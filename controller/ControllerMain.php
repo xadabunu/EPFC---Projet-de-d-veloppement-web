@@ -31,6 +31,7 @@ class ControllerMain extends Controller {
 
     public function signup() : void {
         $email = '';
+        $role='user';
         $full_name = '';
         $iban = '';
         $password = '';
@@ -46,7 +47,7 @@ class ControllerMain extends Controller {
             $password = $_POST['password'];
             $password_confirm = $_POST['password_confirm'];
 
-            $user = new User($email, $full_name, Tools::my_hash($password),'user', $iban);
+            $user = new User($email, $full_name, Tools::my_hash($password),$role, $iban);
             $errors = User::validate_unicity($email);
             $errors = array_merge($errors, $user->validate());
             $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
@@ -55,5 +56,7 @@ class ControllerMain extends Controller {
                 $this->log_user($user);
             }
         }
+        (new View("signup"))->show(["email"=>$email, "password"=>$password, "password_confirm"=>$password_confirm,
+                                    "full_name"=>$full_name, "iban"=>$iban, "errors"=>$errors]);
     }
 }

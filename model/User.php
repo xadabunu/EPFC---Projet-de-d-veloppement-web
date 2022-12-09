@@ -4,7 +4,7 @@ require_once "framework/Model.php";
 
 class User extends Model {
 
-    public function __construct(public string $email, public String $full_name, public string $hashed_password, public string $role = 'user', public String $iban) {}
+    public function __construct(public string $email, public String $full_name, public string $hashed_password, public string $role = 'user', public ?String $iban) {}
 
     public static function validate_login(string $email, string $password) : array
     {
@@ -87,12 +87,12 @@ class User extends Model {
 
     public function persist() : User {
         if(self::get_user_by_email($this->email)){
-            self::execute("UPDATE users SET hashed_password=:password, full_name=:full_name, role=:role, iban=:iban WHERE email=:email",
-                 ["password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role, "iban"=>$this->iban]);
+            self::execute("UPDATE users SET hashed_password=:password, full_name=:full_name, role=:role, iban=:iban WHERE mail=:email",
+                            ["password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role, "iban"=>$this->iban]);
         }
         else{
-            self::execute("INSERT INTO users(email, hashed_password, full_name, role, iban) VALUES(:email, :hashed_password, :full_name, :role, :iban)",
-                ["email" =>$this->email, "password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role, "iban"=>$this->iban]);
+            self::execute("INSERT INTO users(mail, hashed_password, full_name, role, iban) VALUES(:email, :hashed_password, :full_name, :role, :iban)",
+                            ["mail" =>$this->email, "password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role, "iban"=>$this->iban]);
         }
         return $this;
     }

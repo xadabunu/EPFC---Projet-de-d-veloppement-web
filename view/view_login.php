@@ -14,6 +14,6 @@
 		<input type="password" id="password" name="password" value="<?= $password ?>" >
 		<input type="submit" value="Login">
 	</form>
-	<a href="index/signup">New here ? Click here to join the party !</a>
+	<a href="main/signup">New here ? Click here to join the party !</a>
 </body>
 </html>
