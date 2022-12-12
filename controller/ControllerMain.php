@@ -39,10 +39,10 @@ class ControllerMain extends Controller {
         $errors = [];
 
         if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['password_confirm'])
-            && isset($_POST['fullName']) && isset($_POST['iban'])) {
+            && isset($_POST['full_name']) && isset($_POST['iban'])) {
 
             $email = trim($_POST['email']);
-            $full_name = trim($_POST['fullName']);
+            $full_name = trim($_POST['full_name']);
             $iban = ($_POST['iban']);
             $password = $_POST['password'];
             $password_confirm = $_POST['password_confirm'];
@@ -52,6 +52,7 @@ class ControllerMain extends Controller {
             $errors = array_merge($errors, $user->validate());
             $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
             if(count($errors) == 0){
+                var_dump($user) ;
                 $user->persist();
                 $this->log_user($user);
             }
