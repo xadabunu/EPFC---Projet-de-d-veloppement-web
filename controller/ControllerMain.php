@@ -3,31 +3,42 @@ require_once 'framework/View.php';
 require_once 'framework/Controller.php';
 require_once 'model/User.php';
 
-class ControllerMain extends Controller {
+require_once "model/User.php";
 
-    public function index() : void
-    {
-	$this -> login();
-    }
+class ControllerMain extends Controller
+{
 
-    public function login() : void {
+	public function index(): void
+	{
+		if ($this->user_logged()) {
+			$this->redirect("tricount", "index");
+		} else {
+			$this->redirect("main", "login");
+		}
+	}
 
-	    $email = "";
-	    $password = "";
-	    $errors = [];
+	public function login(): void
+	{
 
-	    if (isset($_POST['email']) && isset($_POST['password']))
-	    {
-		    $email = trim($_POST['email']);
-		    $password = trim($_POST['password']);
+		$email = "";
+		$password = "";
+		$errors = [];
 
-		    $errors = User::validate_login($email, $password);
-		    if (empty($errors)) {
-			    $this -> log_user(User::get_user_by_email($email));
-		    }
-	    }
-	(new View("login")) -> show(["email" => $email, "password" => $password, "errors" => $errors]);
-    }
+		if (isset($_POST['email']) && isset($_POST['password'])) {
+			$email = trim($_POST['email']);
+			$password = trim($_POST['password']);
+
+			$errors = User::validate_login($email, $password);
+			if (count($errors) == 0) {
+				$this->log_user(User::get_user_by_email($email), $controller = "Tricount");
+			}
+		}
+		(new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors]);
+	}
+
+
+
+    
 
     public function signup() : void {
         $email = '';
@@ -61,3 +72,6 @@ class ControllerMain extends Controller {
                                     "full_name"=>$full_name, "iban"=>$iban, "errors"=>$errors]);
     }
 }
+
+
+

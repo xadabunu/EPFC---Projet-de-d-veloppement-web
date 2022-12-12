@@ -4,6 +4,7 @@ require_once "framework/Model.php";
 
 class User extends Model {
 
+
     public function __construct(public string $email, public String $full_name, public string $hashed_password, public string $role, public ?String $iban) {}
 
     public static function validate_login(string $email, string $password) : array
@@ -96,8 +97,5 @@ class User extends Model {
         }
         return $this;
     }
-
-
-
 
 }
