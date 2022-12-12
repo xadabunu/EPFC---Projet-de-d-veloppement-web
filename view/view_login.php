@@ -15,9 +15,9 @@
 		<input type="submit" value="Login">
 	</form>
 
-	<a href="main/signup">New here ? Click here to join the party !</a>
+	<a href="signup">New here ? Click here to join the party !</a>
 
-	<a href="index/signup">New here ? Click here to join the party !</a>
+	
 	<?php if (!(empty($errors))) { ?>
 		<ul>
 			<?php foreach ($errors as $error) { ?>
