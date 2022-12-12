@@ -15,9 +15,13 @@
             <li class="tricount">
                 <div>
                     <p class="title"><?= $tricount->title ?></p>
-                    <p class="nfriends"><?php
-                                        $id = $tricount->id;
-                                        echo "with $subs_number[$id] friend(s)" ?></p>
+                    <?php
+                    $id = $tricount->id;
+                    $n = $subs_number[$id];
+                    if ($n > 0) { ?>
+                        <p class="participants_number">
+                            <?php echo "with $n friend(s)" ?></p>
+                    <?php } ?>
                     <p><?= $tricount->description ?></p>
                 </div>
             </li>

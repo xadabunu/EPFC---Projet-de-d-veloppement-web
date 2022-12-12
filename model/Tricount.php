@@ -18,9 +18,9 @@ class Tricount extends Model {
         return $array;
     }
 
-    public static function get_number_of_participants(int $id) : int
+    public function get_number_of_participants() : int
     {
-        $query = self::execute("SELECT COUNT(*) as number FROM subscriptions WHERE tricount = :id", ["id" => $id]);
+        $query = self::execute("SELECT COUNT(*) as number FROM subscriptions WHERE tricount = :id", ["id" => $this->id]);
         return ($query -> fetch())['number'];
     }
 

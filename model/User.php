@@ -1,6 +1,8 @@
 <?php
 
 require_once "framework/Model.php";
+require_once "model/Tricount.php";
+
 
 class User extends Model {
 
@@ -98,4 +100,16 @@ class User extends Model {
         return $this;
     }
 
+	public function get_user_tricounts() : array
+	{
+		$query = self::execute("SELECT t.* FROM tricounts t JOIN subscriptions s ON t.id = s.tricount WHERE s.user = :id", ["id" => $this->id]);
+		$data = $query->fetchAll();
+
+		$array = [];
+		foreach ($data as $tricount) {
+			$array[] = new Tricount($tricount['title'], $tricount['created_at'], $tricount['creator'], $tricount['id'], $tricount['description']);
+		}
+		return $array;
+	}
 }
+
