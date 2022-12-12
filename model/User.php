@@ -4,7 +4,7 @@ require_once "framework/Model.php";
 
 class User extends Model {
 
-public function __construct(public string $email, public string $hashed_password, public string $role, public string $iban) {}
+public function __construct(public string $email, public string $hashed_password, public string $role, public string $full_name, public ?int $id = NULL, public ?string $iban = null) {}
 
 public static function validate_login(string $email, string $password) : array
 {
@@ -14,7 +14,10 @@ public static function validate_login(string $email, string $password) : array
 		if (!self::check_password($password, $user -> hashed_password)) {
 			$errors[] = "Wrong password. Please try again.";
 		}
-	} else {
+	}elseif (empty($email)){
+		$errors[] = "Please enter your email.";
+	}
+	else {
 		$errors[] = "Can't find a user with the email '$email'. Please sign up.";
 	}
 	return $errors;
@@ -31,7 +34,7 @@ public static function get_user_by_email(string $email) : User | false
 	if ($query -> rowCount() == 0) {
 		return false;
 	} else {
-		return new User($data['email'], $data['hashed_password'], $data['full_name'], $data['role'], $data['iban']);
+		return new User($data["mail"], $data["hashed_password"], $data["role"], $data["full_name"], $data["id"], $data["iban"]);
 	}
 }
 

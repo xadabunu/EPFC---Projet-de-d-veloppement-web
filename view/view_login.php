@@ -9,11 +9,18 @@
 <body>
 	<div class="title">Sign In</div>
 	<hr>
-	<form action="index/login">
+	<form action="login" method="POST">
 		<input type="text" id="email" name="email" value="<?= $email ?>">
 		<input type="password" id="password" name="password" value="<?= $password ?>" >
 		<input type="submit" value="Login">
 	</form>
 	<a href="index/signup">New here ? Click here to join the party !</a>
+	<?php if (!(empty($errors))) { ?>
+		<ul>
+			<?php foreach ($errors as $error) { ?>
+				<li><?= $error ?></li>
+			<?php } ?>
+		</ul>
+		<?php } ?>
 </body>
 </html>
