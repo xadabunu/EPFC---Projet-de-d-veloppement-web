@@ -8,7 +8,7 @@ class ControllerTricount extends MyController
 {
     public function index(): void
     {
-        $this->redirect("user", "my_trycounts")
+        $this->redirect("user", "my_trycounts");
     }
 
     public function operations(): void
