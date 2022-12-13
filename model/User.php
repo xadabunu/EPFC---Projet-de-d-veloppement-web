@@ -97,6 +97,7 @@ class User extends Model {
             self::execute("INSERT INTO users(mail, hashed_password, full_name, role, iban) VALUES(:email, :password, :full_name, :role, :iban)",
                             ["email" =>$this->email, "password"=>$this->hashed_password, "full_name"=>$this->full_name,"role"=>$this->role, "iban"=>$this->iban]);
         }
+        $this->id = Model::lastInsertId();
         return $this;
     }
 
