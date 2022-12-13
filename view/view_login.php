@@ -11,7 +11,7 @@
 <body>
 	<div class="title">Sign In</div>
 	<hr>
-	<form action="index" method="POST">
+	<form action="login" method="POST">
 		<input type="text" id="email" name="email" value="<?= $email ?>">
 		<input type="password" id="password" name="password" value="<?= $password ?>">
 		<input type="submit" value="Login">

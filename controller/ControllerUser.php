@@ -3,8 +3,9 @@
 require_once "framework/Controller.php";
 require_once "model/Tricount.php";
 require_once "model/User.php";
+require_once "controller/MyController.php";
 
-class ControllerUser extends Controller
+class ControllerUser extends MyController
 {
 
     public function index(): void
