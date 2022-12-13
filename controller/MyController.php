@@ -1,5 +1,7 @@
 <?php
 
+require_once "framework/Controller.php";
+
 class MyController extends Controller
 {
 

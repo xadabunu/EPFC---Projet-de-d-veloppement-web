@@ -14,7 +14,7 @@
         <?php foreach ($data as $tricount) { ?>
             <li class="tricount">
                 <div>
-                    <p class="title"><?= $tricount->title ?></p>
+                    <a href="tricount/operations/<?= $tricount->id ?>"><p class="title"><?= $tricount->title ?></p></a>
                     <?php
                     $id = $tricount->id;
                     $n = $subs_number[$id];
