@@ -2,7 +2,6 @@
 require_once 'framework/View.php';
 require_once 'framework/Controller.php';
 require_once 'model/User.php';
-
 require_once "model/User.php";
 require_once "controller/MyController.php";
 
@@ -64,7 +63,6 @@ class ControllerMain extends MyController
             $errors = array_merge($errors, $user->validate());
             $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
             if(count($errors) == 0){
-                var_dump($user) ;
                 $user->persist();
                 $this->log_user($user);
             }

@@ -2,6 +2,7 @@
 
 require_once "framework/Model.php";
 require_once "model/Tricount.php";
+require_once "framework/Controller.php";
 
 
 class User extends Model {
@@ -34,7 +35,7 @@ class User extends Model {
         if ($query -> rowCount() == 0) {
             return false;
         } else {
-            return new User($data['email'], $data['hashed_password'], $data['full_name'], $data['role'], $data['iban']);
+            return new User($data['mail'], $data['full_name'],$data['hashed_password'], $data['role'], $data['iban']);
         }
     }
 
