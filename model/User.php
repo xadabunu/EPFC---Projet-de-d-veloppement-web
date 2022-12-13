@@ -52,7 +52,7 @@ class User extends Model {
         if(!strlen($this->email) >0){
             $errors[] = "Email is required.";
         }
-        if(!preg_match('/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/',$this->email)){
+        if(!preg_match('/^[a-zA-Z0-9]{1,20}[@]{1}[a-zA-A0-9]{1,15}[.]{1}[a-z]{1,7}$/',$this->email)){
             $errors [] = "Not a valid email address";
         }
         if(!(strlen($this->full_name) >= 3)){
