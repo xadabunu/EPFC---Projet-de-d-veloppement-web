@@ -17,7 +17,6 @@ class ControllerMain extends MyController
 
 	public function login(): void
 	{
-
 		$email = "";
 		$password = "";
 		$errors = [];
