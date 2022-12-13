@@ -1,8 +1,9 @@
 <?php
 
 require_once "model/User.php";
+require_once "controller/MyController.php";
 
-class ControllerMain extends Controller
+class ControllerMain extends MyController
 {
 
 	public function index(): void
@@ -27,7 +28,7 @@ class ControllerMain extends Controller
 
 			$errors = User::validate_login($email, $password);
 			if (count($errors) == 0) {
-				$this->log_user(User::get_user_by_email($email), $controller = "Tricount");
+				$this->log_user(User::get_user_by_email($email), $controller = "user");
 			}
 		}
 		(new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors]);
