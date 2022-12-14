@@ -24,7 +24,7 @@ class Tricount extends Model
 
     public static function get_tricount_by_id(int $id): Tricount
     {
-        $query = self::execute("SELECT * FROM tricount WHERE id = :id", ["id", $id]);
+        $query = self::execute("SELECT * FROM tricounts WHERE id = :id", ["id" => $id]);
         $data = $query->fetch();
         return new Tricount($data['title'], $data['created_at'], $data['creator'], $data['id'], $data['description']);
     }

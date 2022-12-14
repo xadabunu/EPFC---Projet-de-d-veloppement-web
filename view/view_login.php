@@ -4,6 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="<?= $web_root ?>">
 	<link href="css/styles.css" rel="stylesheet" type="text/css" />
 	<title>Tricount</title>
 </head>
@@ -11,7 +12,7 @@
 <body>
 	<div class="title">Sign In</div>
 	<hr>
-	<form action="login" method="POST">
+	<form action="main/login" method="POST">
 		<input type="text" id="email" name="email" value="<?= $email ?>">
 		<input type="password" id="password" name="password" value="<?= $password ?>">
 		<input type="submit" value="Login">
