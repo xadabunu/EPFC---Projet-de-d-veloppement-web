@@ -19,7 +19,7 @@ class ControllerUser extends MyController
         $array = $user->get_user_tricounts();
         $subs_nb = [];
         foreach ($array as $tricount) {
-            $subs_nb[$tricount->id] = ($tricount->get_number_of_participants() - 1);
+            $subs_nb[$tricount->id] = ($tricount->get_number_of_participants());
         }
         (new View("list_tricount"))->show(["data" => $array, "subs_number" => $subs_nb]);
     }
