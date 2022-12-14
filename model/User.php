@@ -8,7 +8,7 @@ require_once "framework/Controller.php";
 class User extends Model {
 
 
-    public function __construct(public string $email, public string $hashed_password, public string $role, public string $full_name, public ?string $iban = null, public ?int $id = NULL) {}
+    public function __construct(public string $email, public string $hashed_password, public string $full_name, public string $role, public ?string $iban = null, public ?int $id = NULL) {}
 
     public static function validate_login(string $email, string $password) : array
     {

@@ -57,7 +57,7 @@ class ControllerMain extends MyController
             $password = $_POST['password'];
             $password_confirm = $_POST['password_confirm'];
 
-            $user = new User($email, $full_name, Tools::my_hash($password),$role, $iban);
+            $user = new User($email, Tools::my_hash($password), $full_name, $role, $iban);
             $errors = User::validate_unicity($email);
             $errors = array_merge($errors, $user->validate());
             $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
