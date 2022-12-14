@@ -17,19 +17,19 @@
             <form id="signupform" action="main/signup" method="post">
                 <table>
                     <tr>
-                        <td><input id="email" name="email" type="text" size="16" placeholder="Email"></td>
+                        <td><input id="email" name="email" type="text" size="16" placeholder="Email" value="<?= $email ?>"></td>
                     </tr>
                     <tr>
-                        <td><input id="full_name" name="full_name" type="text" size="16" placeholder="Full Name"></td>
+                        <td><input id="full_name" name="full_name" type="text" size="16" placeholder="Full Name" value="<?= $full_name ?>"></td>
                     </tr>
                     <tr>
-                        <td><input id="iban" name="iban" type="text" size="16" placeholder="IBAN"></td>
+                        <td><input id="iban" name="iban" type="text" size="16" placeholder="IBAN" value="<?= $iban ?>"></td>
                     </tr>
                     <tr>
-                        <td><input id="password" name="password" type="text" size="16" placeholder="Password"></td>
+                        <td><input id="password" name="password" type="password" size="16" placeholder="Password" value="<?= $password ?>"></td>
                     </tr>
                     <tr>
-                        <td><input id="password_confirm" name="password_confirm" type="text" size="16" placeholder="Confirm your password"></td>
+                        <td><input id="password_confirm" name="password_confirm" type="password" size="16" placeholder="Confirm your password" value="<?= $password_confirm ?>"></td>
                     </tr>
                 </table>
                 <input type="submit" value="Sign Up">

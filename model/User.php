@@ -8,7 +8,7 @@ require_once "framework/Controller.php";
 class User extends Model {
 
 
-    public function __construct(public string $email, public String $full_name, public string $hashed_password, public string $role, public ?String $iban) {}
+    public function __construct(public string $email, public string $hashed_password, public string $role, public string $full_name, public ?string $iban = null, public ?int $id = NULL) {}
 
     public static function validate_login(string $email, string $password) : array
     {
@@ -35,7 +35,7 @@ class User extends Model {
         if ($query -> rowCount() == 0) {
             return false;
         } else {
-            return new User($data['mail'], $data['full_name'],$data['hashed_password'], $data['role'], $data['iban']);
+            return new User($data['mail'],$data['hashed_password'], $data['full_name'], $data['role'], $data['iban']);
         }
     }
 
@@ -62,9 +62,9 @@ class User extends Model {
         if(!preg_match("/^[a-zA-Z][a-zA-Z0]*$/", $this->full_name)){
             $errors [] = "Name must contains only letters";
         }
-        // if(!preg_match("/^[A-Z]{2}[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}]$/", $this->iban)){
-        //     $errors[] = "IBAN must have an official IBAN format";
-        // }
+         if(!preg_match("/^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/", $this->iban)){
+             $errors[] = "IBAN must have an official IBAN format";
+         }
 
 
         return $errors;
