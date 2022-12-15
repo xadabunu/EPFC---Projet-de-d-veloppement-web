@@ -64,11 +64,26 @@ class ControllerMain extends MyController
             if(count($errors) == 0){
                 $user->persist();
                 $this->log_user($user);
+                // $this->redirect('main', 'signup_prg', $user->email, $password_confirm);
             }
         }
+        // else{
+        //     (new View("signup"))->show();
+        // }
         (new View("signup"))->show(["email"=>$email, "password"=>$password, "password_confirm"=>$password_confirm,
                                     "full_name"=>$full_name, "iban"=>$iban, "errors"=>$errors]);
     }
+
+    // public function signup_prg(){
+    //     if(!empty($_GET['param1'])) {
+    //         $email = $_GET['param1'];
+    //         $user = User::get_user_by_email($email);
+    //         $password_confirm = $_GET['param2'];
+    //     }
+    //     (new View("signup"))->show(["email"=>$email, "password"=>$user->password, "password_confirm"=>$password_confirm,
+    //                                  "full_name"=>$user->full_name, "iban"=>$user->iban]);
+
+    // }
 }
 
 

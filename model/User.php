@@ -2,42 +2,55 @@
 
 require_once "framework/Model.php";
 require_once "model/Tricount.php";
-require_once "framework/Controller.php";
 
+class User extends Model
+{
 
-class User extends Model {
+	public function __construct(public string $email, public string $hashed_password, public string $full_name , public string $role , public ?string $iban = null, public ?int $id = NULL  ) {}
 
+	public static function validate_login(string $email, string $password): array
+	{
+		$errors = [];
+		$user = User::get_user_by_email($email);
+		if ($user) {
+			if (!self::check_password($password, $user->hashed_password)) {
+				$errors[] = "Wrong password. Please try again.";
+			}
+		} elseif (empty($email)) {
+			$errors[] = "Please enter your email.";
+		} else {
+			$errors[] = "Can't find a user with the email '$email'. Please sign up.";
+		}
+		return $errors;
+	}
 
-    public function __construct(public string $email, public string $hashed_password, public string $full_name, public string $role, public ?string $iban = null, public ?int $id = NULL) {}
+	private static function check_password(string $clear_password, string $hash): bool
+	{
+		return $hash === Tools::my_hash($clear_password);
+	}
 
-    public static function validate_login(string $email, string $password) : array
-    {
-        $errors = [];
-        $user = User::get_user_by_email($email);
-        if ($user) {
-            if (!self::check_password($password, $user -> hashed_password)) {
-                $errors[] = "Wrong password. Please try again.";
-            }
-        } else {
-            $errors[] = "Can't find a user with the email '$email'. Please sign up.";
-        }
-        return $errors;
-    }
+	public static function get_user_by_email(string $email): User | false
+	{
+		$query = self::execute("SELECT * FROM users WHERE mail = :email", ["email" => $email]);
+		$data = $query->fetch();
+		if ($query->rowCount() == 0) {
+			return false;
+		} else {
+			return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["iban"], $data["id"]);
+		}
+	}
 
-    private static function check_password(string $clear_password, string $hash) : bool {
-        return $hash === Tools::my_hash($clear_password);
-    }
+	public function get_user_tricounts() : array
+	{
+		$query = self::execute("SELECT t.* FROM tricounts t JOIN subscriptions s ON t.id = s.tricount WHERE s.user = :id UNION (SELECT * from tricounts where creator = :id) ", ["id" => $this->id]);
+		$data = $query->fetchAll();
 
-    public static function get_user_by_email(string $email) : User | false
-    {
-        $query = self::execute("SELECT * FROM users WHERE mail = :email", ["email" => $email]);
-        $data = $query -> fetch();
-        if ($query -> rowCount() == 0) {
-            return false;
-        } else {
-            return new User($data['mail'],$data['hashed_password'], $data['full_name'], $data['role'], $data['iban']);
-        }
-    }
+		$array = [];
+		foreach ($data as $tricount) {
+			$array[] = new Tricount($tricount['title'], $tricount['created_at'], $tricount['creator'], $tricount['id'], $tricount['description']);
+		}
+		return $array;
+	}
 
     public static function validate_unicity(string $email) : array {
         $errors = [];
@@ -101,17 +114,4 @@ class User extends Model {
         $this->id = Model::lastInsertId();
         return $this;
     }
-
-	public function get_user_tricounts() : array
-	{
-		$query = self::execute("SELECT t.* FROM tricounts t JOIN subscriptions s ON t.id = s.tricount WHERE s.user = :id UNION (SELECT * from tricounts where creator = :id) ", ["id" => $this->id]);
-		$data = $query->fetchAll();
-
-		$array = [];
-		foreach ($data as $tricount) {
-			$array[] = new Tricount($tricount['title'], $tricount['created_at'], $tricount['creator'], $tricount['id'], $tricount['description']);
-		}
-		return $array;
-	}
 }
-

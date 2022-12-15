@@ -24,7 +24,9 @@
                         <p class="participants_number">
                             <?php echo "with $n friend(s)" ?></p>
                     <?php } ?>
-                    <p><?= $tricount->description ?></p>
+                    <?php if($tricount -> description != 'NULL'){?>
+                        <p><?= $tricount->description ?></p>
+                    <?php } ?>    
                 </div>
             </li>
         <?php } ?>
