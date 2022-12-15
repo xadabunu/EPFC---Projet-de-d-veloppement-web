@@ -47,7 +47,7 @@ class User extends Model
 
 		$array = [];
 		foreach ($data as $tricount) {
-			$array[] = new Tricount($tricount['title'], $tricount['created_at'], $tricount['creator'], $tricount['id'], $tricount['description']);
+			$array[] = new Tricount($tricount['title'], $tricount['created_at'], $tricount['creator'], $tricount['description'], $tricount['id']);
 		}
 		return $array;
 	}
