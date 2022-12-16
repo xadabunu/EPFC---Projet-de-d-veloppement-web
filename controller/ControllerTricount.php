@@ -24,4 +24,24 @@ class ControllerTricount extends MyController
         }
     }
 
+    public function add_tricount() : void{
+        $title = '';
+        $created_at = '';
+        $creator = '';
+        $description = '';
+        $errors = [];
+        if(isset($_POST['title'])){
+            $title = $_POST['title'];
+            $description = $_POST['description'];
+            $creator = MyController::get_user_or_redirect();
+            $created_at = date("Y-m-d H:i:s");
+            $tricount = new Tricount($title, $created_at, $creator->id, $description);
+            $errors = array_merge($errors, $tricount->validate());
+            if (count($errors) == 0) {
+                $tricount->persist_tricount();
+                $this->redirect('tricount', 'operations', Tricount::lastTricountId());
+            }    
+        }
+        (new View('add_tricount'))->show(["title"=>$title, "desciption"=>$description, "errors" =>$errors]);
+    }
 }

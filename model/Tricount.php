@@ -6,7 +6,7 @@ require_once "model/Operation.php";
 class Tricount extends Model
 {
 
-    public function __construct(public String $title, public String $created_at, public int $creator, public int $id = 0, public ?String $description = null)
+    public function __construct(public String $title, public String $created_at, public int $creator, public ?String $description = null,  public ?int $id = 0)
     {
     }
 
@@ -17,7 +17,7 @@ class Tricount extends Model
 
         $array = [];
         foreach ($data as $tricount) {
-            $array[] = new Tricount($tricount['title'], $tricount['created_at'], $tricount['creator'], $tricount['id'], $tricount['description']);
+            $array[] = new Tricount($tricount['title'], $tricount['created_at'], $tricount['creator'], $tricount['description'], $tricount['id']);
         }
         return $array;
     }
@@ -26,7 +26,7 @@ class Tricount extends Model
     {
         $query = self::execute("SELECT * FROM tricounts WHERE id = :id", ["id" => $id]);
         $data = $query->fetch();
-        return new Tricount($data['title'], $data['created_at'], $data['creator'], $data['id'], $data['description']);
+        return new Tricount($data['title'], $data['created_at'], $data['creator'], $data['description'], $data['id']);
     }
 
     public function get_number_of_participants(): int
@@ -45,5 +45,31 @@ class Tricount extends Model
             $array[] = new Operation($op['title'], $op['tricount'], $op['amount'], $op['operation_date'], $op['initiator'], $op['created_at'], $op['id']);
         }
         return $array;
+    }
+
+    public function persist_tricount() : Tricount{
+        self::execute("INSERT INTO tricounts(title, description, created_at, creator) VALUES(:title, :description, :created_at, :creator)",
+                        ["title"=>$this->title, "description"=>$this->description, "created_at"=>date("Y-m-d H:i:s"), "creator"=>$this->creator]);
+        $this->id = Model::lastInsertId();
+        return $this;
+    }
+
+    public static function lastTricountId() : String {
+        $id = Model::lastInsertId();
+        return $id;
+    }
+
+    public function validate() : array{
+        $errors = [];
+        if(!strlen($this->title) >0){
+            $errors[] = "Title is required.";
+        }
+        if(!(strlen($this->title) >= 3)){
+            $errors[] = "Title length must be higher than 3.";
+        }
+        if(strlen($this->description) > 0 && !(strlen($this->description) >=3)){
+            $errors[] = "Description length must be higher than 3.";
+        }
+        return $errors;
     }
 }

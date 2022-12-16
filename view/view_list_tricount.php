@@ -32,6 +32,7 @@
         <?php } ?>
     </ul>
     <a href="main/logout">Logout</a>
+    <a href="tricount/add_tricount">Add Tricount</a>
 </body>
 
 </html>
