@@ -12,14 +12,21 @@
 <body>
     <div class="title">Edit</div>
     <div class="menu">
-        <a href="tricount/operations/4">Back</a>
+        <a href="tricount/operations/<?= $tricount->id ?>">Back</a>
     </div>
     <div class="main">
-        <form id="edittricountform" action="tricount/edit_tricount" method="post">
+        <form id="edittricountform" action="tricount/edit_title_description/<?= $tricount->id ?>" method="post">
+        <input type="submit" value="Save" formaction="tricount/edit_title_description/<?= $tricount->id ?>">
             <table>
                 <h3>Settings</h3>
                 <tr>
+                    <td>Title</td>
+                </tr>
+                <tr>
                     <td><input id="title" name="title" type="text" size="16" value="<?= $tricount->title ?>"></td>
+                </tr>
+                <tr>
+                    <td>Description (Optional)</td>
                 </tr>
                 <tr>
                     <td><input id="description" name="description" type="text" size="16" value="<?= $tricount->description ?>"></td>

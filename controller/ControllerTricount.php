@@ -57,5 +57,14 @@ class ControllerTricount extends MyController
         else {
             Tools::abort("Invalid or missing argument.");
         }
-    }   
+    }
+    
+    public function edit_title_description() : void {
+        $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+        $tricount->title = $_POST['title'];
+        $tricount->description = $_POST['description'];
+        var_dump($tricount);
+        $tricount->persist_tricount();
+        $this->redirect('tricount', 'edit_tricount', $this->id);
+    }
 }
