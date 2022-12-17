@@ -35,6 +35,16 @@ class Tricount extends Model
         return ($query->fetch())['number'];
     }
 
+    public function get_subscriptors() : array {
+        $query = self::execute("SELECT DISTINCT users.* FROM users, subscriptions, tricounts WHERE subscriptions.user = users.id AND tricount=:id", ['id'=> $this->id]);
+        $data = $query->fetchAll();
+        $array = [];
+		foreach ($data as $user) {
+			$array[] = new User($user['mail'], $user['hashed_password'], $user['full_name'], $user['role'], $user['iban'], $user['id']);
+		}
+		return $array;
+    }
+
     public function get_operations(): array
     {
         $query = self::execute("SELECT * FROM operations WHERE tricount = :id", ["id" => $this->id]);

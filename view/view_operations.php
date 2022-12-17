@@ -13,5 +13,7 @@
             <li> <?=$operation->title?></li>
         <?php } ?>
     </ul>
+    <a href="main/index/<?= $tricount->id ?>">Home</a>
+    <a href="tricount/edit_tricount/<?= $tricount->id ?>">Edit</a>
 </body>
 </html>

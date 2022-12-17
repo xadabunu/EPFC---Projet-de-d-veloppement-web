@@ -40,6 +40,17 @@ class User extends Model
 		}
 	}
 
+    public static function get_user_by_id(int $id) : User |false {
+        $query = self::execute("SELECT * FROM users WHERE id =:id", ["id"=>$id]);
+        $data = $query->fetch();
+        if($query->rowcount() == 0) {
+            return false;
+        }
+        else{
+            return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["iban"], $data["id"]);
+        }
+    }
+
 	public function get_user_tricounts() : array
 	{
 		$query = self::execute("SELECT t.* FROM tricounts t JOIN subscriptions s ON t.id = s.tricount WHERE s.user = :id UNION (SELECT * from tricounts where creator = :id) ", ["id" => $this->id]);

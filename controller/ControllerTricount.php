@@ -17,7 +17,7 @@ class ControllerTricount extends MyController
         {
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             $list = $tricount->get_operations();
-            (new View("operations"))->show(["list" => $list]);
+            (new View("operations"))->show(["list" => $list, "tricount"=>$tricount]);
         }
         else {
             Tools::abort("Invalid or missing argument.");
@@ -44,4 +44,18 @@ class ControllerTricount extends MyController
         }
         (new View('add_tricount'))->show(["title"=>$title, "desciption"=>$description, "errors" =>$errors]);
     }
+
+    public function edit_tricount() : void{
+        $subscriptors = [];
+        $creator = '';
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
+            $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+            $creator = User::get_user_by_id($tricount->creator);
+            $subscriptors = $tricount->get_subscriptors();
+            (new View("edit_tricount"))->show(['tricount'=>$tricount, "subscriptors"=>$subscriptors,'creator'=>$creator]);
+        }
+        else {
+            Tools::abort("Invalid or missing argument.");
+        }
+    }   
 }
