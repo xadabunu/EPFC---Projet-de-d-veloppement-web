@@ -68,6 +68,16 @@ class ControllerTricount extends MyController
         }
         else {
             Tools::abort("Invalid or missing argument.");
-        }    
+        }
+        
+    }
+
+    public function add_subscriptors() : void {
+        if(isset($_POST['subscriptor'])){
+            $subscriptor = $_POST['subscriptor'];
+            $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+            $tricount->persist_subscriptor($subscriptor);
+            $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
+        }         
     }
 }
