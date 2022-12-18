@@ -48,23 +48,27 @@ class ControllerTricount extends MyController
     public function edit_tricount() : void{
         $subscriptors = [];
         $creator = '';
-        if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
+        $title = '';
+        $description = '';
+        if (isset($_GET['param1'])){
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             $creator = User::get_user_by_id($tricount->creator);
             $subscriptors = $tricount->get_subscriptors();
-            (new View("edit_tricount"))->show(['tricount'=>$tricount, "subscriptors"=>$subscriptors,'creator'=>$creator]);
+            $errors = [];
+            if(isset($_POST['title']) || isset($_POST['description'])){
+                $tricount->title = $_POST['title'];
+                $tricount->description = $_POST['description'];
+                $errors = array_merge($errors, $tricount->validate());
+                if (count($errors) == 0) {
+                    $tricount->persist_tricount();
+                    $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
+                }
+            }
+            (new View("edit_tricount"))->show(['tricount'=>$tricount, 'subscriptors'=>$subscriptors,'creator'=>$creator,
+                                             'errors'=>$errors, 'description'=>$description, 'title'=>$title]);
         }
         else {
             Tools::abort("Invalid or missing argument.");
-        }
-    }
-    
-    public function edit_title_description() : void {
-        $tricount = Tricount::get_tricount_by_id($_GET['param1']);
-        $tricount->title = $_POST['title'];
-        $tricount->description = $_POST['description'];
-        var_dump($tricount);
-        $tricount->persist_tricount();
-        $this->redirect('tricount', 'edit_tricount', $this->id);
+        }    
     }
 }

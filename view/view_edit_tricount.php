@@ -15,8 +15,8 @@
         <a href="tricount/operations/<?= $tricount->id ?>">Back</a>
     </div>
     <div class="main">
-        <form id="edittricountform" action="tricount/edit_title_description/<?= $tricount->id ?>" method="post">
-        <input type="submit" value="Save" formaction="tricount/edit_title_description/<?= $tricount->id ?>">
+        <form id="edittricountform" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post">
+        <input type="submit" value="Save" formaction="tricount/edit_tricount/<?= $tricount->id ?>">
             <table>
                 <h3>Settings</h3>
                 <tr>
@@ -33,14 +33,24 @@
                 </tr>
             </table>
         </form>
-        <h3>Subscriptions</h3>
-        
+        <h3>Subscriptions</h3> 
         <ul>
             <li><?=$creator->full_name ?></li>
             <?php foreach ($subscriptors as $subscriptor) { ?>
                 <li> <?= $subscriptor->full_name ?></li>
             <?php } ?>
         </ul>
+        <?php if (count($errors) != 0) : ?>
+                <div class='errors'>
+                    <br><br>
+                    <p>Please correct the following error(s) : </p>
+                    <ul>
+                        <?php foreach ($errors as $error) : ?>
+                            <li><?=  $error ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
     </div>
 </body>
 
