@@ -6,15 +6,15 @@
     <title>Edit_Tricount</title>
     <base href="<?= $web_root ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css" />
+    <link href="css/styles.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-    <div class="title">Edit</div>
-    <div class="menu">
-        <a href="tricount/operations/4">Back</a>
-    </div>
     <div class="main">
+        <div class="title" id="t2"><?= $tricount->title ?> > Edit</div>
+        <div class="menu">
+            <a href="tricount/operations/4">Back</a>
+        </div>
         <form id="edittricountform" action="tricount/edit_tricount" method="post">
             <table>
                 <h3>Settings</h3>
