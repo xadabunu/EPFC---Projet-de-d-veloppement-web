@@ -34,12 +34,25 @@
             </table>
         </form>
         <h3>Subscriptions</h3> 
-        <ul>
-            <li><?=$creator->full_name ?></li>
+        <table>
+            <tr>
+                <td><?=$creator->full_name ?></td>
+            </tr>
             <?php foreach ($subscriptors as $subscriptor) { ?>
-                <li> <?= $subscriptor->full_name ?></li>
+                <tr>
+                    <td> <?= $subscriptor->full_name ?></td>
             <?php } ?>
-        </ul>
+                </tr>
+        </table>
+        <form id= "cbo">
+            <select name="subs" id="subs">
+                <option value ="">--Add a new subscriber--</option>
+                <?php foreach($cbo_users as $cbo_user) { ?>
+                    <option value="<?=$cbo_user->full_name?>"><?=$cbo_user->full_name?></option>
+                <?php } ?> 
+            </select>
+            <input type= "submit" value= "Add" formaction="tricount/add_subscriptors">
+        </form>    
         <?php if (count($errors) != 0) : ?>
                 <div class='errors'>
                     <br><br>

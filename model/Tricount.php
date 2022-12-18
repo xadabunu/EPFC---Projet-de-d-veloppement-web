@@ -45,6 +45,17 @@ class Tricount extends Model
 		return $array;
     }
 
+    public function get_cbo_users() : array{
+        $query = self::execute("SELECT * FROM users WHERE id != :creator_id AND id NOT IN (SELECT user FROM subscriptions WHERE tricount = :tricount_id)",
+                                ['creator_id'=>$this->creator, 'tricount_id'=>$this->id]);
+        $data = $query->fetchAll();
+        $array = [];
+        foreach($data as $user){
+            $array[] = new User($user["mail"], $user["hashed_password"], $user["full_name"], $user["role"], $user["iban"], $user["id"]);
+        }
+        return $array;
+    }
+
     public function get_operations(): array
     {
         $query = self::execute("SELECT * FROM operations WHERE tricount = :id", ["id" => $this->id]);
