@@ -85,6 +85,10 @@ class Tricount extends Model
         self::execute("INSERT INTO subscriptions(user, tricount) VALUES(:user, :tricount)",["user"=> $id, 'tricount'=>$this->id]);
     }
 
+    public function delete_subscriptor(int $id) : void {
+        self::execute("DELETE FROM subscriptions WHERE user=:user_id AND tricount=:tricount_id ",["user_id"=> $id, "tricount_id"=>$this->id]);
+    }
+
     public static function lastTricountId() : String {
         $id = Model::lastInsertId();
         return $id;

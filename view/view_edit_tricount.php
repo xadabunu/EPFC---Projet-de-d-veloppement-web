@@ -36,19 +36,22 @@
         <h3>Subscriptions</h3>
         <table>
             <tr>
-                <td><?= $creator->full_name ?></td>
+                <td><?= $creator->full_name ?>(Creator)</td>
             </tr>
             <?php foreach ($subscriptors as $subscriptor) { ?>
-                <tr>
-                    <td> <?= $subscriptor->full_name ?></td>
-                <?php } ?>
-                </tr>
+            <tr> 
+                <form class="link"  action='tricount/delete_subscriptor/<?= $tricount->id ?>' method='post'>
+                    <input type='text' name='subscriptor_name' value='<?= $subscriptor->id ?>'hidden>
+                    <td><p><?= $subscriptor->full_name ?><input type='submit' value='delete'></td></p></td>
+                </form>
+            </tr>   
+            <?php } ?>
         </table>
-        <form id="subscriptor" name="subscriptor" method ="POST">
+        <form id="subscriptor" name="subscriptor" method="POST">
             <select name="subscriptor" id="subscriptor">
                 <option value="">--Add a new subscriber--</option>
                 <?php foreach ($cbo_users as $cbo_user) { ?>
-                    <option value="<?= $cbo_user->id?>"><?= $cbo_user->full_name ?></option>
+                    <option value="<?= $cbo_user->id ?>"><?= $cbo_user->full_name ?></option>
                 <?php } ?>
             </select>
             <input type="submit" value="Add" formaction="tricount/add_subscriptors/<?= $tricount->id ?>">
