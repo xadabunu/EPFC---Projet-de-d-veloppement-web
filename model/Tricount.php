@@ -45,6 +45,17 @@ class Tricount extends Model
 		return $array;
     }
 
+    public function get_cbo_users() : array {
+        $query = self::execute("SELECT * FROM users WHERE id != :creator_id AND id NOT IN (SELECT user FROM subscriptions WHERE tricount = :tricount_id)",
+                                ['creator_id'=>$this->creator, 'tricount_id'=>$this->id]);
+        $data = $query->fetchAll();
+        $array = [];
+        foreach($data as $user){
+            $array[] = new User($user["mail"], $user["hashed_password"], $user["full_name"], $user["role"], $user["iban"], $user["id"]);
+        }
+        return $array;
+    }
+
     public function get_operations(): array
     {
         $query = self::execute("SELECT * FROM operations WHERE tricount = :id", ["id" => $this->id]);
@@ -57,11 +68,25 @@ class Tricount extends Model
         return $array;
     }
 
-    public function persist_tricount() : Tricount{
+    public function persist_tricount() : Tricount {
+        if(self::get_tricount_by_id($this->id)){
+            self::execute("UPDATE tricounts SET title =:title, description =:description WHERE id=:id",
+                            ["title"=>$this->title, "description"=>$this->description, "id"=>$this->id]);
+        }
+        else{
         self::execute("INSERT INTO tricounts(title, description, created_at, creator) VALUES(:title, :description, :created_at, :creator)",
                         ["title"=>$this->title, "description"=>$this->description, "created_at"=>date("Y-m-d H:i:s"), "creator"=>$this->creator]);
+        }
         $this->id = Model::lastInsertId();
         return $this;
+    }
+
+    public function persist_subscriptor(int $id) : void {
+        self::execute("INSERT INTO subscriptions(user, tricount) VALUES(:user, :tricount)",["user"=> $id, 'tricount'=>$this->id]);
+    }
+
+    public function delete_subscriptor(int $id) : void {
+        self::execute("DELETE FROM subscriptions WHERE user=:user_id AND tricount=:tricount_id ",["user_id"=> $id, "tricount_id"=>$this->id]);
     }
 
     public static function lastTricountId() : String {
