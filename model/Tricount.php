@@ -73,7 +73,7 @@ class Tricount extends Model
             self::execute("UPDATE tricounts SET title =:title, description =:description WHERE id=:id",
                             ["title"=>$this->title, "description"=>$this->description, "id"=>$this->id]);
         }
-        else{
+        else {
         self::execute("INSERT INTO tricounts(title, description, created_at, creator) VALUES(:title, :description, :created_at, :creator)",
                         ["title"=>$this->title, "description"=>$this->description, "created_at"=>date("Y-m-d H:i:s"), "creator"=>$this->creator]);
         }

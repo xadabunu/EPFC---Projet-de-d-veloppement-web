@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/styles.css" rel="stylesheet" type="text/css" />
     <base href="<?= $web_root ?>">
+    <link href="css/styles.css" rel="stylesheet" type="text/css" />
     <title>Add Tricount</title>
 </head>
 
@@ -18,10 +18,10 @@
         <form id="add_tricount" action="tricount/add_tricount" method="post">
             <table>
                 <tr>
-                    <td><input id="title" name="title" type="text" size="16" placeholder="Title"></td>
+                    <td><input id="title" name="title" type="text" size="16" value="<?=$title?>" placeholder="Title"></td>
                 </tr>
                 <tr>
-                    <td><input id="description" name="description" type="text" size="16" placeholder="Description"></td>
+                    <td><input id="description" name="description" type="text" size="16"  placeholder="Description"></td>
                 </tr>
             </table>
             <input type="submit" value="Add Tricount">
