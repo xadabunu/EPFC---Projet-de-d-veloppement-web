@@ -10,7 +10,8 @@
 </head>
 
 <body>
-    <div class="title">Your Tricounts</div>
+<div class="main">
+    <div class="title" id="t2">Your Tricounts</div>
     <ul>
         <?php foreach ($data as $tricount) { ?>
             <li class="tricount">
@@ -32,6 +33,8 @@
     </ul>
     <a href="main/logout">Logout</a>
     <a href="tricount/add_tricount">Add Tricount</a>
+</div>
+
 </body>
 
 </html>

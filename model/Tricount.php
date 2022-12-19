@@ -69,7 +69,7 @@ class Tricount extends Model
     }
 
     public function persist_tricount() : Tricount {
-        if(self::get_tricount_by_id($this->id)){
+        if($this->id != 0){
             self::execute("UPDATE tricounts SET title =:title, description =:description WHERE id=:id",
                             ["title"=>$this->title, "description"=>$this->description, "id"=>$this->id]);
         }

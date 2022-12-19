@@ -10,11 +10,11 @@
 </head>
 
 <body>
-    <div class="title">Add Tricount</div>
-    <div class="menu">
-        <a href="index.php">Cancel</a>
-    </div>
     <div class="main">
+        <div class="title" id="t2">Add Tricount</div>
+        <div class="menu">
+            <a href="index.php">Cancel</a>
+        </div>
         <form id="add_tricount" action="tricount/add_tricount" method="post">
             <table>
                 <tr>

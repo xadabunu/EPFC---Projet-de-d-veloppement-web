@@ -10,11 +10,10 @@
 </head>
 
 <body>
-    <div class="title">Edit</div>
-    <div class="menu">
-        <a href="tricount/operations/<?= $tricount->id ?>">Back</a>
-    </div>
+
     <div class="main">
+        <div class="title" id="t2"><?= $tricount->title ?> > Edit</div>
+        <div class="menu"><a href="tricount/operations/<?= $tricount->id ?>">Back</a></div>
         <form id="edittricountform" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post">
             <input type="submit" value="Save" formaction="tricount/edit_tricount/<?= $tricount->id ?>">
             <table>
@@ -39,12 +38,16 @@
                 <td><?= $creator->full_name ?>(Creator)</td>
             </tr>
             <?php foreach ($subscriptors as $subscriptor) { ?>
-            <tr> 
-                <form class="link"  action='tricount/delete_subscriptor/<?= $tricount->id ?>' method='post'>
-                    <input type='text' name='subscriptor_name' value='<?= $subscriptor->id ?>'hidden>
-                    <td><p><?= $subscriptor->full_name ?><input type='submit' value='delete'></td></p></td>
-                </form>
-            </tr>   
+                <tr>
+                    <form class="link" action='tricount/delete_subscriptor/<?= $tricount->id ?>' method='post'>
+                        <input type='text' name='subscriptor_name' value='<?= $subscriptor->id ?>' hidden>
+                        <td>
+                            <p><?= $subscriptor->full_name ?><input type='submit' value='delete'>
+                        </td>
+                        </p>
+                        </td>
+                    </form>
+                </tr>
             <?php } ?>
         </table>
         <form id="subscriptor" name="subscriptor" method="POST">

@@ -1,0 +1,88 @@
+.main
+{
+    height: 100vh;
+    aspect-ratio: 9/16;
+    background-color: rgb(255, 255, 255);
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body
+{
+    background-color: rgb(171, 206, 236);
+    margin: 0;
+    font-size: 200%;
+}
+
+a
+{
+    text-decoration: none;
+}
+
+a:visited
+{
+    text-decoration: none;
+    color: black;
+}
+
+a:hover
+{
+    color: rgb(90, 167, 235);
+}
+
+.title
+{
+    position: relative;
+    padding: 10px 10px;
+    font-weight: bold;
+}
+
+#t1
+{
+    background-color: rgb(13, 110, 253);
+    color: white;
+}
+
+#t2
+{
+    background-color: rgb(227, 242, 253);
+    color: rgb(102, 109, 114);
+}
+
+li
+{
+    list-style: none;
+}
+
+form
+{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-top: 50%;
+    flex-direction: column;
+    border-style: solid;
+    border-color: rgb(227, 227, 227);
+    width: fit-content;
+    margin: 50% auto;
+    border-radius: 10px;
+    padding: 25px;
+}
+
+.formtitle
+{
+   padding-bottom: 25px;
+   display: flex;
+   justify-content: center;
+   border-bottom: 2px solid rgb(227, 227, 227);
+   margin-bottom: 25px;
+}
+
+form > *
+{
+    width: 100%;
+    align-content: center;
+    margin-top: 10px;
+}
