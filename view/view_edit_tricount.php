@@ -59,6 +59,7 @@
             </select>
             <input type="submit" value="Add" formaction="tricount/add_subscriptors/<?= $tricount->id ?>">
         </form>
+        <a href="tricount/delete_tricount/<?= $tricount->id ?>">Delete Tricount</a>
         <?php if (count($errors) != 0) : ?>
             <div class='errors'>
                 <br><br>

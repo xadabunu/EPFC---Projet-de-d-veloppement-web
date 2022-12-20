@@ -85,10 +85,15 @@ class ControllerTricount extends MyController
         if(isset($_POST['subscriptor_name'])){
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             $subscriptor = $_POST['subscriptor_name'];
-            print_r($subscriptor);
             $tricount->delete_subscriptor($subscriptor);
             $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
         }
 
+    }
+
+    public function delete_tricount() : void {
+        $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+        $tricount->delete_tricount_cascade();
+        $this->redirect('user', 'index');
     }
 }

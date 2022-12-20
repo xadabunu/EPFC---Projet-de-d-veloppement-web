@@ -1,6 +1,6 @@
 -- MariaDB dump 10.19  Distrib 10.4.24-MariaDB, for Win64 (AMD64)
 --
--- Host: 127.0.0.1    Database: prwb_2223_a05
+-- Host: 127.0.0.1    Database: prwb_2223_xyy
 -- ------------------------------------------------------
 -- Server version	10.4.24-MariaDB
 
@@ -155,7 +155,7 @@ CREATE TABLE `subscriptions` (
 
 LOCK TABLES `subscriptions` WRITE;
 /*!40000 ALTER TABLE `subscriptions` DISABLE KEYS */;
-INSERT INTO `subscriptions` VALUES (2,2),(4,2),(4,3);
+INSERT INTO `subscriptions` VALUES (2,1),(4,1),(1,1),(2,2),(4,2),(4,3);
 /*!40000 ALTER TABLE `subscriptions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -185,7 +185,7 @@ CREATE TABLE `tricounts` (
 
 LOCK TABLES `tricounts` WRITE;
 /*!40000 ALTER TABLE `tricounts` DISABLE KEYS */;
-INSERT INTO `tricounts` VALUES (1,'Gers 2022',NULL,'2022-10-10 18:42:24',1),(2,'Resto badminton','NULL','2022-10-10 19:25:10',1),(4,'Vacances','A la mer du nord','2022-10-10 19:31:09',1);
+INSERT INTO `tricounts` VALUES (1,'Gers 2022',NULL,'2022-10-10 18:42:24',1),(2,'Resto badminton',NULL,'2022-10-10 19:25:10',1),(4,'Vacances','A la mer du nord','2022-10-10 19:31:09',1);
 /*!40000 ALTER TABLE `tricounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
