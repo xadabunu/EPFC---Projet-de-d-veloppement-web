@@ -17,7 +17,7 @@ class ControllerTricount extends MyController
         {
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             $list = $tricount->get_operations();
-            (new View("operations"))->show(["list" => $list, "tricount"=>$tricount]);
+            (new View("tricount"))->show(["list" => $list, "tricount"=>$tricount]);
         }
         else {
             Tools::abort("Invalid or missing argument.");
