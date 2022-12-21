@@ -19,6 +19,7 @@
     </ul>
     <a href="main/index/<?= $tricount->id ?>">Home</a>
     <a href="tricount/edit_tricount/<?= $tricount->id ?>">Edit</a>
+    <a href="operation/add_operation/<?= $tricount->id ?>">Add</a>
         </div>
 </body>
 

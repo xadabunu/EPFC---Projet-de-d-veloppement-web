@@ -4,7 +4,7 @@ require_once "framework/Model.php";
 
 class Operation extends Model
 {
-    public function __construct(public string $title, public int $tricount, public float $amount, public string $operation_date, public int $initiator, public string $created_at, public ?int $id) {}
+    public function __construct(public string $title, public int $tricount, public float $amount, public string $operation_date, public int $initiator, public string $created_at, public ?int $id = 0) {}
 
     public static function get_operation_by_id(int $id): Operation
     {
@@ -45,5 +45,30 @@ class Operation extends Model
                                                                 "op_id" => $this->id]);
         return ($query->fetch())['next_id'];
     }
+
+    public function persist_operation() : Operation {
+        // if($this->id != 0){
+        //     self::execute("UPDATE tricounts SET title =:title, description =:description WHERE id=:id",
+        //                     ["title"=>$this->title, "description"=>$this->description, "id"=>$this->id]);
+        // }
+        // else {
+        self::execute("INSERT INTO operations(title, tricount, amount, operation_date, initiator, created_at) VALUES(:title, :tricount, :amount, :operation_date, :initiator, :created_at)",
+                        ["title"=>$this->title, 'tricount'=>$this->tricount, 'amount'=>$this->amount, 'operation_date'=>$this->operations_date, 'initiator'=>$this->initiator, 'created_at'=>$this->created_at]);
+        //}
+        $this->id = Model::lastInsertId();
+        return $this;
+    }
+
+    public function get_subscriptors() : array {
+        $query = self::execute("SELECT DISTINCT users.* FROM users, subscriptions, tricounts WHERE subscriptions.user = users.id AND subscriptions.tricount= :id",
+                                ['id'=> $this->id]);
+        $data = $query->fetchAll();
+        $array = [];
+		foreach ($data as $user) {
+			$array[] = new User($user['mail'], $user['hashed_password'], $user['full_name'], $user['role'], $user['iban'], $user['id']);
+		}
+		return $array;
+    }
+    
 }
 

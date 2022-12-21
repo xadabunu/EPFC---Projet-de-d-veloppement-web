@@ -1,6 +1,7 @@
 <?php
 
 require_once "controller/MyController.php";
+require_once "model/User.php";
 
 class ControllerOperation extends MyController
 {
@@ -27,5 +28,24 @@ class ControllerOperation extends MyController
         else {
             Tools::abort("Invalid or missing argument");
         }
+    }
+
+    public function add_operation() : void {
+        $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+        $subscriptors = [];
+        $operation = '';
+        $subscriptors = $tricount->get_subscriptors_with_creator();
+        $templates = [];
+        $templates = Template::get_templates($tricount->id);
+        if(isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date'])){
+            $title = $_POST['title'];
+            $amount = $_POST['amount'];
+            $operation_date = $_POST['operation_date'];
+            $created_at = Date("Y-m-d H:i:s");
+            $user = Mycontroller::get_user_or_redirect();
+            $operation = new Operation($title, $tricount->id, $amount, $operation_date, $user->id, $created_at);
+            $operation->persist_operation();   
+        }
+        (new View("add_operation"))->show(['tricount'=>$tricount, 'operation'=>$operation, 'subscriptors'=>$subscriptors, 'templates'=>$templates]);
     }
 }
