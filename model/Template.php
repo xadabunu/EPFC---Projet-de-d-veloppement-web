@@ -6,7 +6,7 @@ require_once "model/Operation.php";
 
 class Template extends Model{
 
-    public function __construct(String $title, int $tricount, ?int $id = 0) {
+    public function __construct(public String $title, public int $tricount, public ?int $id = 0) {
         
     }
 

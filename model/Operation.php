@@ -53,7 +53,7 @@ class Operation extends Model
         // }
         // else {
         self::execute("INSERT INTO operations(title, tricount, amount, operation_date, initiator, created_at) VALUES(:title, :tricount, :amount, :operation_date, :initiator, :created_at)",
-                        ["title"=>$this->title, 'tricount'=>$this->tricount, 'amount'=>$this->amount, 'operation_date'=>$this->operations_date, 'initiator'=>$this->initiator, 'created_at'=>$this->created_at]);
+                        ["title"=>$this->title, 'tricount'=>$this->tricount, 'amount'=>$this->amount, 'operation_date'=>$this->operation_date, 'initiator'=>$this->initiator, 'created_at'=>$this->created_at]);
         //}
         $this->id = Model::lastInsertId();
         return $this;
@@ -68,6 +68,20 @@ class Operation extends Model
 			$array[] = new User($user['mail'], $user['hashed_password'], $user['full_name'], $user['role'], $user['iban'], $user['id']);
 		}
 		return $array;
+    }
+
+    public function validate_operations() : array {
+        $errors = [];
+        if(!strlen($this->title) >0){
+            $errors['required'] = "Title is required.";
+        }
+        if(!(strlen($this->title) >= 3)){
+            $errors['lenght'] = "Title length must be higher than 3.";
+        }
+        if(($this->amount) < 0 || empty($this->amount) ){
+            $errors['amount'] = "Amount is required and must be positive";
+        }
+        return $errors;
     }
     
 }
