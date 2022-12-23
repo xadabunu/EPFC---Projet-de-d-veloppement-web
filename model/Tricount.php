@@ -89,8 +89,10 @@ class Tricount extends Model
         else {
         self::execute("INSERT INTO tricounts(title, description, created_at, creator) VALUES(:title, :description, :created_at, :creator)",
                         ["title"=>$this->title, "description"=>$this->description, "created_at"=>date("Y-m-d H:i:s"), "creator"=>$this->creator]);
-        }
+        
         $this->id = Model::lastInsertId();
+        self::execute("INSERT INTO subscriptions(user, tricount) VALUES (:user, :tricount)", ['user'=>$this->creator, 'tricount'=>$this->id]);
+        }
         return $this;
     }
 

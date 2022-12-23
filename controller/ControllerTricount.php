@@ -39,7 +39,7 @@ class ControllerTricount extends MyController
             $errors = array_merge($errors, $tricount->validate());
             if (count($errors) == 0) {
                 $tricount->persist_tricount();
-                $this->redirect('tricount', 'operations', Tricount::lastTricountId());
+                $this->redirect('tricount', 'operations', $tricount->id);
             }    
         }
         (new View('add_tricount'))->show(["title"=>$title, "desciption"=>$description, "errors" =>$errors]);
@@ -93,8 +93,6 @@ class ControllerTricount extends MyController
 
     public function delete_tricount() : void {
         $tricount = Tricount::get_tricount_by_id($_GET['param1']);
-        //$tricount->delete_tricount_cascade();
-        //$this->redirect('user', 'index');
         (new View("delete_tricount"))->show(['tricount'=>$tricount]);
     }
 
