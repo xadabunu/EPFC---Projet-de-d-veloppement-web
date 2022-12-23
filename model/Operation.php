@@ -19,7 +19,7 @@ class Operation extends Model
         $data = $query->fetchAll();
         $array = [];
         foreach ($data as $user) {
-            $array[] = new User($user['email'], $user['hashed_password'], $user['full_name'], $user['role'], $user['iban'], $user['id']);
+            $array[] = new User($user['mail'], $user['hashed_password'], $user['full_name'], $user['role'], $user['iban'], $user['id']);
         }
         return $array;
     }
@@ -29,7 +29,7 @@ class Operation extends Model
         $query = self::execute("WITH tmp AS (SELECT * FROM operations WHERE tricount = :tricount_id ORDER BY created_at)
                         select prev_id
                         from ( select id, 
-                            lag(id) over (ORDER BY created_at) as prev_id,
+                            lag(id) over (ORDER BY created_at) as prev_id
                             from tmp) as t where id = :op_id", ["tricount_id" => $this->tricount,
                                                                 "op_id" => $this->id]);
         return ($query->fetch())['prev_id'];
@@ -40,10 +40,21 @@ class Operation extends Model
         $query = self::execute("WITH tmp AS (SELECT * FROM operations WHERE tricount = :tricount_id ORDER BY created_at)
                         select next_id
                         from ( select id, 
-                            lead(id) over (ORDER BY created_at) as next_id,
+                            lead(id) over (ORDER BY created_at) as next_id
                             from tmp) as t where id = :op_id", ["tricount_id" => $this->tricount,
                                                                 "op_id" => $this->id]);
         return ($query->fetch())['next_id'];
+    }
+
+    public function get_personnal_amount(int $id): float
+    {
+        $query = self::execute("SELECT SUM(weight) as sum FROM repartitions WHERE operation = :id", ["id" => $this->id]);
+        $sum = ($query->fetch())['sum'];
+
+        $query = self::execute("SELECT weight FROM repartitions WHERE user = :user_id AND operation = :id", ["user_id" => $id, "id" => $this->id]);
+        $weight = ($query->fetch()['weight']);
+
+        return ($this->amount) / $sum * $weight;
     }
 }
 
