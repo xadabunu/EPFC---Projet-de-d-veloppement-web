@@ -20,6 +20,7 @@
     <a href="main/index/<?= $tricount->id ?>">Home</a>
     <a href="tricount/edit_tricount/<?= $tricount->id ?>">Edit</a>
     <a href="operation/add_operation/<?= $tricount->id ?>">Add</a>
+    <a href ="operation/edit_operation/4">Edit operation TEMP TEST</a>
         </div>
 </body>
 
