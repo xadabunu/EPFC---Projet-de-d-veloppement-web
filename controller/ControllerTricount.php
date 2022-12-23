@@ -93,6 +93,13 @@ class ControllerTricount extends MyController
 
     public function delete_tricount() : void {
         $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+        //$tricount->delete_tricount_cascade();
+        //$this->redirect('user', 'index');
+        (new View("delete_tricount"))->show(['tricount'=>$tricount]);
+    }
+
+    public function confirm_delete_tricount() : void {
+        $tricount = tricount::get_tricount_by_id($_GET['param1']);
         $tricount->delete_tricount_cascade();
         $this->redirect('user', 'index');
     }
