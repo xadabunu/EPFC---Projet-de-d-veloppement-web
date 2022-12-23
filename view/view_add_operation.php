@@ -29,12 +29,12 @@
                 <p class="errorMessage"><?php echo $errors['amount'];?></p>
             <?php } ?> 
             Date
-            <input id="operation_date" name="operation_date" type="date">
+            <input id="operation_date" name="operation_date" type="date" required>
             <?php if(array_key_exists('date', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['date'];?></p>
             <?php } ?>
             Paid by
-            <select name="paid_by" id="paid_by">
+            <select name="paid_by" id="paid_by" required>
                 <option value="">-- Who paid for it ? --</option>
                 <?php foreach($subscriptors as $subscriptor) { ?>
                     <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>

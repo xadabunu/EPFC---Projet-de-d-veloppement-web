@@ -78,7 +78,7 @@ class Operation extends Model
         if(!(strlen($this->title) >= 3)){
             $errors['lenght'] = "Title length must be higher than 3.";
         }
-        if(($this->amount) < 0 || empty($this->amount) ){
+        if(($this->amount) <= 0 || empty($this->amount) ){
             $errors['amount'] = "Amount is required and must be positive";
         }
         return $errors;
