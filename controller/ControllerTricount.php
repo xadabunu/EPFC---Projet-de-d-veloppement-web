@@ -17,7 +17,7 @@ class ControllerTricount extends MyController
         {
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             $list = $tricount->get_operations();
-            (new View("operations"))->show(["list" => $list, "tricount"=>$tricount]);
+            (new View("tricount"))->show(["list" => $list, "tricount"=>$tricount]);
         }
         else {
             Tools::abort("Invalid or missing argument.");
@@ -34,7 +34,7 @@ class ControllerTricount extends MyController
             $title = $_POST['title'];
             $description = $_POST['description'];
             $creator = MyController::get_user_or_redirect();
-            $created_at = date("Y-m-d H:i:s");
+            $created_at = Date("Y-m-d H:i:s");
             $tricount = new Tricount($title, $created_at, $creator->id, $description);
             $errors = array_merge($errors, $tricount->validate());
             if (count($errors) == 0) {

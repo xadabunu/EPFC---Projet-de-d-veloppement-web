@@ -51,6 +51,7 @@
             <?php } ?>
         </table>
         <form id="subscriptor" name="subscriptor" method="POST">
+            
             <select name="subscriptor" id="subscriptor">
                 <option value="">--Add a new subscriber--</option>
                 <?php foreach ($cbo_users as $cbo_user) { ?>

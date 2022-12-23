@@ -1,6 +1,7 @@
 <?php
 
 require_once "framework/Controller.php";
+require_once "model/User.php";
 
 class MyController extends Controller
 {

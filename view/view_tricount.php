@@ -14,11 +14,12 @@
     <div class="title" id="t2">Expenses</div>
     <ul>
         <?php foreach ($list as $operation) { ?>
-            <li> <?=$operation->title?></li>
+            <li><a href="operation/details"><?=$operation->title?></a></li>
         <?php } ?>
     </ul>
     <a href="main/index/<?= $tricount->id ?>">Home</a>
     <a href="tricount/edit_tricount/<?= $tricount->id ?>">Edit</a>
+    <a href="operation/add_operation/<?= $tricount->id ?>">Add</a>
         </div>
 </body>
 
