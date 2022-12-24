@@ -5,7 +5,7 @@
     background-color: rgb(255, 255, 255);
     margin-left: auto;
     margin-right: auto;
-    padding-top: 0;
+    padding: 0 20px;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -19,6 +19,59 @@ body
 a
 {
     text-decoration: none;
+    color: black;
+}
+
+a.button
+{
+    width : min-content;
+    padding: 5px;
+    border: 3px solid;
+    border-radius: 10px;
+}
+
+.footer
+{
+    margin-top: 25px;
+    display: flex;
+}
+
+a#back
+{
+    border-color: red;
+    color: red;
+}
+
+a#next
+{
+    background-color: rgb(13, 110, 253);
+    border-color: rgb(13, 110, 253);
+    color: white;
+    margin-right: 15px;
+    margin-left: auto;
+}
+
+a#previous
+{
+    background-color: rgb(13, 110, 253);
+    border-color: rgb(13, 110, 253);
+    color: white;
+    margin-left: 15px;
+    margin-right: auto;
+}
+
+.amount
+{
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.payement_info
+{
+    display: flex;
+    justify-content: space-between;
 }
 
 a:visited
@@ -35,8 +88,9 @@ a:hover
 .title
 {
     position: relative;
-    padding: 10px 10px;
+    padding: 20px 10px;
     font-weight: bold;
+    margin: 0 -20px;
 }
 
 #t1

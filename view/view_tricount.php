@@ -14,7 +14,7 @@
     <div class="title" id="t2">Expenses</div>
     <ul>
         <?php foreach ($list as $operation) { ?>
-            <li> <?=$operation->title?></li>
+            <li><a href="operation/details/<?= $operation->id ?>"><?=$operation->title?></a></li>
         <?php } ?>
     </ul>
     <a href="main/index/<?= $tricount->id ?>">Home</a>
