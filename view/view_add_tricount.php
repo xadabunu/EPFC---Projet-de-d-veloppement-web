@@ -18,10 +18,10 @@
         <form id="add_tricount" action="tricount/add_tricount" method="post">
             <table>
                 <tr>
-                    <td><input id="title" name="title" type="text" size="16" placeholder="Title"></td>
+                    <td><input id="title" name="title" type="text" size="16" value="<?=$title?>" placeholder="Title"></td>
                 </tr>
                 <tr>
-                    <td><input id="description" name="description" type="text" size="16" placeholder="Description"></td>
+                    <td><input id="description" name="description" type="text" size="16"  placeholder="Description"></td>
                 </tr>
             </table>
             <input type="submit" value="Add Tricount">

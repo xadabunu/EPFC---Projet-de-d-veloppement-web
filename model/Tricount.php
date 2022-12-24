@@ -2,6 +2,7 @@
 
 require_once "framework/Model.php";
 require_once "model/Operation.php";
+require_once "model/Template.php";
 
 class Tricount extends Model
 {
@@ -36,13 +37,36 @@ class Tricount extends Model
     }
 
     public function get_subscriptors() : array {
-        $query = self::execute("SELECT DISTINCT users.* FROM users, subscriptions, tricounts WHERE subscriptions.user = users.id AND tricount=:id", ['id'=> $this->id]);
+        $query = self::execute("SELECT DISTINCT users.* FROM users, subscriptions WHERE subscriptions.user = users.id AND tricount=:id AND subscriptions.user != :user_id",
+                                ['id'=> $this->id, "user_id"=>$this->creator]);
         $data = $query->fetchAll();
         $array = [];
 		foreach ($data as $user) {
 			$array[] = new User($user['mail'], $user['hashed_password'], $user['full_name'], $user['role'], $user['iban'], $user['id']);
 		}
 		return $array;
+    }
+
+    public function get_subscriptors_with_creator() : array {
+        $query = self::execute("SELECT DISTINCT users.* FROM users, subscriptions WHERE subscriptions.user = users.id AND subscriptions.tricount= :id",
+                                ['id'=> $this->id]);
+        $data = $query->fetchAll();
+        $array = [];
+		foreach ($data as $user) {
+			$array[] = new User($user['mail'], $user['hashed_password'], $user['full_name'], $user['role'], $user['iban'], $user['id']);
+		}
+		return $array;
+    }
+
+    public function get_cbo_users() : array {
+        $query = self::execute("SELECT * FROM users WHERE id != :creator_id AND id NOT IN (SELECT user FROM subscriptions WHERE tricount = :tricount_id)",
+                                ['creator_id'=>$this->creator, 'tricount_id'=>$this->id]);
+        $data = $query->fetchAll();
+        $array = [];
+        foreach($data as $user){
+            $array[] = new User($user["mail"], $user["hashed_password"], $user["full_name"], $user["role"], $user["iban"], $user["id"]);
+        }
+        return $array;
     }
 
     public function get_operations(): array
@@ -57,11 +81,27 @@ class Tricount extends Model
         return $array;
     }
 
-    public function persist_tricount() : Tricount{
+    public function persist_tricount() : Tricount {
+        if($this->id != 0){
+            self::execute("UPDATE tricounts SET title =:title, description =:description WHERE id=:id",
+                            ["title"=>$this->title, "description"=>$this->description, "id"=>$this->id]);
+        }
+        else {
         self::execute("INSERT INTO tricounts(title, description, created_at, creator) VALUES(:title, :description, :created_at, :creator)",
                         ["title"=>$this->title, "description"=>$this->description, "created_at"=>date("Y-m-d H:i:s"), "creator"=>$this->creator]);
+        
         $this->id = Model::lastInsertId();
+        self::execute("INSERT INTO subscriptions(user, tricount) VALUES (:user, :tricount)", ['user'=>$this->creator, 'tricount'=>$this->id]);
+        }
         return $this;
+    }
+
+    public function persist_subscriptor(int $id) : void {
+        self::execute("INSERT INTO subscriptions(user, tricount) VALUES(:user, :tricount)",["user"=> $id, 'tricount'=>$this->id]);
+    }
+
+    public function delete_subscriptor(int $id) : void {
+        self::execute("DELETE FROM subscriptions WHERE user=:user_id AND tricount=:tricount_id ",["user_id"=> $id, "tricount_id"=>$this->id]);
     }
 
     public static function lastTricountId() : String {
@@ -82,4 +122,51 @@ class Tricount extends Model
         }
         return $errors;
     }
+
+    // public function get_repartition_templates() : array {
+    //     $query = self::execute("SELECT * FROM repartition_templates WHERE tricount = :id", ["id" => $this->id]);
+    //     $data = $query->fetchAll();
+    //     $array = [];
+    //     foreach($data as $template)
+    //     {
+    //         $array[] = new Template($template['title'], $template['tricount']);
+    //     }
+    //     return $array;
+    // }
+
+    public function delete_tricount_cascade() : void {
+        $this->delete_repartition_item();
+        $this->delete_repartition();
+        $this->delete_template();
+        $this->delete_operation();
+        $this->delete_subscriptors();
+        $this->delete_tricount();
+        
+
+    }
+
+    private function delete_tricount() : void {
+        self::execute("DELETE FROM tricounts WHERE id= :id ",["id"=>$this->id]);
+    }
+
+    private function delete_operation() : void {
+        self::execute("DELETE FROM operations WHERE tricount= :tricount_id ",["tricount_id"=>$this->id]);
+    }
+
+    private function delete_template() : void {
+        self::execute("DELETE FROM repartition_templates WHERE tricount= :tricount_id ",["tricount_id"=>$this->id]);
+    }
+
+    private function delete_repartition() : void {
+        self::execute("DELETE FROM repartitions WHERE operation IN (SELECT id FROM operations WHERE tricount= :id)", ["id"=>$this->id]);
+    }
+
+    private function delete_subscriptors() : void {
+        self::execute("DELETE FROM subscriptions WHERE tricount= :tricount_id", ["tricount_id"=>$this->id]);
+    }
+
+    private function delete_repartition_item() : void {
+        self::execute("DELETE FROM repartition_template_items WHERE repartition_template IN (SELECT id FROM repartition_templates WHERE tricount = :tricount_id)",["tricount_id"=>$this->id]);
+    }
+
 }

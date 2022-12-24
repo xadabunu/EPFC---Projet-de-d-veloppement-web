@@ -10,16 +10,22 @@
 </head>
 
 <body>
+
     <div class="main">
         <div class="title" id="t2"><?= $tricount->title ?> > Edit</div>
-        <div class="menu">
-            <a href="tricount/operations/4">Back</a>
-        </div>
-        <form id="edittricountform" action="tricount/edit_tricount" method="post">
+        <div class="menu"><a href="tricount/operations/<?= $tricount->id ?>">Back</a></div>
+        <form id="edittricountform" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post">
+            <input type="submit" value="Save" formaction="tricount/edit_tricount/<?= $tricount->id ?>">
             <table>
                 <h3>Settings</h3>
                 <tr>
+                    <td>Title</td>
+                </tr>
+                <tr>
                     <td><input id="title" name="title" type="text" size="16" value="<?= $tricount->title ?>"></td>
+                </tr>
+                <tr>
+                    <td>Description (Optional)</td>
                 </tr>
                 <tr>
                     <td><input id="description" name="description" type="text" size="16" value="<?= $tricount->description ?>"></td>
@@ -27,13 +33,45 @@
             </table>
         </form>
         <h3>Subscriptions</h3>
-        
-        <ul>
-            <li><?=$creator->full_name ?></li>
+        <table>
+            <tr>
+                <td><?= $creator->full_name ?>(Creator)</td>
+            </tr>
             <?php foreach ($subscriptors as $subscriptor) { ?>
-                <li> <?= $subscriptor->full_name ?></li>
+                <tr>
+                    <form class="link" action='tricount/delete_subscriptor/<?= $tricount->id ?>' method='post'>
+                        <input type='text' name='subscriptor_name' value='<?= $subscriptor->id ?>' hidden>
+                        <td>
+                            <p><?= $subscriptor->full_name ?><input type='submit' value='delete'>
+                        </td>
+                        </p>
+                        </td>
+                    </form>
+                </tr>
             <?php } ?>
-        </ul>
+        </table>
+        <form id="subscriptor" name="subscriptor" method="POST">
+            
+            <select name="subscriptor" id="subscriptor">
+                <option value="">--Add a new subscriber--</option>
+                <?php foreach ($cbo_users as $cbo_user) { ?>
+                    <option value="<?= $cbo_user->id ?>"><?= $cbo_user->full_name ?></option>
+                <?php } ?>
+            </select>
+            <input type="submit" value="Add" formaction="tricount/add_subscriptors/<?= $tricount->id ?>">
+        </form>
+        <a href="tricount/delete_tricount/<?= $tricount->id ?>">Delete Tricount</a>
+        <?php if (count($errors) != 0) : ?>
+            <div class='errors'>
+                <br><br>
+                <p>Please correct the following error(s) : </p>
+                <ul>
+                    <?php foreach ($errors as $error) : ?>
+                        <li><?= $error ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
     </div>
 </body>
 

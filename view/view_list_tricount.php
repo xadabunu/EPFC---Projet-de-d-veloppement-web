@@ -7,7 +7,6 @@
     <base href="<?= $web_root ?>">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
     <title>Your Tricounts</title>
-    <base href="<?= $web_root ?>" />
 </head>
 
 <body>
