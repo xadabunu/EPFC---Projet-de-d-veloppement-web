@@ -48,13 +48,19 @@ class Operation extends Model
         return ($query->fetch())['next_id'];
     }
 
-    public function get_personnal_amount(int $id): float
+    public function get_user_amount(int $user_id): float
     {
         $query = self::execute("SELECT SUM(weight) as sum FROM repartitions WHERE operation = :id", ["id" => $this->id]);
         $sum = ($query->fetch())['sum'];
 
-        $query = self::execute("SELECT weight FROM repartitions WHERE user = :user_id AND operation = :id", ["user_id" => $id, "id" => $this->id]);
-        $weight = ($query->fetch()['weight']);
+        $query = self::execute("SELECT weight FROM repartitions WHERE user = :user_id AND operation = :id", ["user_id" => $user_id, "id" => $this->id]);
+
+        $data = $query->fetch();
+
+        if (gettype($data) != "array") {
+            return 0;
+        }
+        $weight = ($data['weight']);
 
         return ($this->amount) / $sum * $weight;
     }

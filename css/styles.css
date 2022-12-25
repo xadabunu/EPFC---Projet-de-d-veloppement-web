@@ -27,7 +27,7 @@ a
 a.button
 {
     width : min-content;
-    padding: 5px;
+    padding: 10px;
     border: 3px solid;
     border-radius: 10px;
 }
@@ -42,17 +42,25 @@ footer
     justify-content: space-between;
     background-color: rgb(227, 242, 253);
     width: 100%;
+    color: rgb(102, 109, 114);
 }
 
-footer > p
+footer > div > p
 {
     font-size: 60%;
     margin: 5px 10px;
+    padding-top: 5px;
 }
 
-footer > p:nth-child(2)
+footer > div:nth-child(2) > p
 {
     text-align: right;
+}
+
+footer > .button
+{
+    font-size: 75%;
+    margin: 15px;
 }
 
 a#back
@@ -66,8 +74,8 @@ a#next
     background-color: rgb(13, 110, 253);
     border-color: rgb(13, 110, 253);
     color: white;
-    margin-right: 15px;
     margin-left: auto;
+
 }
 
 a#previous
@@ -75,7 +83,6 @@ a#previous
     background-color: rgb(13, 110, 253);
     border-color: rgb(13, 110, 253);
     color: white;
-    margin-left: 15px;
     margin-right: auto;
 }
 
@@ -113,41 +120,83 @@ a:hover
     color: rgb(90, 167, 235);
 }
 
-.title
+header
 {
     position: relative;
     padding: 20px 10px;
-    font-weight: bold;
     margin: 0 -20px;
+    display: flex;
+    justify-content: center;
 }
 
-#t1
+header > #back
+{
+    position: absolute;
+    left: 15px;
+}
+
+header > #add
+{
+    position: absolute;
+    right: 15px;
+}
+
+header > p
+{
+    font-weight: bold;
+}
+
+header > *
+{
+    width: max-content;
+    margin: auto;
+    padding: 10px;
+}
+
+.t1
 {
     background-color: rgb(13, 110, 253);
     color: white;
 }
 
-#t2
+.t2
 {
     background-color: rgb(227, 242, 253);
     color: rgb(102, 109, 114);
 }
 
-ul
+table
 {
-    border: 3px solid rgb(225, 225, 225);
-    border-radius: 10px;
-}
-
-li
-{
-    list-style: none;
-    border-bottom: 3px solid rgb(225, 225, 225);
-}
-
-li:last-child
-{
+    border: 3px solid rgb(223, 223, 223);
     border-bottom: none;
+    border-radius: 10px;
+    border-spacing: 0;
+    width: 100%;
+    margin: 40px 0;
+}
+
+td > p
+{
+    margin: 5px 10px;
+    font-size: 85%;
+}
+
+td > p:last-child
+{
+    font-size: 70%;
+}
+
+td
+{
+    border-bottom: 3px solid rgb(223, 223, 223);
+    border-collapse: collapse;
+    padding: 20px;
+    
+}
+
+td:last-child
+{
+    text-align: right;
 }
 
 form

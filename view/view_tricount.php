@@ -6,16 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="<?= $web_root ?>">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
-    <title>Operations</title>
+    <title><?= $tricount->title ?> > Expenses</title>
 </head>
 
 <body>
 <div class="main">
-    <div class="title" id="t2">
+    <header class="t2">
         <a href="main/index/<?= $tricount->id ?>" class="button" id="back">Home</a>
-        Expenses
+        <p><?= $tricount->title ?> > Expenses</p>
         <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button" id="add">Edit</a>
-    </div>
+    </header>
     <table>
         <?php foreach ($list as $operation) { ?>
             <tr>
@@ -24,7 +24,7 @@
                     <p>Paid by <?= $operation->initiator->full_name ?></p>
                 </td>
                 <td>
-                    <p><?= number_format($operation->amount, 2) ?>€</p>
+                    <p><b><?= round($operation->amount, 2) ?>€</b></p>
                     <p><?= date("d/m/Y", strtotime($operation->operation_date)) ?></p>
                 </td>
             </tr>
@@ -32,8 +32,8 @@
     </table>
     <a href="operation/add_operation/<?= $tricount->id ?>" class="button" id="add">Add</a>
     <footer>
-        <p>MY TOTAL<br><b>A NUM</b></p>
-        <p>TOTAL EXPENSES<br><b>A NUM</b></p>
+        <div><p>MY TOTAL</p><p><b><?= number_format($user_total, 2) ?>€</b></p></div>
+        <div><p>TOTAL EXPENSES</p><p><b><?= number_format($total, 2) ?>€</b></p></div>
     </footer>
 </div>
 </body>

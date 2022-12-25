@@ -16,7 +16,7 @@ class ControllerOperation extends MyController
             $list = $op->get_participants();
             $amounts = [];
             foreach ($list as $participant) {
-                $amounts[$participant->id] = $op->get_personnal_amount($participant->id);
+                $amounts[$participant->id] = $op->get_user_amount($participant->id);
             }
             $prev = $op->get_previous();
             $next = $op->get_next();

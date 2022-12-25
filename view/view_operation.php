@@ -11,17 +11,17 @@
 
 <body>
     <div class="main">
-        <div class="title" id="t2">
+        <header class="t2">
             <a href="tricount/operations/<?= $operation->tricount->id ?>" class="button" id="back">Back</a>
-            <?php echo $operation->tricount->title ?> > <?= $operation->title ?>
-        </div>
-        <header>
+            <p><?php echo $operation->tricount->title ?> > <?= $operation->title ?></p>
+        </header>
+        <div>
             <div class="amount"><?php echo number_format($operation->amount, 2) ?> €</div>
             <div class="payement_info">
                 <p>Paid by <?= $operation->initiator->full_name ?></p>
                 <p><?= $operation->operation_date ?></p>
             </div>
-        </header>
+        </div>
         <div>
             <p>For <?= count($list) ?> participants<?php if (in_array($user, $list)) {
                                                         echo " including <b>me</b>";
@@ -30,19 +30,19 @@
                 <?php foreach ($list as $participant) : ?>
                     <tr>
                         <td><?= $participant->full_name ?></td>
-                        <td><?= number_format($amounts[$participant->id], 2) ?></td>
+                        <td><?= round($amounts[$participant->id], 2) ?></td>
                     </tr>
                 <?php endforeach ?>
             </table>
         </div>
-        <div class="footer">
+        <footer>
             <?php if ($previous != NULL) { ?>
                 <a href="operation/details/<?= $previous ?>" class="button" id="previous">Previous</a>
             <?php } ?>
             <?php if ($next != NULL) { ?>
                 <a href="operation/details/<?= $next ?>" class="button" id="next">Next</a>
             <?php } ?>
-        </div>
+        </footer>
     </div>
 </body>
 </html>

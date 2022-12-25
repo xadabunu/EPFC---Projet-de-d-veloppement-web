@@ -11,9 +11,9 @@
 
 <body>
     <div class="main">
-        <div class="title" id="t2">
+        <header class="t2">
             <a href="main/index" class="button" id="back">Cancel</a>
-            Add Tricount</div>
+            <p>Add Tricount</p></header>
         <div class="menu">
             
         </div>

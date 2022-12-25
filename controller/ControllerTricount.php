@@ -15,9 +15,15 @@ class ControllerTricount extends MyController
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1']))
         {
+            $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             $list = $tricount->get_operations();
-            (new View("tricount"))->show(["list" => $list, "tricount"=>$tricount]);
+            $total = $tricount->get_total_expenses();
+            $user_total = $tricount->get_user_total($user->id);
+            (new View("tricount"))->show(["list" => $list,
+                                        "tricount" => $tricount,
+                                        "total" => $total,
+                                        "user_total" => $user_total]);
         }
         else {
             Tools::abort("Invalid or missing argument.");
@@ -42,7 +48,7 @@ class ControllerTricount extends MyController
                 $this->redirect('tricount', 'operations', $tricount->id);
             }    
         }
-        (new View('add_tricount'))->show(["title"=>$title, "desciption"=>$description, "errors" =>$errors]);
+        (new View('add_tricount'))->show(["title" => $title, "desciption" => $description, "errors" => $errors]);
     }
 
     public function edit_tricount() : void{

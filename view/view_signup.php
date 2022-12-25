@@ -10,7 +10,7 @@
 
     <body>
         <div class="main">
-            <div class="title" id="t1">Sign Up</div>
+            <header class="t1">Sign Up</header>
             <div class="menu">
                 <a href="index.php">Home</a>
             </div>

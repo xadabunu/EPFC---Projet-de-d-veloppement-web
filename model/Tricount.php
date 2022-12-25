@@ -30,6 +30,23 @@ class Tricount extends Model
         return new Tricount($data['title'], $data['created_at'], $data['creator'], $data['description'], $data['id']);
     }
 
+    public function get_total_expenses(): float
+    {
+        $query = self::execute("SELECT SUM(amount) AS sum FROM operations WHERE tricount = :id", ["id" => $this->id]);
+        return ($query->fetch())['sum'];
+    }
+
+    public function get_user_total(int $user_id): float
+    {
+        $total = 0;
+        $list = $this->get_operations();
+        foreach ($list as $operation)
+        {
+            $total += $operation->get_user_amount($user_id);
+        }
+        return $total;
+    }
+
     public function get_number_of_participants(): int
     {
         $query = self::execute("SELECT COUNT(*) as number FROM subscriptions WHERE tricount = :id", ["id" => $this->id]);

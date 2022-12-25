@@ -11,9 +11,10 @@
 
 <body>
 <div class="main">
-    <div class="title" id="t2">Your Tricounts
+    <header class="t2">
+        <p>Your Tricounts</p>
     <a href="tricount/add_tricount" class="button" id="add">Add</a>
-    </div>
+    </header>
     <ul>
         <?php foreach ($data as $tricount) { ?>
             <li class="tricount">

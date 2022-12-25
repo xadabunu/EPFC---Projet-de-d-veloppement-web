@@ -11,7 +11,7 @@
 
 <body>
 	<div class="main">
-		<div class="title" id="t1">Tricount</div>
+		<header class="t1">Tricount</header>
 		<form action="main/login" method="POST">
 			<div class="formtitle">Sign In</div>
 			<input type="text" id="email" name="email" value="<?= $email ?>">

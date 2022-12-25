@@ -12,7 +12,7 @@
 <body>
 
     <div class="main">
-        <div class="title" id="t2"> Are your sure ? </div>
+        <header class="t2"><p> Are your sure ? </p></header>
         <p>Do you really want to delete tricount <?= $tricount->title ?> and all of his dependencies ? </p>
         <p>This process can't be undone.</p>
         <form>

@@ -11,10 +11,10 @@
 
 <body>
     <div class="main">
-        <div class="title" id="t2">
+        <header class="t2">
             <a href="tricount/operations/<?=$tricount->id?>" class="button" id="back">Cancel</a>
-            Add Operation
-        </div>
+            <p>Add Operation</p>
+        </header>
         <form id="add_operation_form" action="operation/add_operation/<?=$tricount->id?>" method="post">
             <div class="formtitle">Add Operation</div>
             <input id="title" name="title" type="text" size="16" placeholder="Title">
