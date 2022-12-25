@@ -11,12 +11,14 @@
 
 <body>
 <div class="main">
-    <div class="title" id="t2">Your Tricounts</div>
+    <div class="title" id="t2">Your Tricounts
+    <a href="tricount/add_tricount" class="button" id="add">Add</a>
+    </div>
     <ul>
         <?php foreach ($data as $tricount) { ?>
             <li class="tricount">
                 <div>
-                    <a href="tricount/operations/<?= $tricount->id ?>"><p class="title"><?= $tricount->title ?></p></a>
+                    <p class="title"><a href="tricount/operations/<?= $tricount->id ?>"><?= $tricount->title ?></a></p>
                     <?php
                     $id = $tricount->id;
                     $n = $subs_number[$id];
@@ -32,7 +34,6 @@
         <?php } ?>
     </ul>
     <a href="main/logout">Logout</a>
-    <a href="tricount/add_tricount">Add Tricount</a>
 </div>
 
 </body>

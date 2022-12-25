@@ -11,9 +11,9 @@
 
 <body>
     <div class="main">
-        <div class="title" id="t2">Add Operation</div>
-        <div class="menu">    
-            <a href="tricount/operations/<?=$tricount->id?>">Cancel</a>
+        <div class="title" id="t2">
+            <a href="tricount/operations/<?=$tricount->id?>" class="button" id="back">Cancel</a>
+            Add Operation
         </div>
         <form id="add_operation_form" action="operation/add_operation/<?=$tricount->id?>" method="post">
             <div class="formtitle">Add Operation</div>

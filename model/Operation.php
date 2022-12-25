@@ -1,16 +1,18 @@
 <?php
 
 require_once "framework/Model.php";
+require_once "model/Tricount.php";
+require_once "model/User.php";
 
 class Operation extends Model
 {
-    public function __construct(public string $title, public int $tricount, public float $amount, public string $operation_date, public int $initiator, public string $created_at, public ?int $id = 0) {}
+    public function __construct(public string $title, public Tricount $tricount, public float $amount, public string $operation_date, public User $initiator, public string $created_at, public ?int $id = 0) {}
 
     public static function get_operation_by_id(int $id): Operation
     {
         $query = self::execute("SELECT * FROM operations WHERE id = :id", ["id" => $id]);
         $data = $query->fetch();
-        return new Operation($data['title'], $data['tricount'], $data['amount'], $data['operation_date'], $data['initiator'], $data['created_at'], $data['id']);
+        return new Operation($data['title'], Tricount::get_tricount_by_id($data['tricount']), $data['amount'], $data['operation_date'], User::get_user_by_id($data['initiator']), $data['created_at'], $data['id']);
     }
 
     public function get_participants() : array
@@ -30,7 +32,7 @@ class Operation extends Model
                         select prev_id
                         from ( select id, 
                             lag(id) over (ORDER BY created_at) as prev_id
-                            from tmp) as t where id = :op_id", ["tricount_id" => $this->tricount,
+                            from tmp) as t where id = :op_id", ["tricount_id" => $this->tricount->id,
                                                                 "op_id" => $this->id]);
         return ($query->fetch())['prev_id'];
     }
@@ -41,7 +43,7 @@ class Operation extends Model
                         select next_id
                         from ( select id, 
                             lead(id) over (ORDER BY created_at) as next_id
-                            from tmp) as t where id = :op_id", ["tricount_id" => $this->tricount,
+                            from tmp) as t where id = :op_id", ["tricount_id" => $this->tricount->id,
                                                                 "op_id" => $this->id]);
         return ($query->fetch())['next_id'];
     }
@@ -65,7 +67,7 @@ class Operation extends Model
         // }
         // else {
         self::execute("INSERT INTO operations(title, tricount, amount, operation_date, initiator, created_at) VALUES(:title, :tricount, :amount, :operation_date, :initiator, :created_at)",
-                        ["title"=>$this->title, 'tricount'=>$this->tricount, 'amount'=>$this->amount, 'operation_date'=>$this->operation_date, 'initiator'=>$this->initiator, 'created_at'=>$this->created_at]);
+                        ["title"=>$this->title, 'tricount'=>$this->tricount->id, 'amount'=>$this->amount, 'operation_date'=>$this->operation_date, 'initiator'=>$this->initiator->id, 'created_at'=>$this->created_at]);
         //}
         $this->id = Model::lastInsertId();
         return $this;

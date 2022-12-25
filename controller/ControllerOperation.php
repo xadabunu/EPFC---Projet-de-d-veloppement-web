@@ -6,9 +6,7 @@ require_once "model/Template.php";
 
 class ControllerOperation extends MyController
 {
-    public function index(): void
-    {
-    }
+    public function index(): void {}
 
     public function details(): void
     {
@@ -20,19 +18,14 @@ class ControllerOperation extends MyController
             foreach ($list as $participant) {
                 $amounts[$participant->id] = $op->get_personnal_amount($participant->id);
             }
-            /* total / sum of weight * weight of user */
-            $initiator = User::get_user_by_id($op->initiator);
             $prev = $op->get_previous();
             $next = $op->get_next();
-            $tricount = Tricount::get_tricount_by_id($op->tricount);
             (new View("operation"))->show(["user" => $user,
                                             "operation" => $op,
                                             "list" => $list,
-                                            "initiator" => $initiator,
                                             "next" => $next,
                                             "previous" => $prev,
-                                            "amounts" => $amounts,
-                                            "tricount" => $tricount]);
+                                            "amounts" => $amounts]);
         }
         else {
             Tools::abort("Invalid or missing argument");
@@ -53,7 +46,7 @@ class ControllerOperation extends MyController
             $created_at = Date("Y-m-d H:i:s");
             $initiator = $_POST['paid_by'];
             if (is_numeric($amount) && is_numeric($initiator)) {
-                $operation = new Operation($title, $tricount->id, $amount, $operation_date, $initiator, $created_at);
+                $operation = new Operation($title, $tricount, $amount, $operation_date, User::get_user_by_id($initiator), $created_at);
                 $errors = array_merge($errors, $operation->validate_operations());
                 if (count($errors) == 0) {
                     $operation->persist_operation();

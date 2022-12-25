@@ -11,9 +11,11 @@
 
 <body>
     <div class="main">
-        <div class="title" id="t2">Add Tricount</div>
+        <div class="title" id="t2">
+            <a href="main/index" class="button" id="back">Cancel</a>
+            Add Tricount</div>
         <div class="menu">
-            <a href="index.php">Cancel</a>
+            
         </div>
         <form id="add_tricount" action="tricount/add_tricount" method="post">
             <table>

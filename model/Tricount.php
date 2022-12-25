@@ -71,12 +71,12 @@ class Tricount extends Model
 
     public function get_operations(): array
     {
-        $query = self::execute("SELECT * FROM operations WHERE tricount = :id ORDER BY created_at ASC", ["id" => $this->id]);
+        $query = self::execute("SELECT * FROM operations WHERE tricount = :id ORDER BY created_at DESC", ["id" => $this->id]);
         $data = $query->fetchAll();
         $array = [];
         foreach($data as $op)
         {
-            $array[] = new Operation($op['title'], $op['tricount'], $op['amount'], $op['operation_date'], $op['initiator'], $op['created_at'], $op['id']);
+            $array[] = new Operation($op['title'], Tricount::get_tricount_by_id($op['tricount']), $op['amount'], $op['operation_date'], User::get_user_by_id($op['initiator']), $op['created_at'], $op['id']);
         }
         return $array;
     }

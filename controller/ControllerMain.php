@@ -33,11 +33,7 @@ class ControllerMain extends MyController
 			}
 		}
 		(new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors]);
-	}
-
-
-
-    
+	}    
 
     public function signup() : void {
         $email = '';

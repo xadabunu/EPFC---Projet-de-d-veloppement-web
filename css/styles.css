@@ -7,6 +7,8 @@
     margin-right: auto;
     padding: 0 20px;
     font-family: Arial, Helvetica, sans-serif;
+    color: rgb(33, 37, 41);
+    position: relative;
 }
 
 body
@@ -19,7 +21,7 @@ body
 a
 {
     text-decoration: none;
-    color: black;
+    color: rgb(33, 37, 41);
 }
 
 a.button
@@ -30,10 +32,27 @@ a.button
     border-radius: 10px;
 }
 
-.footer
+footer
 {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
     margin-top: 25px;
     display: flex;
+    justify-content: space-between;
+    background-color: rgb(227, 242, 253);
+    width: 100%;
+}
+
+footer > p
+{
+    font-size: 60%;
+    margin: 5px 10px;
+}
+
+footer > p:nth-child(2)
+{
+    text-align: right;
 }
 
 a#back
@@ -60,6 +79,15 @@ a#previous
     margin-right: auto;
 }
 
+a#add
+{
+    background-color: rgb(13, 110, 253);
+    border-color: rgb(13, 110, 253);
+    color: white;
+    margin-right: 15px;
+    margin-left: auto;
+}
+
 .amount
 {
     text-align: center;
@@ -77,7 +105,7 @@ a#previous
 a:visited
 {
     text-decoration: none;
-    color: black;
+    color: rgb(33, 37, 41);
 }
 
 a:hover
@@ -105,9 +133,21 @@ a:hover
     color: rgb(102, 109, 114);
 }
 
+ul
+{
+    border: 3px solid rgb(225, 225, 225);
+    border-radius: 10px;
+}
+
 li
 {
     list-style: none;
+    border-bottom: 3px solid rgb(225, 225, 225);
+}
+
+li:last-child
+{
+    border-bottom: none;
 }
 
 form
