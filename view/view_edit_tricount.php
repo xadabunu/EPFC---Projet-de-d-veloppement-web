@@ -12,8 +12,10 @@
 <body>
 
     <div class="main">
-        <header class="t2"><p><?= $tricount->title ?> > Edit</p></header>
-        <div class="menu"><a href="tricount/operations/<?= $tricount->id ?>">Back</a></div>
+        <header class="t2">
+            <a href="tricount/operations/<?= $tricount->id ?>" class="button" id="back">Back</a>
+            <p><?= $tricount->title ?> &#11208; Edit</p>
+        </header>
         <form id="edittricountform" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post">
             <input type="submit" value="Save" formaction="tricount/edit_tricount/<?= $tricount->id ?>">
             <table>

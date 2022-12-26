@@ -11,7 +11,7 @@ class ControllerMain extends MyController
 	public function index(): void
 	{
 		if ($this->user_logged()) {
-			$this->redirect("user", "index");
+			$this->redirect("user", "my_tricounts");
 		} else {
 			$this->redirect("main", "login");
 		}

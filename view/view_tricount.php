@@ -13,7 +13,7 @@
 <div class="main">
     <header class="t2">
         <a href="main/index/<?= $tricount->id ?>" class="button" id="back">Home</a>
-        <p><?= $tricount->title ?> > Expenses</p>
+        <p><?= $tricount->title ?> &#11208; Expenses</p>
         <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button" id="add">Edit</a>
     </header>
     <table>
@@ -30,9 +30,9 @@
             </tr>
         <?php } ?>
     </table>
-    <a href="operation/add_operation/<?= $tricount->id ?>" class="button" id="add">Add</a>
     <footer>
         <div><p>MY TOTAL</p><p><b><?= number_format($user_total, 2) ?>€</b></p></div>
+        <a href="operation/add_operation/<?= $tricount->id ?>" class="circle">+</a>
         <div><p>TOTAL EXPENSES</p><p><b><?= number_format($total, 2) ?>€</b></p></div>
     </footer>
 </div>
