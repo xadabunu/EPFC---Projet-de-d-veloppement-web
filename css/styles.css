@@ -224,14 +224,17 @@ form
     display: flex;
     justify-content: center;
     align-content: center;
-    margin-top: 50%;
     flex-direction: column;
     border-style: solid;
     border-color: rgb(227, 227, 227);
-    width: fit-content;
-    margin: 50% auto;
+    width: 80%;
     border-radius: 10px;
     padding: 25px;
+}
+
+.connect
+{
+    margin: 50% auto;
 }
 
 .formtitle
@@ -248,4 +251,31 @@ form > *
     width: 100%;
     align-content: center;
     margin-top: 10px;
+}
+
+th.empty
+{
+    font-weight: 550;
+    padding: 10px 0;
+    border-bottom: 3px solid rgb(227, 227, 227);
+    background-color: rgb(247, 247, 247);
+}
+
+td.empty
+{
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+td.empty > p
+{
+    padding-top: 20px;
+    padding-bottom: 30px;
+}
+
+td.empty > a
+{
+    background-color: rgb(13, 110, 253);
+    border-color: rgb(13, 110, 253);
+    color: white;
 }

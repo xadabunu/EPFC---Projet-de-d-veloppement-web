@@ -11,10 +11,10 @@
 
 <body>
     <div class="main">
-        <div class="title" id="t2">Edit Operation</div>
-        <div class="menu">    
-            <a href="operation/details/<?=$operation->id?>">Cancel</a>
-        </div>
+        <header class="t2">
+            <a href="operation/details/<?=$operation->id?>" class="button" id="back">Cancel</a>
+            <p>Edit Operation</p>
+        </header>
         <form id="edit_operation_form" action="operation/edit_operation/<?=$operation->id?>" method="post">
             <div class="formtitle">Edit Operation</div>
             <input id="title" name="title" type="text" size="16" placeholder="Title" value= "<?=$operation->title?>">

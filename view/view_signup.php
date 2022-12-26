@@ -11,10 +11,7 @@
     <body>
         <div class="main">
             <header class="t1">Sign Up</header>
-            <div class="menu">
-                <a href="index.php">Home</a>
-            </div>
-            <form id="signupform" action="main/signup" method="post">
+            <form id="signupform" action="main/signup" method="post" class="connect">
                 <div class="formtitle">Sign Up</div>
                 <input id="email" name="email" type="text" size="16" placeholder="Email" value="<?= $email ?>">
                 <?php if (array_key_exists('required', $errors)){ ?>
@@ -46,6 +43,7 @@
                     <p class="errorMessage"><?php echo $errors['password_confirm'];?></p>
                 <?php } ?>
                 <input type="submit" value="Sign Up">
+                <a href="index.php" class="button" id="back">Cancel</a>
             </form>
         </div>
     </body>

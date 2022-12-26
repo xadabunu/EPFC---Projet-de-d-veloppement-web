@@ -20,10 +20,12 @@ class ControllerTricount extends MyController
             $list = $tricount->get_operations();
             $total = $tricount->get_total_expenses();
             $user_total = $tricount->get_user_total($user->id);
+            $alone = $tricount->get_number_of_participants() == 1;
             (new View("tricount"))->show(["list" => $list,
                                         "tricount" => $tricount,
                                         "total" => $total,
-                                        "user_total" => $user_total]);
+                                        "user_total" => $user_total,
+                                        "alone" => $alone]);
         }
         else {
             Tools::abort("Invalid or missing argument.");

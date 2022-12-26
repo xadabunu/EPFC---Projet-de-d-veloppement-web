@@ -12,7 +12,7 @@
 <body>
 	<div class="main">
 		<header class="t1">Tricount</header>
-		<form action="main/login" method="POST">
+		<form action="main/login" method="POST" class="connect">
 			<div class="formtitle">Sign In</div>
 			<input type="text" id="email" name="email" value="<?= $email ?>">
 			<input type="password" id="password" name="password" value="<?= $password ?>">

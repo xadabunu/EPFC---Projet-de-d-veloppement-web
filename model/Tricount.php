@@ -33,7 +33,9 @@ class Tricount extends Model
     public function get_total_expenses(): float
     {
         $query = self::execute("SELECT SUM(amount) AS sum FROM operations WHERE tricount = :id", ["id" => $this->id]);
-        return ($query->fetch())['sum'];
+        $data = ($query->fetch())['sum'];
+        if ($data) {return $data;}
+        return 0;
     }
 
     public function get_user_total(int $user_id): float
