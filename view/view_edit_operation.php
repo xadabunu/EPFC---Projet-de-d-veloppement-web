@@ -69,5 +69,6 @@
                 </tr>
             </tabel>
             <input type="submit" value="Save" formaction="operation/edit_operation/<?=$operation->id?>">
+            <a href="operation/delete_operation/<?= $operation->id ?>">Delete operation</a>
         </form>
     </div>

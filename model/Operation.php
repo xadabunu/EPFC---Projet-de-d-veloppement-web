@@ -108,5 +108,18 @@ class Operation extends Model
         }
         return $errors;
     }
+
+    public function delete_operation_cascade() : void {
+        $this->delete_repartition();
+        $this->delete_operation();
+    }
+
+    private function delete_operation() : void {
+        self::execute("DELETE FROM operations WHERE id= :id ",["id"=>$this->id]);
+    }
+
+    private function delete_repartition() : void {
+        self::execute("DELETE FROM repartitions WHERE operation IN (SELECT id FROM operations WHERE tricount= :id)", ["id"=>$this->id]);
+    }
 }
 
