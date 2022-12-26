@@ -54,11 +54,11 @@ class ControllerTricount extends MyController
     public function edit_tricount() : void{
         $subscriptors = [];
         $creator = '';
+        $errors = [];
         if (isset($_GET['param1'])){
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             $creator = User::get_user_by_id($tricount->creator);
             $subscriptors = $tricount->get_subscriptors();
-            $errors = [];
             $cbo_users = $tricount->get_cbo_users();
             if(isset($_POST['title']) || isset($_POST['description'])){
                 $tricount->title = $_POST['title'];

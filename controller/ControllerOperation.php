@@ -57,4 +57,32 @@ class ControllerOperation extends MyController
         (new View("add_operation"))->show(['tricount'=>$tricount, 'operation'=>$operation, 'subscriptors'=>$subscriptors,
                                             'templates'=>$templates, 'errors'=>$errors]);
     }
+
+    public function edit_operation() : void {
+        $subscriptors = [];
+        $templates = '';
+        $operation = '';
+        $errors = [];
+        $initiator = '';
+        if(isset($_GET['param1'])){
+            $operation = Operation::get_operation_by_id($_GET['param1']);
+            $tricount = Tricount::get_tricount_by_id($operation->tricount);
+            $subscriptors = $tricount->get_subscriptors_with_creator();
+            $templates = Template::get_templates($operation->tricount);
+            $initiator = User::get_user_by_id($operation->initiator);
+            if(isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date'])) {
+                $operation->title = $_POST['title'];
+                $operation->amount = $_POST['amount'];
+                $operation->initiator = $_POST['paid_by'];
+                $operation->operation_date = $_POST['operation_date'];
+                $errors = array_merge($errors, $operation->validate_operations());
+                if(count($errors) == 0){
+                    $operation->persist_operation();
+                    $this->redirect('tricount', 'operations', $operation->tricount);
+                }
+            }
+        }
+        (new View('edit_operation'))->show(['operation'=>$operation, 'errors'=>$errors, 'initiator'=>$initiator,
+                                            'subscriptors'=>$subscriptors, 'templates'=>$templates]);
+    }
 }
