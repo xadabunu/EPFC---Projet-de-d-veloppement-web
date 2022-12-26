@@ -70,12 +70,12 @@ class Operation extends Model
     public function persist_operation() : Operation {
         if($this->id != 0){
             self::execute("UPDATE operations SET title= :title, tricount= :tricount, amount= :amount, operation_date= :operation_date, initiator= :initiator, created_at= :created_at WHERE id= :id",
-                            ["title"=>$this->title, 'tricount'=>$this->tricount, 'amount'=>$this->amount, 'operation_date'=>$this->operation_date,
-                            'initiator'=>$this->initiator, 'created_at'=>$this->created_at, 'id'=>$this->id]);
+                            ["title"=>$this->title, 'tricount'=>$this->tricount->id, 'amount'=>$this->amount, 'operation_date'=>$this->operation_date,
+                            'initiator'=>$this->initiator->id, 'created_at'=>$this->created_at, 'id'=>$this->id]);
         }
         else {
         self::execute("INSERT INTO operations(title, tricount, amount, operation_date, initiator, created_at) VALUES(:title, :tricount, :amount, :operation_date, :initiator, :created_at)",
-                        ["title"=>$this->title, 'tricount'=>$this->tricount, 'amount'=>$this->amount, 'operation_date'=>$this->operation_date, 'initiator'=>$this->initiator, 'created_at'=>$this->created_at]);
+                        ["title"=>$this->title, 'tricount'=>$this->tricount->id, 'amount'=>$this->amount, 'operation_date'=>$this->operation_date, 'initiator'=>$this->initiator->id, 'created_at'=>$this->created_at]);
         }
         
         $this->id = Model::lastInsertId();

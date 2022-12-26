@@ -12,6 +12,7 @@
 <body>
     <div class="main">
         <header class="t2">
+            <a href ="operation/edit_operation/<?= $operation->id ?>" class= "button" id= "add">Edit</a>
             <a href="tricount/operations/<?= $operation->tricount->id ?>" class="button" id="back">Back</a>
             <p><?php echo $operation->tricount->title ?> &#11208; <?= $operation->title ?></p>
         </header>

@@ -35,7 +35,7 @@
             <?php } ?>
             Paid by
             <select name="paid_by" id="paid_by" required>
-                <option value="" ><?= $initiator->full_name ?></option>
+                <option value="<?= $operation->initiator->id ?>" ><?= $operation->initiator->full_name ?></option>
                 <?php foreach($subscriptors as $subscriptor) { ?>
                     <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
                 <?php } ?>
@@ -68,6 +68,6 @@
                     <td>name</td>
                 </tr>
             </tabel>
-            <input type="submit" value="Save" formaction="operation/edit_operation/<?=$operation->tricount?>">
+            <input type="submit" value="Save" formaction="operation/edit_operation/<?=$operation->id?>">
         </form>
     </div>
