@@ -30,7 +30,7 @@
                 <?php foreach ($list as $participant) : ?>
                     <tr>
                         <td><?= $participant->full_name ?></td>
-                        <td><?= round($amounts[$participant->id], 2) ?></td>
+                        <td><?= round($amounts[$participant->id], 2) ?>€</td>
                     </tr>
                 <?php endforeach ?>
             </table>

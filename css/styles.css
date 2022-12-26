@@ -52,7 +52,7 @@ footer > div > p
     padding-top: 5px;
 }
 
-footer > div:nth-child(2) > p
+footer > div:last-child > p
 {
     text-align: right;
 }
@@ -107,6 +107,7 @@ a.circle
     width: 30px;
     text-align: center;
     margin-top: -30px;
+    margin-left: 60px;
 }
 
 a.circle:visited
