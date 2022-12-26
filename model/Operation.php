@@ -77,7 +77,7 @@ class Operation extends Model
         self::execute("INSERT INTO operations(title, tricount, amount, operation_date, initiator, created_at) VALUES(:title, :tricount, :amount, :operation_date, :initiator, :created_at)",
                         ["title"=>$this->title, 'tricount'=>$this->tricount, 'amount'=>$this->amount, 'operation_date'=>$this->operation_date, 'initiator'=>$this->initiator, 'created_at'=>$this->created_at]);
         }
-
+        
         $this->id = Model::lastInsertId();
         return $this;
     }
