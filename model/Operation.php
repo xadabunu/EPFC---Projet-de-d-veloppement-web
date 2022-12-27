@@ -106,6 +106,12 @@ class Operation extends Model
         if(($this->amount) <= 0 || empty($this->amount) ){
             $errors['amount'] = "Amount is required and must be positive";
         }
+        if(empty($this->operation_date)) {
+            $errors['date'] = "Date is required";
+        }
+        if(empty($this->initiator) || ($this->initiator) == 0) {
+            $errors['paid'] = "You must choose an initiator";
+        }
         return $errors;
     }
 

@@ -131,13 +131,13 @@ class Tricount extends Model
     public function validate() : array{
         $errors = [];
         if(!strlen($this->title) >0){
-            $errors[] = "Title is required.";
+            $errors['required'] = "Title is required.";
         }
         if(!(strlen($this->title) >= 3)){
-            $errors[] = "Title length must be higher than 3.";
+            $errors['title_lenght'] = "Title length must be higher than 3.";
         }
         if(strlen($this->description) > 0 && !(strlen($this->description) >=3)){
-            $errors[] = "Description length must be higher than 3.";
+            $errors['description_lenght'] = "Description length must be higher than 3.";
         }
         return $errors;
     }

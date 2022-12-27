@@ -39,13 +39,14 @@ class ControllerOperation extends MyController
         $subscriptors = $tricount->get_subscriptors_with_creator();
         $templates = Template::get_templates($tricount->id);
         $errors = [];
-        if(isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
+        if(isset($_POST['title']) && isset($_POST['amount'])) {
             $title = $_POST['title'];
-            $amount = $_POST['amount'];
+            $amount = floatval($_POST['amount']);
             $operation_date = $_POST['operation_date'];
             $created_at = Date("Y-m-d H:i:s");
             $initiator = $_POST['paid_by'];
             if (is_numeric($amount) && is_numeric($initiator)) {
+
                 $operation = new Operation($title, $tricount, $amount, $operation_date, User::get_user_by_id($initiator), $created_at);
                 $errors = array_merge($errors, $operation->validate_operations());
                 if (count($errors) == 0) {

@@ -17,14 +17,14 @@
         </header>
         <form id="add_operation_form" action="operation/add_operation/<?=$tricount->id?>" method="post">
             <div class="formtitle">Add Operation</div>
-            <input id="title" name="title" type="text" size="16" placeholder="Title">
+            <input id="title" name="title" type="text" size="16" placeholder="Title" required>
             <?php if (array_key_exists('required', $errors)){ ?>
                 <p class="errorMessage"><?php echo $errors['required'];?></p>
             <?php } 
             if(array_key_exists('lenght', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['lenght'];?></p>
             <?php } ?>
-            <input id="Amount" name="amount" type="text" size="16" placeholder="Amount">
+            <input id="Amount" name="amount" type="text" size="16" placeholder="Amount" required>
             <?php if(array_key_exists('amount', $errors)){ ?>
                 <p class="errorMessage"><?php echo $errors['amount'];?></p>
             <?php } ?> 
