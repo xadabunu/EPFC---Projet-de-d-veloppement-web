@@ -83,4 +83,15 @@ class ControllerOperation extends MyController
         (new View('edit_operation'))->show(['operation'=>$operation, 'errors'=>$errors,
                                             'subscriptors'=>$subscriptors, 'templates'=>$templates]);
     }
+
+    public function delete_operation() : void {
+        $operation = Operation::get_operation_by_id($_GET['param1']);
+        (new View('delete_operation'))->show(['operation'=>$operation]);
+    }
+
+    public function confirm_delete_operation() : void {
+        $operation = Operation::get_operation_by_id($_GET['param1']);
+        $operation->delete_operation_cascade();
+        $this->redirect('tricount', 'operations', $operation->tricount->id);
+    }
 }
