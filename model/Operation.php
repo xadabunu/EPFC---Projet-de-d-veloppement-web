@@ -106,7 +106,26 @@ class Operation extends Model
         if(($this->amount) <= 0 || empty($this->amount) ){
             $errors['amount'] = "Amount is required and must be positive";
         }
+        if(empty($this->operation_date)) {
+            $errors['date'] = "Date is required";
+        }
+        if(empty($this->initiator) || ($this->initiator) == 0) {
+            $errors['paid'] = "You must choose an initiator";
+        }
         return $errors;
+    }
+
+    public function delete_operation_cascade() : void {
+        $this->delete_repartition();
+        $this->delete_operation();
+    }
+
+    private function delete_operation() : void {
+        self::execute("DELETE FROM operations WHERE id= :id ",["id"=>$this->id]);
+    }
+
+    private function delete_repartition() : void {
+        self::execute("DELETE FROM repartitions WHERE operation IN (SELECT id FROM operations WHERE tricount= :id)", ["id"=>$this->id]);
     }
 }
 
