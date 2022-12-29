@@ -11,8 +11,8 @@
 
 <body>
 	<div class="main">
-		<div class="title" id="t1">Tricount</div>
-		<form action="main/login" method="POST">
+		<header class="t1">Tricount</header>
+		<form action="main/login" method="POST" class="connect">
 			<div class="formtitle">Sign In</div>
 			<input type="text" id="email" name="email" value="<?= $email ?>">
 			<input type="password" id="password" name="password" value="<?= $password ?>">

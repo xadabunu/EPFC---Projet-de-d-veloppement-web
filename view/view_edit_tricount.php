@@ -12,8 +12,10 @@
 <body>
 
     <div class="main">
-        <div class="title" id="t2"><?= $tricount->title ?> > Edit</div>
-        <div class="menu"><a href="tricount/operations/<?= $tricount->id ?>">Back</a></div>
+        <header class="t2">
+            <a href="tricount/operations/<?= $tricount->id ?>" class="button" id="back">Back</a>
+            <p><?= $tricount->title ?> &#11208; Edit</p>
+        </header>
         <form id="edittricountform" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post">
             <input type="submit" value="Save" formaction="tricount/edit_tricount/<?= $tricount->id ?>">
             <table>
@@ -61,17 +63,6 @@
             <input type="submit" value="Add" formaction="tricount/add_subscriptors/<?= $tricount->id ?>">
         </form>
         <a href="tricount/delete_tricount/<?= $tricount->id ?>">Delete Tricount</a>
-        <?php if (count($errors) != 0) : ?>
-            <div class='errors'>
-                <br><br>
-                <p>Please correct the following error(s) : </p>
-                <ul>
-                    <?php foreach ($errors as $error) : ?>
-                        <li><?= $error ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endif; ?>
     </div>
 </body>
 

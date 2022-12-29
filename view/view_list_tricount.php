@@ -10,30 +10,26 @@
 </head>
 
 <body>
-<div class="main">
-    <div class="title" id="t2">Your Tricounts</div>
-    <ul>
-        <?php foreach ($data as $tricount) { ?>
-            <li class="tricount">
-                <div>
-                    <a href="tricount/operations/<?= $tricount->id ?>"><p class="title"><?= $tricount->title ?></p></a>
-                    <?php
-                    $id = $tricount->id;
-                    $n = $subs_number[$id];
-                    if ($n > 0) { ?>
-                        <p class="participants_number">
-                            <?php echo "with $n friend(s)" ?></p>
-                    <?php } ?>
-                    <?php if($tricount -> description != 'NULL'){?>
+    <div class="main">
+        <header class="t2">
+            <p>Your Tricounts</p>
+            <a href="tricount/add_tricount" class="button" id="add">Add</a>
+        </header>
+        <table>
+            <?php foreach ($data as $tricount) { ?>
+                <tr>
+                    <td>
+                        <p><b><a href="tricount/operations/<?= $tricount->id ?>"><?= $tricount->title ?></a></b></p>
                         <p><?= $tricount->description ?></p>
-                    <?php } ?>    
-                </div>
-            </li>
-        <?php } ?>
-    </ul>
-    <a href="main/logout">Logout</a>
-    <a href="tricount/add_tricount">Add Tricount</a>
-</div>
+                    </td>
+                    <td>
+                        <p><?= $subs_number[$tricount->id] ?></p>
+                    </td>
+                </tr>
+            <?php } ?>
+        </table>
+        <a href="main/logout">Logout</a>
+    </div>
 
 </body>
 

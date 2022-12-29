@@ -11,30 +11,28 @@
 
 <body>
     <div class="main">
-        <div class="title" id="t2">Add Tricount</div>
+        <header class="t2">
+            <a href="main/index" class="button" id="back">Cancel</a>
+            <p>Add Tricount</p>
+        </header>
         <div class="menu">
-            <a href="index.php">Cancel</a>
+
         </div>
         <form id="add_tricount" action="tricount/add_tricount" method="post">
-            <table>
-                <tr>
-                    <td><input id="title" name="title" type="text" size="16" value="<?=$title?>" placeholder="Title"></td>
-                </tr>
-                <tr>
-                    <td><input id="description" name="description" type="text" size="16"  placeholder="Description"></td>
-                </tr>
-            </table>
+            <input id="title" name="title" type="text" size="16" value="<?= $title ?>" placeholder="Title">
+            <?php if (array_key_exists('required', $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors['required']; ?></p>
+            <?php }
+            if (array_key_exists('title_lenght', $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors['title_lenght']; ?></p>
+            <?php } ?>
+
+            <input id="description" name="description" type="text" size="16" placeholder="Description">
+            <?php if (array_key_exists('description_lenght', $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors['description_lenght']; ?></p>
+            <?php } ?>
+
             <input type="submit" value="Add Tricount">
         </form>
-        <?php if (count($errors) != 0) : ?>
-                <div class='errors'>
-                    <br><br>
-                    <p>Please correct the following error(s) : </p>
-                    <ul>
-                        <?php foreach ($errors as $error) : ?>
-                            <li><?=  $error ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
+    </div>
 </body>
