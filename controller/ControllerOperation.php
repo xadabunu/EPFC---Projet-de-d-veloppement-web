@@ -39,24 +39,45 @@ class ControllerOperation extends MyController
         $subscriptors = $tricount->get_subscriptors_with_creator();
         $templates = Template::get_templates($tricount->id);
         $errors = [];
-        if(isset($_POST['title']) && isset($_POST['amount'])) {
+        if(isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
             $title = $_POST['title'];
             $amount = floatval($_POST['amount']);
             $operation_date = $_POST['operation_date'];
             $created_at = Date("Y-m-d H:i:s");
             $initiator = $_POST['paid_by'];
-            if (is_numeric($amount) && is_numeric($initiator)) {
-
+            $list = self::get_whom($_POST, $tricount);
+            $errors = array_merge($errors, self::is_valid_fields($amount, $initiator, $title, $operation_date));
+            if(count($errors) == 0){
+            //if (!is_numeric($amount) || !is_numeric($initiator)) {
                 $operation = new Operation($title, $tricount, $amount, $operation_date, User::get_user_by_id($initiator), $created_at);
                 $errors = array_merge($errors, $operation->validate_operations());
                 if (count($errors) == 0) {
                     $operation->persist_operation();
+                    //persist_repartition($operation, $list);
                     $this->redirect('tricount', 'operations', $tricount->id);
                 }
+            //}
             }
         }
         (new View("add_operation"))->show(['tricount'=>$tricount, 'operation'=>$operation, 'subscriptors'=>$subscriptors,
                                             'templates'=>$templates, 'errors'=>$errors]);
+    }
+
+    private function is_valid_fields($amount, $initiator, $title, $operation_date) : array {
+        $errors = [];
+        if(empty($title)){
+            $errors ['empty_title'] = "Title is required";
+        }
+        if(empty($amount)) {
+            $errors['empty_amount'] = "Amount is required";
+        }
+        if(empty($initiator)) {
+            $errors['empty_initiator'] = "You must choose an initiator";
+        }
+        if(empty($operation_date)){
+            $errors['empty_date'] = "Date of your operation is required";
+        }
+        return $errors;
     }
 
     public function edit_operation() : void {
@@ -83,6 +104,18 @@ class ControllerOperation extends MyController
         }
         (new View('edit_operation'))->show(['operation'=>$operation, 'errors'=>$errors,
                                             'subscriptors'=>$subscriptors, 'templates'=>$templates]);
+    }
+
+    private function get_whom(array $array, Tricount $tricount) : array
+    {   
+        $list = $tricount->get_subscriptors_with_creator();
+        $result = [];
+        foreach($list as $sub) {
+            if(array_key_exists($sub->id, $array)){
+                $result[] = $sub;
+            }
+        }
+        return $result;
     }
 
     public function delete_operation() : void {
