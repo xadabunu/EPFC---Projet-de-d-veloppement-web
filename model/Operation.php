@@ -97,20 +97,11 @@ class Operation extends Model
     public function validate_operations(): array
     {
         $errors = [];
-        if(!strlen($this->title) >0){
-            $errors['required'] = "Title is required.";
-        }
         if(!(strlen($this->title) >= 3)){
             $errors['lenght'] = "Title length must be higher than 3.";
         }
-        if(($this->amount) <= 0 || empty($this->amount) ){
-            $errors['amount'] = "Amount is required and must be positive";
-        }
-        if(empty($this->operation_date)) {
-            $errors['date'] = "Date is required";
-        }
-        if(empty($this->initiator) || ($this->initiator->id) == 0) {
-            $errors['paid'] = "You must choose an initiator";
+        if(($this->amount) <= 0){
+            $errors['amount'] = "Amount must be positive";
         }
         return $errors;
     }

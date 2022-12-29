@@ -18,8 +18,8 @@
         <form id="add_operation_form" action= "operation/add_operation/<?= $tricount->id ?>" method="post">
             <div class="formtitle">Add Operation</div>
             <input id="title" name="title" type="text" size="16" placeholder="Title">
-            <?php if (array_key_exists('required', $errors)){ ?>
-                <p class="errorMessage"><?php echo $errors['required'];?></p>
+            <?php if (array_key_exists('empty_title', $errors)){ ?>
+                <p class="errorMessage"><?php echo $errors['empty_title'];?></p>
             <?php } 
             if(array_key_exists('lenght', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['lenght'];?></p>
@@ -27,11 +27,17 @@
             <input id="Amount" name="amount" type="text" size="16" placeholder="Amount">
             <?php if(array_key_exists('amount', $errors)){ ?>
                 <p class="errorMessage"><?php echo $errors['amount'];?></p>
-            <?php } ?> 
+            <?php }
+            if(array_key_exists('empty_amount', $errors)){?>
+                <p class="errorMessage"><?php echo $errors['empty_amount'];?></p>
+            <?php }
+            if(array_key_exists('amount', $errors)){?>
+                <p class="errorMessage"><?php echo $errors['amount'];?></p>
+            <?php } ?>
             Date
             <input id="operation_date" name="operation_date" type="date" >
-            <?php if(array_key_exists('date', $errors)){?>
-                <p class="errorMessage"><?php echo $errors['date'];?></p>
+            <?php if(array_key_exists('empty_date', $errors)){?>
+                <p class="errorMessage"><?php echo $errors['empty_date'];?></p>
             <?php } ?>
             Paid by
             <select name="paid_by" id="paid_by" >
@@ -40,8 +46,8 @@
                     <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
                 <?php } ?>
             </select>
-            <?php if(array_key_exists('paid', $errors)){?>
-                <p class="errorMessage"><?php echo $errors['paid'];?></p>
+            <?php if(array_key_exists('empty_initiator', $errors)){?>
+                <p class="errorMessage"><?php echo $errors['empty_initiator'];?></p>
             <?php } ?>
             Use repartition template (Optional)
             <select name="templates" id="templates">
@@ -60,7 +66,7 @@
                         <td><?= $subscriptor->full_name ?></td>
                         </p>
                         </td>
-                        <td>weight</td>
+                        <td>weight<input type= 'text' name='weight'></td>
                     </tr>
                 <?php } ?>
             </table>
