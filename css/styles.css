@@ -279,3 +279,59 @@ td.empty > a
     border-color: rgb(13, 110, 253);
     color: white;
 }
+
+p.balance
+{
+    /* width: 100%; */
+    /* text-align: center; */
+}
+
+a#balance
+{
+    position: inherit;
+    top: 20px;
+    background-color: rgb(60, 179, 113);
+    width: 100%;
+    border-color: rgb(60, 179, 113);
+    color: white;
+    justify-self: center;
+    padding: 10px 240px;
+}
+
+table.balance
+{
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0 20px;
+    margin: 0;
+}
+
+td.positive, td.negative, td.left, td.right
+{
+    border-bottom: white;
+    /* width: 50%; */
+}
+
+td.positive
+{
+    background-color: rgb(60, 179, 113);
+}
+
+td.right
+{
+    text-align: left;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+td.negative
+{
+    background-color: rgb(255, 99, 71);
+}
+
+td.left
+{
+    text-align: right;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}

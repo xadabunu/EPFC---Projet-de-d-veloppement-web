@@ -112,7 +112,6 @@ class User extends Model
         return $errors;
     }
 
-
     public function persist() : User {
         if(self::get_user_by_email($this->email)){
             self::execute("UPDATE users SET hashed_password=:password, full_name=:full_name, role=:role, iban=:iban WHERE mail=:email",

@@ -42,6 +42,7 @@
                 </tr>
             </table>
         <?php } } else { ?>
+            <p class="balance"><a href="tricount/balance/<?= $tricount->id ?>" class="button" id="balance"><b>&#8644;</b> View balance</a></p>
             <table>
                 <?php foreach ($list as $operation) { ?>
                     <tr>
