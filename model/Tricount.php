@@ -160,8 +160,6 @@ class Tricount extends Model
         $this->delete_operation();
         $this->delete_subscriptors();
         $this->delete_tricount();
-        
-
     }
 
     private function delete_tricount() : void {
@@ -188,4 +186,18 @@ class Tricount extends Model
         self::execute("DELETE FROM repartition_template_items WHERE repartition_template IN (SELECT id FROM repartition_templates WHERE tricount = :tricount_id)",["tricount_id"=>$this->id]);
     }
 
+    public function get_balance(int $user_id): float
+    {
+        $query = self::execute("SELECT SUM(amount) AS sum FROM operations WHERE tricount = :tricount_id AND initiator = :user_id", 
+                                ["tricount_id" => $this->id,
+                                "user_id" => $user_id]);
+        $paid = $query->fetch()['sum'];
+        $spent = 0;
+
+        $list = $this->get_operations();
+        foreach ($list as $op) {
+            $spent += $op->get_user_amount($user_id);
+        }
+        return $paid - $spent;
+    }
 }

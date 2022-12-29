@@ -77,7 +77,6 @@ class ControllerTricount extends MyController
         else {
             Tools::abort("Invalid or missing argument.");
         }
-        
     }
 
     public function add_subscriptors() : void {
@@ -108,5 +107,28 @@ class ControllerTricount extends MyController
         $tricount = tricount::get_tricount_by_id($_GET['param1']);
         $tricount->delete_tricount_cascade();
         $this->redirect('user', 'index');
+    }
+
+    public function balance(): void
+    {
+        $user = $this -> get_user_or_redirect();
+        if (isset($_GET['param1']) && is_numeric($_GET['param1']))
+        {
+            $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+            $list = $tricount -> get_subscriptors_with_creator();
+            $amounts = [];
+            foreach ($list as $sub)
+            {
+                $amounts[$sub -> id] = $tricount -> get_balance($sub -> id);
+            }
+            (new View("balance"))->show(["user" => $user,
+                                        "subs" => $list,
+                                        "amounts" => $amounts,
+                                        "tricount" => $tricount,
+                                        "max" => max(array_map("abs", $amounts))]);
+        }
+        else {
+            Tools::abort("Invalid or missing argument.");
+        }
     }
 }
