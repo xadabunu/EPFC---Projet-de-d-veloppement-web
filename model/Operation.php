@@ -109,7 +109,7 @@ class Operation extends Model
         if(empty($this->operation_date)) {
             $errors['date'] = "Date is required";
         }
-        if(empty($this->initiator) || ($this->initiator) == 0) {
+        if(empty($this->initiator) || ($this->initiator->id) == 0) {
             $errors['paid'] = "You must choose an initiator";
         }
         return $errors;

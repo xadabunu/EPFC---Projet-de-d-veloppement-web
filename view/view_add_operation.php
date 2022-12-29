@@ -12,29 +12,29 @@
 <body>
     <div class="main">
         <header class="t2">
-            <a href="tricount/operations/<?=$tricount->id?>" class="button" id="back">Cancel</a>
+            <a href="tricount/operations/<?= $tricount->id ?>" class="button" id="back">Cancel</a>
             <p>Add Operation</p>
         </header>
-        <form id="add_operation_form" action="operation/add_operation/<?=$tricount->id?>" method="post">
+        <form id="add_operation_form" action= "operation/add_operation/<?= $tricount->id ?>" method="post">
             <div class="formtitle">Add Operation</div>
-            <input id="title" name="title" type="text" size="16" placeholder="Title" required>
+            <input id="title" name="title" type="text" size="16" placeholder="Title">
             <?php if (array_key_exists('required', $errors)){ ?>
                 <p class="errorMessage"><?php echo $errors['required'];?></p>
             <?php } 
             if(array_key_exists('lenght', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['lenght'];?></p>
             <?php } ?>
-            <input id="Amount" name="amount" type="text" size="16" placeholder="Amount" required>
+            <input id="Amount" name="amount" type="text" size="16" placeholder="Amount">
             <?php if(array_key_exists('amount', $errors)){ ?>
                 <p class="errorMessage"><?php echo $errors['amount'];?></p>
             <?php } ?> 
             Date
-            <input id="operation_date" name="operation_date" type="date" required>
+            <input id="operation_date" name="operation_date" type="date" >
             <?php if(array_key_exists('date', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['date'];?></p>
             <?php } ?>
             Paid by
-            <select name="paid_by" id="paid_by" required>
+            <select name="paid_by" id="paid_by" >
                 <option value="">-- Who paid for it ? --</option>
                 <?php foreach($subscriptors as $subscriptor) { ?>
                     <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
@@ -54,20 +54,24 @@
             <table>
                 <?php foreach($subscriptors as $subscriptor){?>
                     <tr>
-                        <td><input type="checkbox" id="repartitions" name="repartitions"></td>
-                        <td><?=$subscriptor->full_name;?></td>
+                        <td>
+                            <p><input type='checkbox' name='<?= $subscriptor->id ?>' value=''>
+                        </td>
+                        <td><?= $subscriptor->full_name ?></td>
+                        </p>
+                        </td>
                         <td>weight</td>
                     </tr>
                 <?php } ?>
             </table>
             Add a new repartition template
-            <tabel>
+            <table>
                 <tr>
                     <td><input type="checkbox" id="save_template" name="save_template"></td>
                     <td>Save this template</td> 
                     <td>name</td>
                 </tr>
-            </tabel>
-            <input type="submit" value="Save" formaction="operation/add_operation/<?=$tricount->id?>">
+            </table>
+            <input type="submit" value="Save" >
         </form>
     </div>

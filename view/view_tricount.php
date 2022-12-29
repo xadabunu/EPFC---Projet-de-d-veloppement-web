@@ -25,7 +25,7 @@
                 <tr>
                     <td class="empty">
                         <p>Click below to add your friends!</p>
-                        <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button">Add an expense</a>
+                        <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button">Add Friends</a>
                     </td>
                 </tr>
             </table>

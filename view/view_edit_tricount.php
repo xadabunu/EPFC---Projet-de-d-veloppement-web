@@ -63,17 +63,6 @@
             <input type="submit" value="Add" formaction="tricount/add_subscriptors/<?= $tricount->id ?>">
         </form>
         <a href="tricount/delete_tricount/<?= $tricount->id ?>">Delete Tricount</a>
-        <?php if (count($errors) != 0) : ?>
-            <div class='errors'>
-                <br><br>
-                <p>Please correct the following error(s) : </p>
-                <ul>
-                    <?php foreach ($errors as $error) : ?>
-                        <li><?= $error ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endif; ?>
     </div>
 </body>
 
