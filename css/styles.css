@@ -282,20 +282,18 @@ td.empty > a
 
 p.balance
 {
-    /* width: 100%; */
-    /* text-align: center; */
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
 }
 
 a#balance
 {
-    position: inherit;
-    top: 20px;
     background-color: rgb(60, 179, 113);
     width: 100%;
     border-color: rgb(60, 179, 113);
     color: white;
-    justify-self: center;
-    padding: 10px 240px;
 }
 
 table.balance
