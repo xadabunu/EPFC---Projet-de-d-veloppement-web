@@ -118,5 +118,13 @@ class Operation extends Model
     private function delete_repartition() : void {
         self::execute("DELETE FROM repartitions WHERE operation IN (SELECT id FROM operations WHERE tricount= :id)", ["id"=>$this->id]);
     }
+
+    public function persist_repartition(Operation $operation, array $list) : void {
+        $array = array_keys($list);
+        foreach($array as $id){
+            self::execute("INSERT INTO repartitions(operation, user, weight) VALUES(:operation, :user, :weight)", ['operation'=>$operation->id, 'user'=>$id, 'weight'=>$list[$id]]);
+        }
+        
+    }
 }
 

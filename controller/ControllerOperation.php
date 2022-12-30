@@ -39,24 +39,23 @@ class ControllerOperation extends MyController
         $subscriptors = $tricount->get_subscriptors_with_creator();
         $templates = Template::get_templates($tricount->id);
         $errors = [];
+        $test = '';
         if(isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
             $title = $_POST['title'];
             $amount = floatval($_POST['amount']);
             $operation_date = $_POST['operation_date'];
             $created_at = Date("Y-m-d H:i:s");
             $initiator = $_POST['paid_by'];
-            $list = self::get_whom($_POST, $tricount);
+            $list = self::get_weight($_POST, $tricount);
             $errors = array_merge($errors, self::is_valid_fields($amount, $initiator, $title, $operation_date));
             if(count($errors) == 0){
-            //if (!is_numeric($amount) || !is_numeric($initiator)) {
                 $operation = new Operation($title, $tricount, $amount, $operation_date, User::get_user_by_id($initiator), $created_at);
-                $errors = array_merge($errors, $operation->validate_operations());
+                $errors = $operation->validate_operations();
                 if (count($errors) == 0) {
                     $operation->persist_operation();
-                    //persist_repartition($operation, $list);
+                    $operation->persist_repartition($operation, $list);
                     $this->redirect('tricount', 'operations', $tricount->id);
                 }
-            //}
             }
         }
         (new View("add_operation"))->show(['tricount'=>$tricount, 'operation'=>$operation, 'subscriptors'=>$subscriptors,
@@ -114,6 +113,20 @@ class ControllerOperation extends MyController
             if(array_key_exists($sub->id, $array)){
                 $result[] = $sub;
             }
+        }
+        return $result;
+    }
+
+    private function get_weight(array $array, Tricount $tricount) {
+        $list = self::get_whom($array, $tricount);
+        $result = [];
+        foreach($list as $sub) {
+/*            if(array_key_exists($sub->full_name, $array)){
+                foreach($array as $value => $weight)
+                    $result[$sub->full_name] = $weight;
+            }*/
+            $result[$sub->id] = $array['weight_'.$sub->id];
+
         }
         return $result;
     }
