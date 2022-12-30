@@ -9,6 +9,8 @@
     font-family: Arial, Helvetica, sans-serif;
     color: rgb(33, 37, 41);
     position: relative;
+    overflow-y: scroll;
+    scrollbar-width: thin;
 }
 
 body

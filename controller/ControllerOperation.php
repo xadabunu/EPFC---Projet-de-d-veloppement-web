@@ -39,7 +39,6 @@ class ControllerOperation extends MyController
         $subscriptors = $tricount->get_subscriptors_with_creator();
         $templates = Template::get_templates($tricount->id);
         $errors = [];
-        $test = '';
         if(isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
             $title = $_POST['title'];
             $amount = floatval($_POST['amount']);
@@ -47,7 +46,7 @@ class ControllerOperation extends MyController
             $created_at = Date("Y-m-d H:i:s");
             $initiator = $_POST['paid_by'];
             $list = self::get_weight($_POST, $tricount);
-            $errors = array_merge($errors, self::is_valid_fields($amount, $initiator, $title, $operation_date));
+            $errors = array_merge($errors, self::is_valid_fields($_POST));
             if(count($errors) == 0){
                 $operation = new Operation($title, $tricount, $amount, $operation_date, User::get_user_by_id($initiator), $created_at);
                 $errors = $operation->validate_operations();
@@ -62,20 +61,37 @@ class ControllerOperation extends MyController
                                             'templates'=>$templates, 'errors'=>$errors]);
     }
 
-    private function is_valid_fields($amount, $initiator, $title, $operation_date) : array {
+    private function is_valid_fields(array $array) : array {
         $errors = [];
-        if(empty($title)){
+        if(empty($array['title'])){
             $errors ['empty_title'] = "Title is required";
         }
-        if(empty($amount)) {
+        if(empty($array['amount'])) {
             $errors['empty_amount'] = "Amount is required";
         }
-        if(empty($initiator)) {
+        if(empty($array['paid_by'])) {
             $errors['empty_initiator'] = "You must choose an initiator";
         }
-        if(empty($operation_date)){
+        if(empty($array['operation_date'])){
             $errors['empty_date'] = "Date of your operation is required";
         }
+        $cpt = 0;
+        $list = [];
+        foreach($array as $var) {
+            if(is_numeric($var)){
+                $cpt += 1;
+                $list[] = $var;
+            }
+        }
+        if($cpt == 0){
+            $errors['whom'] = "You must choose at least one person";
+        }
+        foreach ($list as $var) {
+            if ($var <= 0) {
+                $errors['whom'] = "Weight must be strictly positive";
+            }
+        }
+
         return $errors;
     }
 
@@ -121,12 +137,7 @@ class ControllerOperation extends MyController
         $list = self::get_whom($array, $tricount);
         $result = [];
         foreach($list as $sub) {
-/*            if(array_key_exists($sub->full_name, $array)){
-                foreach($array as $value => $weight)
-                    $result[$sub->full_name] = $weight;
-            }*/
             $result[$sub->id] = $array['weight_'.$sub->id];
-
         }
         return $result;
     }

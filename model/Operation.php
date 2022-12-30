@@ -116,7 +116,7 @@ class Operation extends Model
     }
 
     private function delete_repartition() : void {
-        self::execute("DELETE FROM repartitions WHERE operation IN (SELECT id FROM operations WHERE tricount= :id)", ["id"=>$this->id]);
+        self::execute("DELETE FROM repartitions WHERE operation= :id", ["id"=>$this->id]);
     }
 
     public function persist_repartition(Operation $operation, array $list) : void {
