@@ -66,10 +66,13 @@
                         <td><?= $subscriptor->full_name ?></td>
                         </p>
                         </td>
-                        <td>weight<input type= 'text' name='weight'></td>
+                        <td>weight<input type= 'text' name= 'weight_<?= $subscriptor->id ?>'></td>
                     </tr>
                 <?php } ?>
             </table>
+            <?php if(array_key_exists('whom', $errors)){?>
+                <p class="errorMessage"><?php echo $errors['whom'];?></p>
+            <?php } ?>
             Add a new repartition template
             <table>
                 <tr>
