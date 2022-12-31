@@ -17,50 +17,49 @@
         </header>
         <table class="balance">
             <?php foreach ($subs as $sub) { ?>
-                <tr>
+                <tr class="balance">
                     <?php if ($amounts[$sub->id] >= 0) { ?>
-                        <td class="left">
+                        <td class="balance"> <p class="left">
                             <?php if ($sub->id === $user->id) {
                                 echo "<b>";
                             } ?>
                             <?= $sub->full_name ?>
                             <?php if ($sub->id === $user->id) {
                                 echo "(me)</b>";
-                            } ?>
+                            } ?></p>
                         </td>
-                        <td class="positive right" style="width: <?= abs($amounts[$sub->id] / $max * 50) ?>%;">
+                        <td class="positive balance"> <p class="positive right" style="width: <?= abs($amounts[$sub->id] / $max * 100) ?>%;">
                             <?php if ($sub->id === $user->id) {
                                 echo "<b>";
                             } ?>
                             <?= round($amounts[$sub->id], 2) ?> €
                             <?php if ($sub->id === $user->id) {
                                 echo "</b>";
-                            } ?>
+                            } ?></p>
                         </td>
                     <?php } else { ?>
-                        <td class="negative left" style="width: <?= $amounts[$sub->id] / $max * 50 ?>%;">
+                        <td class="negative balance"> <p class="negative left" style="width: <?= abs($amounts[$sub->id] / $max * 100) ?>%;">
                             <?php if ($sub->id === $user->id) {
                                 echo "<b>";
                             } ?>
                             <?= round($amounts[$sub->id], 2) ?> €
                             <?php if ($sub->id === $user->id) {
                                 echo "</b>";
-                            } ?>
+                            } ?></p>
                         </td>
-                        <td class="right">
+                        <td class="balance"> <p class="right">
                             <?php if ($sub->id === $user->id) {
                                 echo "<b>";
                             } ?>
                             <?= $sub->full_name ?>
                             <?php if ($sub->id === $user->id) {
                                 echo "(me)</b>";
-                            } ?>
+                            } ?></p>
                         </td>
                     <?php } ?>
                 </tr>
             <?php } ?>
         </table>
-        <?php print_r(array_map("abs", $amounts)) ?>
     </div>
 
 </body>
