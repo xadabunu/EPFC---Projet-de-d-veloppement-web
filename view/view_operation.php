@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title><?= $operation->tricount->title ?> > <?= $operation->title ?></title>
+    <title><?= $operation->tricount->title ?> &#11208; <?= $operation->title ?></title>
     <base href="<?= $web_root ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />

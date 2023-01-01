@@ -15,6 +15,19 @@
             <p>Your Tricounts</p>
             <a href="tricount/add_tricount" class="button" id="add">Add</a>
         </header>
+        <?php if (empty($data)) { ?>
+            <table>
+                <tr>
+                    <th class="empty"> You have no tricount!</th>
+                </tr>
+                <tr>
+                    <td class="empty">
+                        <p>Click below to add a tricount!</p>
+                        <a href="tricount/add_tricount" class="button">Add a tricount</a>
+                    </td>
+                </tr>
+            </table>
+            <?php } else { ?>
         <table>
             <?php foreach ($data as $tricount) { ?>
                 <tr>
@@ -28,6 +41,7 @@
                 </tr>
             <?php } ?>
         </table>
+        <?php } ?>
         <a href="main/logout">Logout</a>
     </div>
 

@@ -11,6 +11,13 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.main::-webkit-scrollbar
+{
+    width: 0;
 }
 
 body
@@ -36,15 +43,12 @@ a.button
 
 footer
 {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    margin-top: 25px;
     display: flex;
     justify-content: space-between;
     background-color: rgb(227, 242, 253);
-    width: 100%;
+    width: 106%;
     color: rgb(102, 109, 114);
+    margin: auto 20px 0 -20px;
 }
 
 footer > div > p
@@ -194,7 +198,7 @@ table
     border-radius: 10px;
     border-spacing: 0;
     width: 100%;
-    margin: 40px 0;
+    margin: 10px 0 40px 0;
 }
 
 td > p

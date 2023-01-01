@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="<?= $web_root ?>">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
-    <title><?= $tricount->title ?> > Expenses</title>
+    <title><?= $tricount->title ?> &#11208; Expenses</title>
 </head>
 
 <body>
