@@ -367,3 +367,30 @@ p.left:not(.negative)
 {
     padding-right: 10px;
 }
+
+.input
+{
+    font-size : 50%;
+    margin : 3% auto;
+    border-radius : 10px;
+    padding : 2%;
+    height: 20px;
+}
+
+.login
+{
+    font-size : 50%;
+    margin : 3% auto;
+    border-radius : 10px;
+    padding : 2%; 
+    width: 104%;
+    background-color: rgb(13, 110, 253);
+    color : white;
+    height: 40px;
+}
+
+.join
+{
+    font-size: large;
+    text-align: center;   
+}
