@@ -110,6 +110,7 @@ class ControllerOperation extends MyController
             $tricount = $operation->tricount;
             $subscriptors = $tricount->get_subscriptors_with_creator();
             $templates = Template::get_templates($tricount->id);
+            $list = $operation->get_repartitions();
             if(isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date'])) {
                 $operation->title = $_POST['title'];
                 $operation->amount = $_POST['amount'];

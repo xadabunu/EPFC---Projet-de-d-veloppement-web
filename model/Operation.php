@@ -90,6 +90,18 @@ class Operation extends Model
         }  
     }
 
+    public function get_repartitions() : array
+    {
+        $query = self::execute("SELECT * FROM repartitions WHERE operation = :id", ["id" => $this->id]);
+        $data = $query->fetchAll();
+        $list = [];
+        foreach ($data as $var)
+        {
+            $list[$var['user']] = $var['weight'];
+        }
+        return $list;
+    }
+
     public function get_subscriptors(): array
     {
         $query = self::execute("SELECT DISTINCT users.* FROM users, subscriptions, tricounts WHERE subscriptions.user = users.id AND subscriptions.tricount= :id",
