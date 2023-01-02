@@ -379,6 +379,7 @@ p.left:not(.negative)
     padding-right: 10px;
 }
 
+
 p.inner
 {
     position: absolute;
@@ -390,4 +391,43 @@ p.inner
 p.inner.left
 {
     padding-right: 10px;
+}
+
+.input
+{
+    font-size : 50%;
+    margin : 3% auto;
+    border-radius : 10px;
+    padding : 2%;
+    height: auto ;
+    width: 95%;
+}
+
+.login
+{
+    font-size : 50%;
+    margin : 3% auto;
+    margin-bottom: 0%;
+    border-radius : 10px;
+    padding : 2%; 
+    background-color: rgb(13, 110, 253);
+    color : white;
+    height: 0% auto;
+    width : 100%;
+}
+
+.join
+{
+    font-size: large;
+    text-align: center;
+}
+
+a.bottom
+{
+    font-size : 50%;   
+    border-radius : 10px;
+    padding : 2%; 
+    text-align: center;
+    height: 0% auto;
+    width : 95%;   
 }
