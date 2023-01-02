@@ -374,23 +374,38 @@ p.left:not(.negative)
     margin : 3% auto;
     border-radius : 10px;
     padding : 2%;
-    height: 20px;
+    height: auto ;
+    width: 95%;
 }
 
 .login
 {
     font-size : 50%;
     margin : 3% auto;
+    margin-bottom: 0%;
     border-radius : 10px;
     padding : 2%; 
-    width: 104%;
     background-color: rgb(13, 110, 253);
     color : white;
-    height: 40px;
+    height: 0% auto;
+    width : 100%;
 }
 
 .join
 {
     font-size: large;
-    text-align: center;   
+    text-align: center;
 }
+
+a.bottom
+{
+    font-size : 50%;   
+    border-radius : 10px;
+    padding : 2%; 
+    text-align: center;
+    height: 0% auto;
+    width : 95%;   
+}
+
+
+
