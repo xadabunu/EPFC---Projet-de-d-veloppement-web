@@ -44,11 +44,12 @@ a.button
 footer
 {
     display: flex;
+    position: sticky;
+    bottom: 0;
     justify-content: space-between;
     background-color: rgb(227, 242, 253);
-    width: 106%;
     color: rgb(102, 109, 114);
-    margin: auto 20px 0 -20px;
+    margin: auto -20px 0 -20px;
 }
 
 footer > div > p
@@ -75,28 +76,25 @@ a#back
     color: red;
 }
 
-a#next
+a#next, a#previous, a#add
 {
     background-color: rgb(13, 110, 253);
     border-color: rgb(13, 110, 253);
     color: white;
-    margin-left: auto;
+}
 
+a#next
+{
+    margin-left: auto;
 }
 
 a#previous
 {
-    background-color: rgb(13, 110, 253);
-    border-color: rgb(13, 110, 253);
-    color: white;
     margin-right: auto;
 }
 
 a#add
 {
-    background-color: rgb(13, 110, 253);
-    border-color: rgb(13, 110, 253);
-    color: white;
     margin-right: 15px;
     margin-left: auto;
 }
@@ -148,7 +146,8 @@ a:hover
 
 header
 {
-    position: relative;
+    position: sticky;
+    top: 0;
     padding: 20px 10px;
     margin: 0 -20px;
     display: flex;
@@ -330,9 +329,21 @@ td.negative
     justify-content: right;
 }
 
+td.positive
+{
+    display: flex;
+    justify-content: left;
+}
+
 p.positive, p.negative, p.left, p.right
 {
     padding: 10px 0;
+}
+
+p.negative, p.positive
+{
+    white-space: nowrap;
+    vertical-align: middle;
 }
 
 p.positive
@@ -353,7 +364,7 @@ p.negative
 {
     background-color: rgb(255, 99, 71);
     padding-right: 10px;
-    margin-right: 5px;
+    margin-right: -15px;
 }
 
 p.left
@@ -364,6 +375,19 @@ p.left
 }
 
 p.left:not(.negative)
+{
+    padding-right: 10px;
+}
+
+p.inner
+{
+    position: absolute;
+    margin: 10px;
+    font-size: 70%;
+    padding: 6px 0;
+}
+
+p.inner.left
 {
     padding-right: 10px;
 }
