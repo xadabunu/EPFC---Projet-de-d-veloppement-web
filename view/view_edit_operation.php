@@ -18,8 +18,8 @@
         <form id="edit_operation_form" action="operation/edit_operation/<?=$operation->id?>" method="post">
             <div class="formtitle">Edit Operation</div>
             <input id="title" name="title" type="text" size="16" placeholder="Title" value= "<?=$operation->title?>">
-            <?php if (array_key_exists('required', $errors)){ ?>
-                <p class="errorMessage"><?php echo $errors['required'];?></p>
+            <?php if (array_key_exists('empty_title', $errors)){ ?>
+                <p class="errorMessage"><?php echo $errors['empty_title'];?></p>
             <?php } 
             if(array_key_exists('lenght', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['lenght'];?></p>
@@ -27,11 +27,14 @@
             <input id="Amount" name="amount" type="text" size="16" placeholder="Amount" value= "<?=$operation->amount?>">
             <?php if(array_key_exists('amount', $errors)){ ?>
                 <p class="errorMessage"><?php echo $errors['amount'];?></p>
-            <?php } ?> 
+            <?php }
+            if(array_key_exists('empty_amount', $errors)){?>
+                <p class="errorMessage"><?php echo $errors['empty_amount'];?></p>
+            <?php } ?>
             Date
             <input id="operation_date" name="operation_date" type="date" value = "<?=$operation->operation_date?>" required>
-            <?php if(array_key_exists('date', $errors)){?>
-                <p class="errorMessage"><?php echo $errors['date'];?></p>
+            <?php if(array_key_exists('empty_date', $errors)){?>
+                <p class="errorMessage"><?php echo $errors['empty_date'];?></p>
             <?php } ?>
             Paid by
             <select name="paid_by" id="paid_by" required>
@@ -40,8 +43,8 @@
                     <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
                 <?php } ?>
             </select>
-            <?php if(array_key_exists('paid', $errors)){?>
-                <p class="errorMessage"><?php echo $errors['paid'];?></p>
+            <?php if(array_key_exists('empty_initiator', $errors)){?>
+                <p class="errorMessage"><?php echo $errors['empty_initiator'];?></p>
             <?php } ?>
             Use repartition template (Optional)
             <select name="templates" id="templates">
@@ -61,13 +64,22 @@
                 <?php } ?>
             </table>
             Add a new repartition template
-            <tabel>
-                <tr>
-                    <td><input type="checkbox" id="save_template" name="save_template"></td>
-                    <td>Save this template</td> 
-                    <td>name</td>
-                </tr>
-            </tabel>
+            <table>
+                <?php foreach($subscriptors as $subscriptor){?>
+                    <tr>
+                        <td>
+                            <p><input type='checkbox' name='<?= $subscriptor->id ?>' value=''>
+                        </td>
+                        <td><?= $subscriptor->full_name ?></td>
+                        </p>
+                        </td>
+                        <td>weight<input type= 'text' name= 'weight_<?= $subscriptor->id ?>'></td>
+                    </tr>
+                <?php } ?>
+            </table>
+            <?php if(array_key_exists('whom', $errors)){?>
+                <p class="errorMessage"><?php echo $errors['whom'];?></p>
+            <?php } ?>
             <input type="submit" value="Save" formaction="operation/edit_operation/<?=$operation->id?>">
             <a href="operation/delete_operation/<?= $operation->id ?>">Delete operation</a>
         </form>

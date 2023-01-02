@@ -34,11 +34,14 @@ class ControllerOperation extends MyController
 
     public function add_operation() : void {
         $tricount = Tricount::get_tricount_by_id($_GET['param1']);
-        $subscriptors = [];
         $operation = '';
         $subscriptors = $tricount->get_subscriptors_with_creator();
         $templates = Template::get_templates($tricount->id);
         $errors = [];
+        $title = '';
+        $amount = '';
+        $operation_date = '';
+        $initiator = '';
         if(isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
             $title = $_POST['title'];
             $amount = floatval($_POST['amount']);
@@ -58,7 +61,8 @@ class ControllerOperation extends MyController
             }
         }
         (new View("add_operation"))->show(['tricount'=>$tricount, 'operation'=>$operation, 'subscriptors'=>$subscriptors,
-                                            'templates'=>$templates, 'errors'=>$errors]);
+                                            'templates'=>$templates, 'errors'=>$errors, 'title'=>$title, 'amount'=>$amount,
+                                            'operation_date'=>$operation_date, 'initiator'=>$initiator]);
     }
 
     private function is_valid_fields(array $array) : array {
@@ -100,6 +104,7 @@ class ControllerOperation extends MyController
         $templates = '';
         $operation = '';
         $errors = [];
+        $list = [];
         if(isset($_GET['param1'])){
             $operation = Operation::get_operation_by_id($_GET['param1']);
             $tricount = $operation->tricount;
@@ -110,15 +115,18 @@ class ControllerOperation extends MyController
                 $operation->amount = $_POST['amount'];
                 $operation->initiator = User::get_user_by_id($_POST['paid_by']);
                 $operation->operation_date = $_POST['operation_date'];
+                $list = self::get_weight($_POST, $tricount);
+                $errors = array_merge($errors, self::is_valid_fields($_POST));
                 $errors = array_merge($errors, $operation->validate_operations());
                 if(count($errors) == 0){
+                    $operation->persist_repartition($operation, $list);
                     $operation->persist_operation();
                     $this->redirect('tricount', 'operations', $tricount->id);
                 }
             }
         }
         (new View('edit_operation'))->show(['operation'=>$operation, 'errors'=>$errors,
-                                            'subscriptors'=>$subscriptors, 'templates'=>$templates]);
+                                            'subscriptors'=>$subscriptors, 'templates'=>$templates, 'list'=>$list]);
     }
 
     private function get_whom(array $array, Tricount $tricount) : array
@@ -133,7 +141,7 @@ class ControllerOperation extends MyController
         return $result;
     }
 
-    private function get_weight(array $array, Tricount $tricount) {
+    private function get_weight(array $array, Tricount $tricount) : array {
         $list = self::get_whom($array, $tricount);
         $result = [];
         foreach($list as $sub) {

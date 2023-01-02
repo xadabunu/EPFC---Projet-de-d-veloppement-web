@@ -17,31 +17,28 @@
         </header>
         <form id="add_operation_form" action= "operation/add_operation/<?= $tricount->id ?>" method="post">
             <div class="formtitle">Add Operation</div>
-            <input id="title" name="title" type="text" size="16" placeholder="Title">
+            <input id="title" name="title" type="text" size="16" placeholder="Title" value= '<?= $title ?>'>
             <?php if (array_key_exists('empty_title', $errors)){ ?>
                 <p class="errorMessage"><?php echo $errors['empty_title'];?></p>
             <?php } 
             if(array_key_exists('lenght', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['lenght'];?></p>
             <?php } ?>
-            <input id="Amount" name="amount" type="text" size="16" placeholder="Amount">
+            <input id="Amount" name="amount" type="text" size="16" placeholder="Amount" value= '<?= $amount ?>'>
             <?php if(array_key_exists('amount', $errors)){ ?>
                 <p class="errorMessage"><?php echo $errors['amount'];?></p>
             <?php }
             if(array_key_exists('empty_amount', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['empty_amount'];?></p>
-            <?php }
-            if(array_key_exists('amount', $errors)){?>
-                <p class="errorMessage"><?php echo $errors['amount'];?></p>
             <?php } ?>
             Date
-            <input id="operation_date" name="operation_date" type="date" >
+            <input id="operation_date" name="operation_date" type="date" value= '<?= $operation_date ?>'>
             <?php if(array_key_exists('empty_date', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['empty_date'];?></p>
             <?php } ?>
             Paid by
             <select name="paid_by" id="paid_by" >
-                <option value="">-- Who paid for it ? --</option>
+                <option value= '<?= $initiator ?>'>-- Who paid for it ? --</option>
                 <?php foreach($subscriptors as $subscriptor) { ?>
                     <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
                 <?php } ?>
@@ -66,7 +63,7 @@
                         <td><?= $subscriptor->full_name ?></td>
                         </p>
                         </td>
-                        <td>weight<input type= 'text' name= 'weight_<?= $subscriptor->id ?>'></td>
+                        <td>weight<input type= 'text' name= 'weight_<?= $subscriptor->id ?>' value = '1'></td>
                     </tr>
                 <?php } ?>
             </table>

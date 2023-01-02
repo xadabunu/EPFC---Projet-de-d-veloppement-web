@@ -82,6 +82,14 @@ class Operation extends Model
         return $this;
     }
 
+    public function persist_repartition(Operation $operation, array $list) : void {
+        $this->delete_repartition();
+        $array = array_keys($list);
+        foreach($array as $id){
+            self::execute("INSERT INTO repartitions(operation, user, weight) VALUES(:operation, :user, :weight)", ['operation'=>$operation->id, 'user'=>$id, 'weight'=>$list[$id]]);
+        }  
+    }
+
     public function get_subscriptors(): array
     {
         $query = self::execute("SELECT DISTINCT users.* FROM users, subscriptions, tricounts WHERE subscriptions.user = users.id AND subscriptions.tricount= :id",
@@ -117,14 +125,6 @@ class Operation extends Model
 
     private function delete_repartition() : void {
         self::execute("DELETE FROM repartitions WHERE operation= :id", ["id"=>$this->id]);
-    }
-
-    public function persist_repartition(Operation $operation, array $list) : void {
-        $array = array_keys($list);
-        foreach($array as $id){
-            self::execute("INSERT INTO repartitions(operation, user, weight) VALUES(:operation, :user, :weight)", ['operation'=>$operation->id, 'user'=>$id, 'weight'=>$list[$id]]);
-        }
-        
     }
 }
 
