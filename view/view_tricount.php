@@ -50,7 +50,7 @@
                             <p><b><a href="operation/details/<?= $operation->id ?>"><?= $operation->title ?></a></b></p>
                             <p>Paid by <?= $operation->initiator->full_name ?></p>
                         </td>
-                        <td>
+                        <td class="right">
                             <p><b><?= round($operation->amount, 2) ?> €</b></p>
                             <p><?= date("d/m/Y", strtotime($operation->operation_date)) ?></p>
                         </td>

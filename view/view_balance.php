@@ -32,7 +32,7 @@
                             <?php if ($sub->id === $user->id) {
                                 echo "<b>";
                             } ?>
-                            <?= round($amounts[$sub->id], 2) ?> €
+                            <p class="inner"><?= round($amounts[$sub->id], 2) ?> €</p>
                             <?php if ($sub->id === $user->id) {
                                 echo "</b>";
                             } ?></p>
@@ -42,7 +42,7 @@
                             <?php if ($sub->id === $user->id) {
                                 echo "<b>";
                             } ?>
-                            <?= round($amounts[$sub->id], 2) ?> €
+                            <p class="inner left"><?= round($amounts[$sub->id], 2) ?> €</p>
                             <?php if ($sub->id === $user->id) {
                                 echo "</b>";
                             } ?></p>
