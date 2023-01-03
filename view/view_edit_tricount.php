@@ -20,9 +20,18 @@
         <form id="edittricountform" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post" class="edit">
             <input type="submit" value="Save" formaction="tricount/edit_tricount/<?= $tricount->id ?>" class="button save">
             <label>Title :</label>
-            <input id="title" name="title" type="text" value="<?= $tricount->title ?>">
+            <input id="title" name="title" type="text" value="<?= $tricount->title ?>" <?php if(array_key_exists('required', $errors) || array_key_exists('title_lenght', $errors)) {?>class = "errorInput"<?php } ?>>
+            <?php if (array_key_exists('required', $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors['required']; ?></p>
+            <?php }
+            if (array_key_exists('title_lenght', $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors['title_lenght']; ?></p>
+            <?php } ?>
             <label>Description (optional) :</label>
-            <input id="description" name="description" type="textarea" value="<?= $tricount->description ?>"></td>
+            <textarea id="description" name="description" rows="6" placeholder="Description" value="<?= $tricount->description ?>" <?php if(array_key_exists('description_lenght', $errors)) {?>class = "errorInput"<?php } ?>></textarea>
+            <?php if (array_key_exists('description_lenght', $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors['description_lenght']; ?></p>
+            <?php } ?>
         </form>
         <h3>Subscriptions</h3>
         <table class="subs">

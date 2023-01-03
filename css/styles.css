@@ -28,7 +28,7 @@ body
 {
     background-color: rgb(171, 206, 236);
     margin: 0;
-    font-size: 150%;
+    font-size: 175%;
 }
 
 a
@@ -477,7 +477,7 @@ td.link:hover pop
 
 input, textarea
 {
-    font-size : 50%;
+    font-size : 75%;
     border-radius : 10px;
     padding : 2%;
     height: auto ;
@@ -486,7 +486,7 @@ input, textarea
 
 .login
 {
-    font-size : 50%;
+    font-size : 75%;
     margin : 5% auto;
     margin-bottom: 0%;
     border-radius : 10px;
@@ -525,6 +525,7 @@ form > h3
     color :rgb(220, 53, 69);
     font-size: 50%;
     margin-bottom : 1%;
+    font-weight: bold;
 }
 
 .confirm_delete
@@ -553,4 +554,9 @@ td.empty > .text_confirm, .text_confirm_title
 td.empty > .text_confirm_title
 {
     font-size: 150%;
+}
+
+.errorInput
+{ 
+    border : 2px solid rgb(220, 53, 69);;
 }
