@@ -35,7 +35,7 @@
                         <p><b><a href="tricount/operations/<?= $tricount->id ?>"><?= $tricount->title ?></a></b></p>
                         <p><?= $tricount->description ?></p>
                     </td>
-                    <td>
+                    <td class="right">
                         <p><?= $subs_number[$tricount->id] ?></p>
                     </td>
                 </tr>
