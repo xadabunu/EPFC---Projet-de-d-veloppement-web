@@ -12,12 +12,17 @@
 <body>
 
     <div class="main">
-        <header class="t2"><p> Are your sure ? </p></header>
-        <p>Do you really want to delete operation <?= $operation->title ?> and all of his dependencies ? </p>
-        <p>This process can't be undone.</p>
-        <form>
-            <input type="submit" value="Delete" formaction="operation/confirm_delete_operation/<?= $operation->id ?>">
-            <div class="menu"><a href="operation/edit_operation/<?= $operation->id ?>">Cancel</a></div>
-        </form>
+    <table class = "confirm_delete">
+            <tr>
+                <td class="empty"><p class = "text_confirm_title">Are you sure?</p></td>
+            </tr>
+            <tr>
+                <td class="empty">
+                    <p class = "text_confirm">Do you really want to delete operation <b>"<?= $operation->title ?>"</b> and all of his dependencies ? <br> This process can't be undone.</p>
+                    <a href="operation/edit_operation/<?= $operation->id ?>" class="button btn_cancel">Cancel</a>
+                    <a href="operation/confirm_delete_operation/<?= $operation->id ?>" class="button btn_delete">Delete</a>
+                </td>
+            </tr>
+        </table>
     </div>
 </body>

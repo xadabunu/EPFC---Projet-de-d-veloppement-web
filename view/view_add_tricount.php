@@ -18,21 +18,21 @@
         <div class="menu">
 
         </div>
-        <form id="add_tricount" action="tricount/add_tricount" method="post">
-            <input id="title" name="title" type="text" size="16" value="<?= $title ?>" placeholder="Title">
+        <form class="connect" id="add_tricount" action="tricount/add_tricount" method="post">
+            <input type="submit" value="Save" class="button save">
+            <h3>Titre</h3>
+            <input id="title" name="title" type="text" value="<?= $title ?>" placeholder="Title">
             <?php if (array_key_exists('required', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['required']; ?></p>
             <?php }
             if (array_key_exists('title_lenght', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['title_lenght']; ?></p>
             <?php } ?>
-
-            <input id="description" name="description" type="text" size="16" placeholder="Description">
+            <h3>Description (Optional) :</h3>
+            <textarea id="description" name="description" rows="6" placeholder="Description"></textarea>
             <?php if (array_key_exists('description_lenght', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['description_lenght']; ?></p>
             <?php } ?>
-
-            <input type="submit" value="Add Tricount">
         </form>
     </div>
 </body>

@@ -15,17 +15,19 @@
 		<form action="main/login" method="POST" class="connect">
 			<div class="formtitle">Sign In</div>
 			<input class="input" type="text" id="email" name="email" value="<?= $email ?>">
+			<?php if (array_key_exists('empty_email', $errors)){ ?>
+                    <p class="errorMessage"><?php echo $errors['empty_email'];?></p>
+                <?php }
+                 if(array_key_exists('wrong_email', $errors)){?>
+                    <p class="errorMessage"><?php echo $errors['wrong_email'];?></p>
+                <?php } ?>
 			<input class="input" type="password" id="password" name="password" value="<?= $password ?>">
+			<?php if (array_key_exists('wrong_password', $errors)){ ?>
+                    <p class="errorMessage"><?php echo $errors['wrong_password'];?></p>
+                <?php } ?>
 			<input class='login' type="submit" value="Login">
 			<p class = 'join'><a href="main/signup">New here ? Click here to join the party !</a></p>
 		</form>
-		<?php if (!(empty($errors))) { ?>
-			<ul>
-				<?php foreach ($errors as $error) { ?>
-					<li><?= $error ?></li>
-				<?php } ?>
-			</ul>
-		<?php } ?>
 	</div>
 </body>
 

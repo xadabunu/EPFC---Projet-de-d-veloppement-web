@@ -12,12 +12,17 @@
 <body>
 
     <div class="main">
-        <header class="t2"><p> Are your sure ? </p></header>
-        <p>Do you really want to delete tricount <?= $tricount->title ?> and all of his dependencies ? </p>
-        <p>This process can't be undone.</p>
-        <form>
-            <input type="submit" value="Delete" formaction="tricount/confirm_delete_tricount/<?= $tricount->id ?>">
-            <div class="menu"><a href="tricount/edit_tricount/<?= $tricount->id ?>">Cancel</a></div>
-        </form>
+        <table class = "confirm_delete">
+            <tr>
+                <td class="empty"><p class = "text_confirm_title">Are you sure?</p></td>
+            </tr>
+            <tr>
+                <td class="empty">
+                    <p class = "text_confirm">Do you really want to delete tricount <b>"<?= $tricount->title ?>"</b> and all of his dependencies ? <br> This process can't be undone.</p>
+                    <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button btn_cancel">Cancel</a>
+                    <a href="tricount/confirm_delete_tricount/<?= $tricount->id ?>" class="button btn_delete">Delete</a>
+                </td>
+            </tr>
+        </table>
     </div>
 </body>

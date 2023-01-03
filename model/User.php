@@ -14,12 +14,12 @@ class User extends Model
 		$user = User::get_user_by_email($email);
 		if ($user) {
 			if (!self::check_password($password, $user->hashed_password)) {
-				$errors[] = "Wrong password. Please try again.";
+				$errors['wrong_password'] = "Wrong password. Please try again.";
 			}
 		} elseif (empty($email)) {
-			$errors[] = "Please enter your email.";
+			$errors['empty_email'] = "Please enter your email.";
 		} else {
-			$errors[] = "Can't find a user with the email '$email'. Please sign up.";
+			$errors['wrong_email'] = "Can't find a user with the email '$email'. Please sign up.";
 		}
 		return $errors;
 	}
