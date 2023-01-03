@@ -5,46 +5,46 @@
         <title>Sign up</title>
         <base href="<?= $web_root ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="css" />
+        <link href="css/styles.css" rel="stylesheet" type="text/css" />
     </head>
 
     <body>
-        <div class="title">Sign Up</div>
-        <div class="menu">
-            <a href="index.php">Home</a>
-        </div>
         <div class="main">
-            <form id="signupform" action="main/signup" method="post">
-                <table>
-                    <tr>
-                        <td><input id="email" name="email" type="text" size="16" placeholder="Email" value="<?= $email ?>"></td>
-                    </tr>
-                    <tr>
-                        <td><input id="full_name" name="full_name" type="text" size="16" placeholder="Full Name" value="<?= $full_name ?>"></td>
-                    </tr>
-                    <tr>
-                        <td><input id="iban" name="iban" type="text" size="16" placeholder="IBAN" value="<?= $iban ?>"></td>
-                    </tr>
-                    <tr>
-                        <td><input id="password" name="password" type="password" size="16" placeholder="Password" value="<?= $password ?>"></td>
-                    </tr>
-                    <tr>
-                        <td><input id="password_confirm" name="password_confirm" type="password" size="16" placeholder="Confirm your password" value="<?= $password_confirm ?>"></td>
-                    </tr>
-                </table>
-                <input type="submit" value="Sign Up">
+            <header class="t1">Sign Up</header>
+            <form id="signupform" action="main/signup" method="post" class="connect">
+                <div class="formtitle">Sign Up</div>
+                <input id="email" name="email" type="text" placeholder="Email" value="<?= $email ?>" <?php if(array_key_exists('required', $errors) || array_key_exists('validity', $errors)) {?>class = "errorInput"<?php } ?>>
+                <?php if (array_key_exists('required', $errors)){ ?>
+                    <p class="errorMessage"><?php echo $errors['required'];?></p>
+                <?php }
+                 if(array_key_exists('validity', $errors)){?>
+                    <p class="errorMessage"><?php echo $errors['validity'];?></p>
+                <?php } ?>
+                <input id="full_name" name="full_name" type="text" placeholder="Full Name" value="<?= $full_name ?>" <?php if(array_key_exists('lenght', $errors) || array_key_exists('name_contains', $errors)) {?>class = "errorInput"<?php } ?>>
+                <?php if (array_key_exists('lenght', $errors)){ ?>
+                    <p class="errorMessage"><?php echo $errors['lenght'];?></p>
+                <?php }
+                if (array_key_exists('name_contains', $errors)){ ?>
+                    <p class="errorMessage"><?php echo $errors['name_contains'];?></p>
+                <?php } ?>
+                <input id="iban" name="iban" type="text" placeholder="IBAN" value="<?= $iban ?>" <?php if(array_key_exists('iban', $errors)) {?>class = "errorInput"<?php } ?>>
+                <?php if (array_key_exists('iban', $errors)){ ?>
+                    <p class="errorMessage"><?php echo $errors['iban'];?></p>
+                <?php } ?>
+                <input id="password" name="password" type="password" placeholder="Password" value="<?= $password ?>" <?php if(array_key_exists('password_lenght', $errors) || array_key_exists('password_format', $errors)) {?>class = "errorInput"<?php } ?>>
+                <?php if (array_key_exists('password_lenght', $errors)){ ?>
+                    <p class="errorMessage"><?php echo $errors['password_lenght'];?></p>
+                <?php }
+                if (array_key_exists('password_format', $errors)){ ?>
+                    <p class="errorMessage"><?php echo $errors['password_format'];?></p>
+                <?php } ?>
+                <input id="password_confirm" name="password_confirm" type="password" placeholder="Confirm your password" value="<?= $password_confirm ?>" <?php if(array_key_exists('password_confirm', $errors)) {?>class = "errorInput"<?php } ?>>
+                <?php if (array_key_exists('password_confirm', $errors)){ ?>
+                    <p class="errorMessage"><?php echo $errors['password_confirm'];?></p>
+                <?php } ?>
+                <input class= 'login' type="submit" value="Sign Up">
+                <a  href="index.php" class="button bottom" id='back'>Cancel</a>
             </form>
-            <?php if (count($errors) != 0) : ?>
-                <div class='errors'>
-                    <br><br>
-                    <p>Please correct the following error(s) : </p>
-                    <ul>
-                        <?php foreach ($errors as $error) : ?>
-                            <li><?=  $error ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
         </div>
     </body>
 </html>

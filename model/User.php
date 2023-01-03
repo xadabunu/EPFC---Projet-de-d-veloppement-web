@@ -14,12 +14,12 @@ class User extends Model
 		$user = User::get_user_by_email($email);
 		if ($user) {
 			if (!self::check_password($password, $user->hashed_password)) {
-				$errors[] = "Wrong password. Please try again.";
+				$errors['wrong_password'] = "Wrong password. Please try again.";
 			}
 		} elseif (empty($email)) {
-			$errors[] = "Please enter your email.";
+			$errors['empty_email'] = "Please enter your email.";
 		} else {
-			$errors[] = "Can't find a user with the email '$email'. Please sign up.";
+			$errors['wrong_email'] = "Can't find a user with the email '$email'. Please sign up.";
 		}
 		return $errors;
 	}
@@ -39,6 +39,17 @@ class User extends Model
 			return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["iban"], $data["id"]);
 		}
 	}
+
+    public static function get_user_by_id(int $id) : User |false {
+        $query = self::execute("SELECT * FROM users WHERE id =:id", ["id"=>$id]);
+        $data = $query->fetch();
+        if($query->rowcount() == 0) {
+            return false;
+        }
+        else{
+            return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["iban"], $data["id"]);
+        }
+    }
 
 	public function get_user_tricounts() : array
 	{
@@ -64,19 +75,19 @@ class User extends Model
     public function validate() : array{
         $errors = [];
         if(!strlen($this->email) >0){
-            $errors[] = "Email is required.";
+            $errors['required'] = "Email is required.";
         }
         if(!preg_match('/^[a-zA-Z0-9]{1,20}[@]{1}[a-zA-A0-9]{1,15}[.]{1}[a-z]{1,7}$/',$this->email)){
-            $errors [] = "Not a valid email address";
+            $errors ['validity'] = "Not a valid email address";
         }
         if(!(strlen($this->full_name) >= 3)){
-            $errors[] = "Pseudo length must be higher than 3.";
+            $errors['lenght'] = "Pseudo length must be higher than 3.";
         }
         if(!preg_match("/^[a-zA-Z][a-zA-Z0]*$/", $this->full_name)){
-            $errors [] = "Name must contains only letters";
+            $errors ['name_contains'] = "Name must contains only letters";
         }
          if(!preg_match("/^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/", $this->iban)){
-             $errors[] = "IBAN must have an official IBAN format";
+             $errors['iban'] = "IBAN must have an official IBAN format";
          }
 
 
@@ -86,9 +97,9 @@ class User extends Model
     private static function validate_password(string $password) : array {
         $errors = [];
         if (strlen($password) < 8 || strlen($password) > 16) {
-            $errors[] = "Password length must be between 8 and 16.";
+            $errors['password_lenght'] = "Password length must be between 8 and 16.";
         } if (!((preg_match("/[A-Z]/", $password)) && preg_match("/\d/", $password) && preg_match("/['\";:,.\/?!\\-]/", $password))) {
-            $errors[] = "Password must contain one uppercase letter, one number and one punctuation mark.";
+            $errors['password_format'] = "Password must contain one uppercase letter, one number and one punctuation mark.";
         }
         return $errors;
     }
@@ -96,11 +107,10 @@ class User extends Model
     public static function validate_passwords(string $password, string $password_confirm) : array {
         $errors = self::validate_password($password);
         if ($password != $password_confirm) {
-            $errors[] = "You have to enter twice the same password.";
+            $errors['password_confirm'] = "You have to enter twice the same password.";
         }
         return $errors;
     }
-
 
     public function persist() : User {
         if(self::get_user_by_email($this->email)){

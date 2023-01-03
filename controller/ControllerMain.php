@@ -11,7 +11,7 @@ class ControllerMain extends MyController
 	public function index(): void
 	{
 		if ($this->user_logged()) {
-			$this->redirect("user", "index");
+			$this->redirect("user", "my_tricounts");
 		} else {
 			$this->redirect("main", "login");
 		}
@@ -33,11 +33,7 @@ class ControllerMain extends MyController
 			}
 		}
 		(new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors]);
-	}
-
-
-
-    
+	}    
 
     public function signup() : void {
         $email = '';
