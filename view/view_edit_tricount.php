@@ -52,7 +52,7 @@
                 <td><input type="submit" value="Add" formaction="tricount/add_subscriptors/<?= $tricount->id ?>"></td>
             </table>
         </form>
-        <a href="tricount/delete_tricount/<?= $tricount->id ?>" class="button bottom delete">Delete this tricount</a>
+        <a href="tricount/delete_tricount/<?= $tricount->id ?>" class="button bottom2 delete">Delete this tricount</a>
     </div>
 </body>
 

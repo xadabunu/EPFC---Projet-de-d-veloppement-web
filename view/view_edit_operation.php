@@ -57,25 +57,23 @@
             <table>
                 <?php foreach($subscriptors as $subscriptor){?>
                     <tr>
-                        <td><input type="checkbox" id="repartitions" name="repartitions"></td>
-                        <td><?=$subscriptor->full_name;?></td>
-                        <td>weight</td>
+                        <td>
+                            <p><input type='checkbox' <?php if (array_key_exists($subscriptor->id, $list)) echo "checked"?> name='<?= $subscriptor->id ?>' value=''>
+                        </td>
+                        <td><?= $subscriptor->full_name ?></td>
+                        </p>
+                        </td>
+                        <td>weight<input type= 'text' name= 'weight_<?= $subscriptor->id ?>' value= '<?php if(array_key_exists($subscriptor->id, $list)) echo $list[$subscriptor->id] ?>'></td>
                     </tr>
                 <?php } ?>
             </table>
             Add a new repartition template
             <table>
-                <?php foreach($subscriptors as $subscriptor){?>
-                    <tr>
-                        <td>
-                            <p><input type='checkbox' name='<?= $subscriptor->id ?>' value=''>
-                        </td>
-                        <td><?= $subscriptor->full_name ?></td>
-                        </p>
-                        </td>
-                        <td>weight<input type= 'text' name= 'weight_<?= $subscriptor->id ?>'></td>
-                    </tr>
-                <?php } ?>
+                <tr>
+                    <td><input type="checkbox" id="save_template" name="save_template"></td>
+                    <td>Save this template</td> 
+                    <td>name</td>
+                </tr>
             </table>
             <?php if(array_key_exists('whom', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['whom'];?></p>

@@ -14,10 +14,10 @@
 		<header class="t1">Tricount</header>
 		<form action="main/login" method="POST" class="connect">
 			<div class="formtitle">Sign In</div>
-			<input type="text" id="email" name="email" value="<?= $email ?>">
-			<input type="password" id="password" name="password" value="<?= $password ?>">
-			<input type="submit" value="Login">
-			<a href="main/signup">New here ? Click here to join the party !</a>
+			<input class="input" type="text" id="email" name="email" value="<?= $email ?>">
+			<input class="input" type="password" id="password" name="password" value="<?= $password ?>">
+			<input class='login' type="submit" value="Login">
+			<p class = 'join'><a href="main/signup">New here ? Click here to join the party !</a></p>
 		</form>
 		<?php if (!(empty($errors))) { ?>
 			<ul>
