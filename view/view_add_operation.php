@@ -17,14 +17,14 @@
         </header>
         <form id="add_operation_form" action= "operation/add_operation/<?= $tricount->id ?>" method="post">
             <div class="formtitle">Add Operation</div>
-            <input id="title" name="title" type="text" size="16" placeholder="Title" value= '<?= $title ?>'>
+            <input id="title" name="title" type="text" size="16" placeholder="Title" value= '<?= $title ?>' <?php if(array_key_exists('empty_title', $errors) || array_key_exists('lenght', $errors)) {?>class = "errorInput"<?php } ?>>
             <?php if (array_key_exists('empty_title', $errors)){ ?>
                 <p class="errorMessage"><?php echo $errors['empty_title'];?></p>
             <?php } 
             if(array_key_exists('lenght', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['lenght'];?></p>
             <?php } ?>
-            <input id="Amount" name="amount" type="text" size="16" placeholder="Amount" value= '<?= $amount ?>'>
+            <input id="Amount" name="amount" type="text" size="16" placeholder="Amount" value= '<?= $amount ?>' <?php if(array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) {?>class = "errorInput"<?php } ?>>
             <?php if(array_key_exists('amount', $errors)){ ?>
                 <p class="errorMessage"><?php echo $errors['amount'];?></p>
             <?php }
@@ -32,7 +32,7 @@
                 <p class="errorMessage"><?php echo $errors['empty_amount'];?></p>
             <?php } ?>
             Date
-            <input id="operation_date" name="operation_date" type="date" value= '<?= $operation_date ?>'>
+            <input id="operation_date" name="operation_date" type="date" value= '<?= $operation_date ?>' <?php if(array_key_exists('empty_date', $errors)) {?>class = "errorInput"<?php } ?>>
             <?php if(array_key_exists('empty_date', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['empty_date'];?></p>
             <?php } ?>

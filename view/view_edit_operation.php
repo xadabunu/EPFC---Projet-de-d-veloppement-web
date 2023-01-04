@@ -6,25 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="<?= $web_root ?>">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
-    <title>Edit Operation</title>
+    <title><?= $operation->title ?> &#11208; Edit</title>
 </head>
 
 <body>
     <div class="main">
         <header class="t2">
             <a href="operation/details/<?=$operation->id?>" class="button" id="back">Cancel</a>
-            <p>Edit Operation</p>
+            <p><?= $operation->title ?> &#11208; Edit</p>
         </header>
         <form id="edit_operation_form" action="operation/edit_operation/<?=$operation->id?>" method="post">
             <div class="formtitle">Edit Operation</div>
-            <input id="title" name="title" type="text" size="16" placeholder="Title" value= "<?=$operation->title?>">
+            <input id="title" name="title" type="text" size="16" placeholder="Title" value= "<?=$operation->title?>" <?php if(array_key_exists('empty_title', $errors) || array_key_exists('lenght', $errors)) {?>class = "errorInput"<?php } ?>>
             <?php if (array_key_exists('empty_title', $errors)){ ?>
                 <p class="errorMessage"><?php echo $errors['empty_title'];?></p>
             <?php } 
             if(array_key_exists('lenght', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['lenght'];?></p>
             <?php } ?>
-            <input id="Amount" name="amount" type="text" size="16" placeholder="Amount" value= "<?=$operation->amount?>">
+            <input id="Amount" name="amount" type="text" size="16" placeholder="Amount" value= "<?=$operation->amount?>" <?php if(array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) {?>class = "errorInput"<?php } ?>>
             <?php if(array_key_exists('amount', $errors)){ ?>
                 <p class="errorMessage"><?php echo $errors['amount'];?></p>
             <?php }
@@ -32,12 +32,12 @@
                 <p class="errorMessage"><?php echo $errors['empty_amount'];?></p>
             <?php } ?>
             Date
-            <input id="operation_date" name="operation_date" type="date" value = "<?=$operation->operation_date?>" required>
+            <input id="operation_date" name="operation_date" type="date" value = "<?=$operation->operation_date?>" <?php if(array_key_exists('empty_date', $errors)) {?>class = "errorInput"<?php } ?>>
             <?php if(array_key_exists('empty_date', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['empty_date'];?></p>
             <?php } ?>
             Paid by
-            <select name="paid_by" id="paid_by" required>
+            <select name="paid_by" id="paid_by" >
                 <option value="<?= $operation->initiator->id ?>" ><?= $operation->initiator->full_name ?></option>
                 <?php foreach($subscriptors as $subscriptor) { ?>
                     <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>

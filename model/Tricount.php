@@ -139,6 +139,12 @@ class Tricount extends Model
         if(strlen($this->description) > 0 && !(strlen($this->description) >=3)){
             $errors['description_lenght'] = "Description length must be higher than 3.";
         }
+        $array = self::get_tricounts_list($this->creator);
+        foreach($array as $data){
+            if($this->title == $data->title){
+                $errors['unique_title'] = "Title must be unique";
+            }
+        }
         return $errors;
     }
 

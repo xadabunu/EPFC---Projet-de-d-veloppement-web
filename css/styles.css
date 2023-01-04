@@ -1,3 +1,8 @@
+*
+{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 .main
 {
     height: 100vh;
@@ -6,7 +11,6 @@
     margin-left: auto;
     margin-right: auto;
     padding: 0 20px;
-    font-family: Arial, Helvetica, sans-serif;
     color: rgb(33, 37, 41);
     position: relative;
     display: flex;
@@ -24,7 +28,7 @@ body
 {
     background-color: rgb(171, 206, 236);
     margin: 0;
-    font-size: 150%;
+    font-size: 175%;
 }
 
 a
@@ -298,7 +302,7 @@ tr.balance
     display: flex;
 }
 
-a#balance
+a#balance, .manage:visited
 {
     background-color: rgb(60, 179, 113);
     width: 100%;
@@ -399,9 +403,21 @@ p.inner.left
     right: 20px;
     font-size: 90%;
     background-color: rgb(13, 110, 253);
-    border: rgb(13, 110, 253);
+    border-color: rgb(13, 110, 253);
     color: white;
     padding: 15px;
+}
+
+.save:hover, #add:hover, .circle:hover, td.subscriptor.input:hover > input, #next:hover, #previous:hover
+{
+    background-color: white;
+    color: rgb(13, 110, 253);
+}
+
+td.subscriptor.input:hover
+{
+    background-color: white;
+    border: 3px solid rgb(13, 110, 253);
 }
 
 h3
@@ -415,6 +431,7 @@ h3
     font-size: 80%;
     margin-top: 10px;
     padding: 0;
+    width: inherit;
 }
 
 .bottom2
@@ -424,7 +441,7 @@ h3
     margin-top: 20px;
 }
 
-.delete
+.delete, #back:hover
 {
     background-color: rgb(220, 53, 69);
     border-color: rgb(220, 53, 69);
@@ -437,9 +454,23 @@ h3
     color: rgb(220, 53, 69);
 }
 
+.manage
+{
+    background-color: rgb(60, 179, 113);
+    border-color: rgb(60, 179, 113);
+    color: white;
+}
+
+.manage:hover, #balance:hover
+{
+    background-color: white;
+    color: rgb(60, 179, 113);
+}
+
 .subs
 {
     text-align: left;
+    margin-bottom: 0;
 }
 
 .link
@@ -473,7 +504,7 @@ td.link:hover pop
 
 input, textarea
 {
-    font-size : 50%;
+    font-size : 75%;
     border-radius : 10px;
     padding : 2%;
     height: auto ;
@@ -482,7 +513,7 @@ input, textarea
 
 .login
 {
-    font-size : 50%;
+    font-size : 75%;
     margin : 5% auto;
     margin-bottom: 0%;
     border-radius : 10px;
@@ -513,7 +544,7 @@ form > h3
 {
     font-size: large;
     font-weight: lighter;
-    margin : 0%;
+    margin-top: 2%;
 }
 
 .errorMessage
@@ -521,6 +552,7 @@ form > h3
     color :rgb(220, 53, 69);
     font-size: 50%;
     margin-bottom : 1%;
+    font-weight: bold;
 }
 
 .confirm_delete
@@ -549,4 +581,40 @@ td.empty > .text_confirm, .text_confirm_title
 td.empty > .text_confirm_title
 {
     font-size: 150%;
+}
+
+.errorInput
+{ 
+    border : 2px solid rgb(220, 53, 69);;
+}
+
+td.subscriptor
+{
+    padding: 0;
+    height: min-content;
+    font-size: 130%;
+}
+
+td.subscriptor.input
+{
+    background-color: rgb(13, 110, 253);
+    border: 3px solid rgb(13, 110, 253);
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    font-size: 150%;
+    padding: 10px 15px;
+}
+
+td.subscriptor > input
+{
+    border: none;
+    background-color: rgb(13, 110, 253);
+    color: white;
+}
+
+select#subscriptor
+{
+    border: none;
+    font-size: 100%;
+    padding: 0.5em 35% 0.5em 1em;
 }
