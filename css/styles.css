@@ -618,3 +618,30 @@ select#subscriptor
     font-size: 100%;
     padding: 0.5em 35% 0.5em 1em;
 }
+
+.contains_input
+{
+    margin: 10px auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.icon
+{
+    position: absolute;
+    left: 15px;
+    top: 0;
+    font-size: 25px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contains_input > input{
+    text-align: center;
+    
+}
