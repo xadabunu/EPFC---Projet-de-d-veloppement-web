@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="<?= $web_root ?>">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
-    <title>Edit Operation</title>
+    <title><?= $operation->title ?> &#11208; Edit</title>
 </head>
 
 <body>
     <div class="main">
         <header class="t2">
             <a href="operation/details/<?=$operation->id?>" class="button" id="back">Cancel</a>
-            <p>Edit Operation</p>
+            <p><?= $operation->title ?> &#11208; Edit</p>
         </header>
         <form id="edit_operation_form" action="operation/edit_operation/<?=$operation->id?>" method="post">
             <div class="formtitle">Edit Operation</div>
