@@ -1,6 +1,7 @@
 *
 {
     font-family: Arial, Helvetica, sans-serif;
+    outline: none;
 }
 
 .main
@@ -41,7 +42,7 @@ a
 {
     width : min-content;
     padding: 10px;
-    border: 3px solid;
+    border: 2px solid;
     border-radius: 10px;
 }
 
@@ -80,7 +81,7 @@ a#back
     color: red;
 }
 
-a#next, a#previous, a#add
+#next, #previous, #add
 {
     background-color: rgb(13, 110, 253);
     border-color: rgb(13, 110, 253);
@@ -108,7 +109,7 @@ a.circle
     font-size: 115%;
     padding: 5px 10px;
     background-color: rgb(13, 110, 253);
-    border: 3px solid rgb(13, 110, 253);
+    border: 2px solid rgb(13, 110, 253);
     color: white;
     border-radius: 50%;
     height: min-content;
@@ -196,8 +197,7 @@ header > *
 
 table
 {
-    border: 3px solid rgb(223, 223, 223);
-    border-bottom: none;
+    border: 2px solid rgb(223, 223, 223);
     border-radius: 10px;
     border-spacing: 0;
     width: 100%;
@@ -217,10 +217,14 @@ td > p:last-child
 
 td
 {
-    border-bottom: 3px solid rgb(223, 223, 223);
+    border-bottom: 2px solid rgb(223, 223, 223);
     border-collapse: collapse;
     padding: 20px;
-    
+}
+
+tr:last-child td
+{
+    border-bottom: none;
 }
 
 td.right
@@ -265,7 +269,7 @@ th.empty
 {
     font-weight: 550;
     padding: 10px 0;
-    border-bottom: 3px solid rgb(227, 227, 227);
+    border-bottom: 2px solid rgb(227, 227, 227);
     background-color: rgb(247, 247, 247);
 }
 
@@ -441,14 +445,14 @@ h3
     margin-top: 20px;
 }
 
-.delete, #back:hover
+.delete, .delete:visited, #back:hover
 {
     background-color: rgb(220, 53, 69);
     border-color: rgb(220, 53, 69);
     color: white;
 }
 
-.delete:hover
+.delete:hover, td.empty > a.btn_delete:hover
 {
     background-color: white;
     color: rgb(220, 53, 69);
@@ -509,6 +513,7 @@ input, textarea
     padding : 2%;
     height: auto ;
     width: 95%;
+    border: 2px solid rgb(223, 223, 223);
 }
 
 .login
@@ -566,6 +571,12 @@ td.empty > a.btn_cancel
     border-color: rgb(108,117,125);
 }
 
+td.empty > a.btn_cancel:hover
+{
+    background-color: white;
+    color: rgb(108,117,125);
+}
+
 td.empty > a.btn_delete
 {
     background-color: rgb(220, 53, 69);
@@ -598,7 +609,7 @@ td.subscriptor
 td.subscriptor.input
 {
     background-color: rgb(13, 110, 253);
-    border: 3px solid rgb(13, 110, 253);
+    border: 2px solid rgb(13, 110, 253);
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     font-size: 150%;
@@ -608,7 +619,7 @@ td.subscriptor.input
 td.subscriptor > input
 {
     border: none;
-    background-color: rgb(13, 110, 253);
+    background: none;
     color: white;
 }
 
@@ -616,5 +627,118 @@ select#subscriptor
 {
     border: none;
     font-size: 100%;
-    padding: 0.5em 35% 0.5em 1em;
+    /* padding: 0.5em 35% 0.5em 1em; */
+    padding-left: 1em;
+}
+
+tr.currency input, tr.currency input:focus
+{
+    border: none;
+    outline: none;
+}
+
+tr.currency
+{
+    border: solid 2px rgb(233, 233, 223);
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 150%;
+}
+
+tr.currency > td
+{
+    padding: 10px;
+}
+
+tr.currency .right
+{
+    background-color: rgb(233, 236, 239);
+    border-left: 2px solid rgb(233, 233, 223);
+    font-size: 90%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+table#currency
+{
+    margin-bottom: 15px;
+}
+
+.edit2
+{
+    border: 2px solid rgb(223, 223, 223);
+    border-radius: 10px;
+    padding: 2%;
+    margin-bottom: 15px;
+}
+
+ul
+{
+    padding-left: 0;
+}
+
+li
+{
+    list-style: none;
+}
+
+table.whom
+{
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+table.whom tr
+{
+    display: flex;
+    margin-top: 0;
+}
+
+table.whom td
+{
+    padding: 2%;
+}
+
+td.check
+{
+    border-right: 2px solid rgb(223, 223, 223);
+    background-color: rgb(233, 236, 239);
+    width: 5%;
+}
+
+td.user
+{
+    border-right: 2px solid rgb(223, 223, 223);
+    background-color: rgb(233, 236, 239);
+    width: 70%;
+    font-size: 120%;
+}
+
+table.whom td.weight
+{
+    width: min-content;
+    padding: 0;
+}
+
+td.weight input
+{
+    border: none;
+    margin-left: 15%;
+    font-size: 100%;
+}
+
+td.weight p
+{
+    font-size: 100%;
+    color: rgb(117, 120, 123);
+    padding: 0;
+    margin: 10% 10px 0 10px;
+}
+
+td.template
+{
+    border-right: 2px solid rgb(223, 223, 223);
+    background-color: rgb(233, 236, 239);
+    width: 35%;
 }
