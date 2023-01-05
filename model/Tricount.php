@@ -206,4 +206,14 @@ class Tricount extends Model
         }
         return $paid - $spent;
     }
+
+    public function get_not_deletables() : array {
+        $operations = $this->get_operations();
+        $array = [];
+        foreach($operations as $operation){
+            $array = array_merge($array, $operation->get_participants());
+        }
+        
+        return $array;
+    }
 }
