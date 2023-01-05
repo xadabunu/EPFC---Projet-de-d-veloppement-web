@@ -17,6 +17,7 @@
     flex-direction: column;
     overflow-y: scroll;
     overflow-x: hidden;
+    font-size : 125%;
 }
 
 .main::-webkit-scrollbar
@@ -28,7 +29,6 @@ body
 {
     background-color: rgb(171, 206, 236);
     margin: 0;
-    font-size: 175%;
 }
 
 a
@@ -112,7 +112,7 @@ a.circle
     color: white;
     border-radius: 50%;
     height: min-content;
-    width: 30px;
+    width: 20px;
     text-align: center;
     margin-top: -30px;
     margin-left: 60px;
