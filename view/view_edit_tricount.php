@@ -20,12 +20,15 @@
         <form id="edittricountform" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post" class="edit">
             <input type="submit" value="Save" formaction="tricount/edit_tricount/<?= $tricount->id ?>" class="button save">
             <label>Title :</label>
-            <input id="title" name="title" type="text" value="<?= $tricount->title ?>" <?php if(array_key_exists('required', $errors) || array_key_exists('title_lenght', $errors)) {?>class = "errorInput"<?php } ?>>
+            <input id="title" name="title" type="text" value="<?= $tricount->title ?>" <?php if(array_key_exists('required', $errors) || array_key_exists('title_lenght', $errors) || array_key_exists('unique_title', $errors)) {?>class = "errorInput"<?php } ?>>
             <?php if (array_key_exists('required', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['required']; ?></p>
             <?php }
             if (array_key_exists('title_lenght', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['title_lenght']; ?></p>
+            <?php }
+            if (array_key_exists('unique_title', $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors['unique_title']; ?></p>
             <?php } ?>
             <label>Description (optional) :</label>
             <textarea id="description" name="description" rows="3" placeholder="Description" <?php if(array_key_exists('description_lenght', $errors)) {?>class = "errorInput"<?php } ?>><?= $tricount->description ?></textarea>

@@ -139,6 +139,12 @@ class Tricount extends Model
         if(strlen($this->description) > 0 && !(strlen($this->description) >=3)){
             $errors['description_lenght'] = "Description length must be higher than 3.";
         }
+        $array = self::get_tricounts_list($this->creator);
+        foreach($array as $data){
+            if($this->title == $data->title){
+                $errors['unique_title'] = "Title must be unique";
+            }
+        }
         return $errors;
     }
 
@@ -199,5 +205,15 @@ class Tricount extends Model
             $spent += $op->get_user_amount($user_id);
         }
         return $paid - $spent;
+    }
+
+    public function get_not_deletables() : array {
+        $operations = $this->get_operations();
+        $array = [];
+        foreach($operations as $operation){
+            $array = array_merge($array, $operation->get_participants());
+        }
+        
+        return $array;
     }
 }

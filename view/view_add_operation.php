@@ -70,7 +70,7 @@
                             <td class="user"><?= $subscriptor->full_name ?></td>
                             </p>
                             </td>
-                            <td class="weight">weight<input type= 'text' name= 'weight_<?= $subscriptor->id ?>' value = '1'></td>
+                            <td class="weight"><p>Weight</p><input type= 'text' name= 'weight_<?= $subscriptor->id ?>' value = '1'></td>
                         </tr>
                     </table>
                     </li>
