@@ -10,15 +10,15 @@
 </head>
 
 <body>
-
     <div class="main">
         <header class="t2">
             <a href="tricount/operations/<?= $tricount->id ?>" class="button" id="back">Back</a>
             <p><?= $tricount->title ?> &#11208; Edit</p>
+            <input type="submit" value="Save" formaction="tricount/edit_tricount/<?= $tricount->id ?>" class="button" id= "add">
         </header>
         <h3>Settings</h3>
         <form id="edittricountform" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post" class="edit">
-            <input type="submit" value="Save" formaction="tricount/edit_tricount/<?= $tricount->id ?>" class="button save">
+            
             <label>Title :</label>
             <input id="title" name="title" type="text" value="<?= $tricount->title ?>" <?php if(array_key_exists('required', $errors) || array_key_exists('title_lenght', $errors) || array_key_exists('unique_title', $errors)) {?>class = "errorInput"<?php } ?>>
             <?php if (array_key_exists('required', $errors)) { ?>

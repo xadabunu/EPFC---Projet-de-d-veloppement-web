@@ -80,7 +80,7 @@ a#back
     color: red;
 }
 
-a#next, a#previous, a#add
+a#next, a#previous, #add
 {
     background-color: rgb(13, 110, 253);
     border-color: rgb(13, 110, 253);
@@ -526,13 +526,13 @@ input, textarea
 
 .join
 {
-    font-size: large;
+    font-size: 70%;
     text-align: center;
 }
 
 a.bottom
 {
-    font-size : 50%;   
+    font-size : 75%;   
     border-radius : 10px;
     padding : 2%; 
     text-align: center;
