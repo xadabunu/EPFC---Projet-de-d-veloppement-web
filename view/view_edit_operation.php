@@ -8,7 +8,6 @@
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
     <title><?= $operation->title ?> &#11208; Edit</title>
 </head>
-
 <body>
     <div class="main">
         <header class="t2">
@@ -43,9 +42,11 @@
             <label for="paid_by">Paid by</label>
             <select name="paid_by" id="paid_by" class="edit edit2">
                 <option value="<?= $operation->initiator->id ?>" ><?= $operation->initiator->full_name ?></option>
-                <?php foreach($subscriptors as $subscriptor) { ?>
-                    <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
-                <?php } ?>
+                <?php foreach($subscriptors as $subscriptor) { 
+                    if($subscriptor != $operation->initiator){ ?>
+                        <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
+                    <?php } 
+                } ?>
             </select>
             <?php if(array_key_exists('empty_initiator', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['empty_initiator'];?></p>
