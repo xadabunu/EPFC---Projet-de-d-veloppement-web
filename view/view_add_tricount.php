@@ -14,12 +14,12 @@
         <header class="t2">
             <a href="main/index" class="button" id="back">Cancel</a>
             <p>Add Tricount</p>
+            <button class="button save" id="add" type="submit" form="add_tricount">Save</button>
         </header>
         <div class="menu">
 
         </div>
-        <form class="connect" id="add_tricount" action="tricount/add_tricount" method="post">
-            <input type="submit" value="Save" class="button save">
+        <form class="edit" id="add_tricount" action="tricount/add_tricount" method="post">
             <h3>Titre</h3>
             <input id="title" name="title" type="text" value="<?= $title ?>" placeholder="Title" <?php if(array_key_exists('required', $errors) || array_key_exists('title_lenght', $errors) || array_key_exists('unique_title', $errors)) {?>class = "errorInput"<?php } ?>>
             <?php if (array_key_exists('required', $errors)) { ?>

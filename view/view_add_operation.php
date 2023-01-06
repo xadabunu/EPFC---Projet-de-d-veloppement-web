@@ -14,6 +14,7 @@
         <header class="t2">
             <a href="tricount/operations/<?= $tricount->id ?>" class="button" id="back">Cancel</a>
             <p>Add Operation</p>
+            <button class = "button save" id="add" type="submit" form="add_operation_form">Save</button>
         </header>
         <form id="add_operation_form" action= "operation/add_operation/<?= $tricount->id ?>" method="post" class="edit">
             <input id="title" name="title" type="text" size="16" placeholder="Title" value= '<?= $title ?>' <?php if(array_key_exists('empty_title', $errors) || array_key_exists('lenght', $errors)) {?>class = "errorInput"<?php } ?>>
@@ -68,8 +69,6 @@
                                 <p><input type='checkbox' name='<?= $subscriptor->id ?>' value=''>
                             </td>
                             <td class="user"><?= $subscriptor->full_name ?></td>
-                            </p>
-                            </td>
                             <td class="weight"><p>Weight</p><input type= 'text' name= 'weight_<?= $subscriptor->id ?>' value = '1'></td>
                         </tr>
                     </table>
@@ -87,6 +86,5 @@
                     <td>name</td>
                 </tr>
             </table>
-            <input type="submit" value="Save" >
         </form>
     </div>

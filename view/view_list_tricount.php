@@ -12,6 +12,7 @@
 <body>
     <div class="main">
         <header class="t2">
+            <p></p>
             <p>Your Tricounts</p>
             <a href="tricount/add_tricount" class="button" id="add">Add</a>
         </header>

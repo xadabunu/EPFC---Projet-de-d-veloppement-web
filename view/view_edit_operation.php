@@ -13,6 +13,7 @@
         <header class="t2">
             <a href="operation/details/<?=$operation->id?>" class="button" id="back">Cancel</a>
             <p><?= $operation->title ?> &#11208; Edit</p>
+            <button class = "button save" id="add" type="submit" form="edit_operation_form">Save</button>
         </header>
         <form id="edit_operation_form" action="operation/edit_operation/<?=$operation->id?>" method="post" class="edit">
             <input id="title" name="title" type="text" size="16" placeholder="Title" value= "<?=$operation->title?>" <?php if(array_key_exists('empty_title', $errors) || array_key_exists('lenght', $errors)) {?>class = "errorInput"<?php } ?>>
@@ -85,7 +86,6 @@
             <?php if(array_key_exists('whom', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['whom'];?></p>
             <?php } ?>
-            <input type="submit" value="Save" formaction="operation/edit_operation/<?=$operation->id?>" class="button save">
-            <a href="operation/delete_operation/<?= $operation->id ?>" class="button bottom2 delete">Delete this operation</a>
+            <a href="operation/delete_operation/<?= $operation->id ?>" class="button bottom2 delete delete2">Delete this operation</a>
         </form>
     </div>

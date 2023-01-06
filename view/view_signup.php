@@ -12,7 +12,7 @@
     <body>
         <div class="main">
             <header class="t1">Sign Up</header>
-            <form id="signupform" action="main/signup" method="post" class="connect">
+            <form id="signupform" action="main/signup" method="post" class="connect2">
                 <div class="formtitle">Sign Up</div>
                 <div class="contains_input">
 				    <span class="icon"><i class="fa fa-at" aria-hidden="true"></i></span>
@@ -35,7 +35,7 @@
                     <p class="errorMessage"><?php echo $errors['name_contains'];?></p>
                 <?php } ?>
                 <div class="contains_input">
-				    <span class="icon"><i class="fa fa-credit-card-alt" aria-hidden="true"></i></span>
+				    <span class="icon"><i class="fa fa-credit-card" aria-hidden="true"></i></span>
                     <input id="iban" name="iban" type="text" placeholder="IBAN" value="<?= $iban ?>" <?php if(array_key_exists('iban', $errors)) {?>class = "errorInput"<?php } ?>>
                 </div>
                 <?php if (array_key_exists('iban', $errors)){ ?>

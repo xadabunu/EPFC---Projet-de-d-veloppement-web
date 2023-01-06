@@ -12,9 +12,9 @@
 <body>
     <div class="main">
         <header class="t2">
-            <a href ="operation/edit_operation/<?= $operation->id ?>" class= "button" id= "add">Edit</a>
             <a href="tricount/operations/<?= $operation->tricount->id ?>" class="button" id="back">Back</a>
             <p><?php echo $operation->tricount->title ?> &#11208; <?= $operation->title ?></p>
+            <a href ="operation/edit_operation/<?= $operation->id ?>" class= "button" id= "add">Edit</a>
         </header>
         <div>
             <div class="amount"><?php echo number_format($operation->amount, 2) ?> €</div>
@@ -38,10 +38,10 @@
         </div>
         <footer>
             <?php if ($previous != NULL) { ?>
-                <a href="operation/details/<?= $previous ?>" class="button" id="previous">Previous</a>
+                <a href="operation/details/<?= $previous ?>" class="button" id="previous">&#129060;</a>
             <?php } ?>
             <?php if ($next != NULL) { ?>
-                <a href="operation/details/<?= $next ?>" class="button" id="next">Next</a>
+                <a href="operation/details/<?= $next ?>" class="button" id="next">&#129062;</a>
             <?php } ?>
         </footer>
     </div>
