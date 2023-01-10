@@ -70,7 +70,7 @@
                 <td class="subscriptor input"><input type="submit" value="Add" formaction="tricount/add_subscriptors/<?= $tricount->id ?>"></td>
             </table>
         </form>
-        <a class="button bottom2 manage">Manage repartition template</a>
+        <a href="templates/manage_templates/<?= $tricount->id ?>" class="button bottom2 manage">Manage repartition template</a>
         <a href="tricount/delete_tricount/<?= $tricount->id ?>" class="button bottom2 delete">Delete this tricount</a>
     </div>
 </body>
