@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang='en'>
 
 <head>
-    <meta charset="utf8">
+    <meta charset="utf-8">
     <title>Delete Operation</title>
     <base href="<?= $web_root ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

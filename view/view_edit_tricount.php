@@ -7,13 +7,14 @@
     <base href="<?= $web_root ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
     <div class="main">
         <header class="t2">
             <a href="tricount/operations/<?= $tricount->id ?>" class="button" id="back">Back</a>
-            <p><?= $tricount->title ?> &#11208; Edit</p>
+            <p><?= $title ?> &#11208; Edit</p>
             <button form= "edittricountform" type="submit" class ="button save" id="add">Save</button>
         </header>
         <h3>Settings</h3>
@@ -46,10 +47,12 @@
                 <tr class="pop">
                     <td><?= $subscriptor->full_name ?></td>
                     <td class="link">
-                        <form id="delete_sub" class="link" action='tricount/delete_subscriptor/<?= $tricount->id ?>' method='post'>
-                            <input type='text' name='subscriptor_name' value='<?= $subscriptor->id ?>' hidden>
-                            <button type="submit" class="pop x">&#215;</i></button>
-                        </form>
+                        <?php if (!in_array($subscriptor, $not_deletables)) { ?>
+                            <form id="delete_sub" class="link" action='tricount/delete_subscriptor/<?= $tricount->id ?>' method='post'>
+                                <input type='text' name='subscriptor_name' value='<?= $subscriptor->id ?>' hidden>
+                                <button type="submit" class="pop x"><i class="fa fa-trash-o fa" aria-hidden="true"></i></button>
+                            </form>
+                        <?php } ?>
                     </td>
                 </tr>
             <?php } ?>

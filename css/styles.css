@@ -409,7 +409,7 @@ p.inner.left
     padding: 15px;
 }
 
-.save:hover, #add:hover, .circle:hover, td.subscriptor.input:hover > input, #next:hover, #previous:hover, .login:hover
+.save:hover, #add:hover, .circle:hover, td.subscriptor.input:hover > input, #next:hover, #previous:hover, .login:hover, td.empty .button:hover
 {
     background-color: white;
     color: rgb(13, 110, 253);
@@ -502,22 +502,11 @@ tr.pop .pop
     width: min-content;
     height: min-content;
     margin: 0;
-    display: none;
 }
 
 tr.pop td
 {
     width: 90%;
-}
-
-tr.pop:hover .pop
-{
-    display: block;
-}
-
-td.link:hover pop
-{
-    display: block;
 }
 
 input, textarea
@@ -641,8 +630,8 @@ select#subscriptor
 {
     border: none;
     font-size: 65%;
-    /* padding: 0.5em 35% 0.5em 1em; */
-    padding-left: 1em;
+    padding: 0.5em 35% 0.5em 1em;
+    /* padding-left: 1em; */
 }
 
 form#subscriptor > table
@@ -809,3 +798,11 @@ p#confirm_title
     font-size : 200%; 
 }
 
+select-selected:after
+{
+    content: "";
+    position: absolute;
+    top: 14px;
+    right: 10px;
+    
+}
