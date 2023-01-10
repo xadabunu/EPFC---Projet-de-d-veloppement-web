@@ -357,7 +357,7 @@ p.positive
 {
     background-color: rgb(60, 179, 113);
     padding-left: 10px;
-    margin-left: -5px;
+    margin-left: 0px;
 }
 
 p.right
@@ -371,7 +371,7 @@ p.negative
 {
     background-color: rgb(255, 99, 71);
     padding-right: 10px;
-    margin-right: -15px;
+    margin-right: 0px;
 }
 
 p.left
@@ -809,3 +809,7 @@ p#confirm_title
     font-size : 200%; 
 }
 
+p.inner.left.bold, p.right.bold, p.left.bold, p.inner.bold
+{
+    font-weight: bold;
+}
