@@ -20,4 +20,19 @@ class Template extends Model{
             return $array;
         
     }
+
+    public function get_repartition_items(): array{
+        $array = [];
+
+        $query = self::execute("SELECT * FROM repartition_template_items WHERE repartition_template = :id", ["id" => $this->id]);
+        $data = $query->fetchAll();
+
+        foreach($data as $template_item){
+            $array[$template_item["user"] = $template_item["weight"]];
+        }
+
+        return $array;
+    }
+    
+    
 }

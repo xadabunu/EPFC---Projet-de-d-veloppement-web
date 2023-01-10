@@ -54,12 +54,12 @@
             <?php } ?>
             <label for="templates">Use repartition template <i>(optional)</i></label>
             <select name="templates" id="templates" class="edit edit2">
-                <option selected><i>-- No, i'll use custom repartition --</i></option>
+                <option selected>-- No, I'll use custom repartition --</option>
                 <?php foreach($templates as $template) { ?>
                     <option value="<?= $template->id ?>"><?= $template->title ?></option>
                 <?php } ?>
             </select>
-            <label for="whom">For whom ? <i>(select at leat one)</i></label>
+            <label>For whom ? <i>(select at leat one)</i></label>
             <ul>
                 <?php foreach($subscriptors as $subscriptor){?>
                     <li>
@@ -69,7 +69,7 @@
                             <p><input type='checkbox' <?php if (array_key_exists($subscriptor->id, $list)) echo "checked"?> name='<?= $subscriptor->id ?>' value=''></p>
                         </td>
                         <td class="user">
-                            <?= $subscriptor->full_name ?></td>
+                            <?= $subscriptor->full_name ?>
                         </td>
                         <td class="weight"><p>Weight</p><input type= 'text' name= 'weight_<?= $subscriptor->id ?>' value= '<?php if(array_key_exists($subscriptor->id, $list)) echo $list[$subscriptor->id] ?>'></td>
                     </tr></table></li>
