@@ -56,7 +56,7 @@ class Tricount extends Model
     }
 
     public function get_subscriptors() : array {
-        $query = self::execute("SELECT DISTINCT users.* FROM users, subscriptions WHERE subscriptions.user = users.id AND tricount=:id AND subscriptions.user != :user_id",
+        $query = self::execute("SELECT DISTINCT users.* FROM users, subscriptions WHERE subscriptions.user = users.id AND tricount=:id AND subscriptions.user != :user_id ORDER BY users.full_name",
                                 ['id'=> $this->id, "user_id"=>$this->creator]);
         $data = $query->fetchAll();
         $array = [];
@@ -67,7 +67,7 @@ class Tricount extends Model
     }
 
     public function get_subscriptors_with_creator() : array {
-        $query = self::execute("SELECT DISTINCT users.* FROM users, subscriptions WHERE subscriptions.user = users.id AND subscriptions.tricount= :id",
+        $query = self::execute("SELECT DISTINCT users.* FROM users, subscriptions WHERE subscriptions.user = users.id AND subscriptions.tricount= :id ORDER BY users.full_name",
                                 ['id'=> $this->id]);
         $data = $query->fetchAll();
         $array = [];
