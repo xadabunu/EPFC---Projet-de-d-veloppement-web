@@ -28,9 +28,8 @@ class Template extends Model{
         $data = $query->fetchAll();
 
         foreach($data as $template_item){
-            $array[$template_item["user"] = $template_item["weight"]];
+            $array[$template_item["user"]] =  $template_item["weight"];
         }
-
         return $array;
     }
     
