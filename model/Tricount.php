@@ -3,13 +3,12 @@
 require_once "framework/Model.php";
 require_once "model/Operation.php";
 require_once "model/Template.php";
+require_once "model/User.php";
 
 class Tricount extends Model
 {
 
-    public function __construct(public String $title, public String $created_at, public int $creator, public ?String $description = null,  public ?int $id = 0)
-    {
-    }
+    public function __construct(public String $title, public String $created_at, public User $creator, public ?String $description = null,  public ?int $id = 0) {}
 
 // --------------------------- Get sur les Tricounts ------------------------------------ 
 
@@ -21,7 +20,7 @@ class Tricount extends Model
 
         $array = [];
         foreach ($data as $tricount) {
-            $array[] = new Tricount($tricount['title'], $tricount['created_at'], $tricount['creator'], $tricount['description'], $tricount['id']);
+            $array[] = new Tricount($tricount['title'], $tricount['created_at'], User::get_user_by_id($tricount['creator']), $tricount['description'], $tricount['id']);
         }
         return $array;
     }
@@ -30,7 +29,7 @@ class Tricount extends Model
     {
         $query = self::execute("SELECT * FROM tricounts WHERE id = :id", ["id" => $id]);
         $data = $query->fetch();
-        return new Tricount($data['title'], $data['created_at'], $data['creator'], $data['description'], $data['id']);
+        return new Tricount($data['title'], $data['created_at'], User::get_user_by_id($data['creator']), $data['description'], $data['id']);
     }
 
 // --------------------------- Get sur les dépenses && Balance ------------------------------------ 
@@ -83,7 +82,7 @@ class Tricount extends Model
     public function get_subscriptors() : array
     {
         $query = self::execute("SELECT DISTINCT users.* FROM users, subscriptions WHERE subscriptions.user = users.id AND tricount=:id AND subscriptions.user != :user_id ORDER BY users.full_name",
-                                ['id'=> $this->id, "user_id"=>$this->creator]);
+                                ["id" => $this->id, "user_id" => $this->creator->id]);
         $data = $query->fetchAll();
         $array = [];
 		foreach ($data as $user) {
@@ -107,7 +106,7 @@ class Tricount extends Model
     public function get_cbo_users() : array
     {
         $query = self::execute("SELECT * FROM users WHERE id != :creator_id AND id NOT IN (SELECT user FROM subscriptions WHERE tricount = :tricount_id)",
-                                ['creator_id'=>$this->creator, 'tricount_id'=>$this->id]);
+                                ["creator_id" => $this->creator->id, "tricount_id" => $this->id]);
         $data = $query->fetchAll();
         $array = [];
         foreach($data as $user){
@@ -171,7 +170,7 @@ public function delete_subscriptor(int $id) : void
         if(strlen($this->description) > 0 && !(strlen($this->description) >=3)){
             $errors['description_lenght'] = "Description length must be higher than 3.";
         }
-        $array = self::get_tricounts_list($this->creator);
+        $array = self::get_tricounts_list($this->creator->id);
         foreach($array as $data){
             if(strtoupper($this->title) == strtoupper($data->title) && $this->id != $data->id){
                 $errors['unique_title'] = "Title must be unique";
@@ -184,14 +183,14 @@ public function delete_subscriptor(int $id) : void
     {
         if($this->id != 0){
             self::execute("UPDATE tricounts SET title =:title, description =:description WHERE id=:id",
-                            ["title"=>$this->title, "description"=>$this->description, "id"=>$this->id]);
+                            ["title" => $this->title, "description" => $this->description, "id" => $this->id]);
         }
         else {
         self::execute("INSERT INTO tricounts(title, description, created_at, creator) VALUES(:title, :description, :created_at, :creator)",
-                        ["title"=>$this->title, "description"=>$this->description, "created_at"=>$this->created_at, "creator"=>$this->creator]);
+                        ["title" => $this->title, "description" => $this->description, "created_at" => $this->created_at, "creator" => $this->creator->id]);
         
         $this->id = Model::lastInsertId();
-        self::execute("INSERT INTO subscriptions(user, tricount) VALUES (:user, :tricount)", ['user'=>$this->creator, 'tricount'=>$this->id]);
+        self::execute("INSERT INTO subscriptions(user, tricount) VALUES (:user, :tricount)", ["user" => $this->creator->id, "tricount" => $this->id]);
         }
         return $this;
     }

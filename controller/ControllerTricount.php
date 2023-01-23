@@ -75,7 +75,7 @@ class ControllerTricount extends MyController
             $description = Tools::sanitize($_POST['description']);
             $creator = MyController::get_user_or_redirect();
             $created_at = Date("Y-m-d H:i:s");
-            $tricount = new Tricount($title, $created_at, $creator->id, $description);
+            $tricount = new Tricount($title, $created_at, $creator, $description);
             $errors = array_merge($errors, $tricount->validate());
             if (count($errors) == 0) {
                 $tricount->persist_tricount();
@@ -95,7 +95,7 @@ class ControllerTricount extends MyController
         if (isset($_GET['param1'])){
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             $title = $tricount->title;
-            $creator = User::get_user_by_id($tricount->creator);
+            $creator = $tricount->creator;
             $subscriptors = $tricount->get_subscriptors();
             $cbo_users = $tricount->get_cbo_users();
             $not_deletables = $tricount->get_not_deletables();
