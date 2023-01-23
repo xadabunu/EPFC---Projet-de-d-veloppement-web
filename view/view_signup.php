@@ -36,7 +36,7 @@
                 <?php } ?>
                 <div class="contains_input">
 				    <span class="icon"><i class="fa fa-credit-card" aria-hidden="true"></i></span>
-                    <input id="iban" name="iban" type="text" placeholder="IBAN" value="<?= $iban ?>" <?php if(array_key_exists('iban', $errors)) {?>class = "errorInput"<?php } ?>>
+                    <input id="iban" name="iban" type="text" placeholder="IBAN - BE12 3456 7890 1234" value="<?= $iban ?>" <?php if(array_key_exists('iban', $errors)) {?>class = "errorInput"<?php } ?>>
                 </div>
                 <?php if (array_key_exists('iban', $errors)){ ?>
                     <p class="errorMessage"><?php echo $errors['iban'];?></p>

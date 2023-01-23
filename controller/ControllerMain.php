@@ -4,6 +4,7 @@ require_once 'framework/Controller.php';
 require_once 'model/User.php';
 require_once "model/User.php";
 require_once "controller/MyController.php";
+require_once "framework/Tools.php";
 
 class ControllerMain extends MyController
 {
@@ -24,8 +25,8 @@ class ControllerMain extends MyController
 		$errors = [];
 
 		if (isset($_POST['email']) && isset($_POST['password'])) {
-			$email = trim($_POST['email']);
-			$password = trim($_POST['password']);
+			$email = Tools::sanitize($_POST['email']);
+			$password = Tools::sanitize($_POST['password']);
 
 			$errors = User::validate_login($email, $password);
 			if (count($errors) == 0) {
@@ -35,7 +36,8 @@ class ControllerMain extends MyController
 		(new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors]);
 	}    
 
-    public function signup() : void {
+    public function signup() : void
+    {
         $email = '';
         $role='user';
         $full_name = '';
@@ -47,11 +49,11 @@ class ControllerMain extends MyController
         if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['password_confirm'])
             && isset($_POST['full_name']) && isset($_POST['iban'])) {
 
-            $email = trim($_POST['email']);
-            $full_name = trim($_POST['full_name']);
-            $iban = ($_POST['iban']);
-            $password = $_POST['password'];
-            $password_confirm = $_POST['password_confirm'];
+            $email = Tools::sanitize($_POST['email']);
+            $full_name = Tools::sanitize($_POST['full_name']);
+            $iban = Tools::sanitize($_POST['iban']);
+            $password = Tools::sanitize($_POST['password']);
+            $password_confirm = Tools::sanitize($_POST['password_confirm']);
 
             $user = new User($email, Tools::my_hash($password), $full_name, $role, $iban);
             $errors = User::validate_unicity($email);

@@ -8,7 +8,49 @@ class User extends Model
 
 	public function __construct(public string $email, public string $hashed_password, public string $full_name , public string $role , public ?string $iban = null, public ?int $id = NULL  ) {}
 
-	public static function validate_login(string $email, string $password): array
+// --------------------------- Get sur User ------------------------------------ 
+
+
+    public static function get_user_by_email(string $email): User | false
+    {
+        $query = self::execute("SELECT * FROM users WHERE mail = :email", ["email" => $email]);
+        $data = $query->fetch();
+        if ($query->rowCount() == 0) {
+            return false;
+        } else {
+            return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["iban"], $data["id"]);
+        }
+    }
+
+    public static function get_user_by_id(int $id) : User |false
+    {
+        $query = self::execute("SELECT * FROM users WHERE id =:id", ["id"=>$id]);
+        $data = $query->fetch();
+        if($query->rowcount() == 0) {
+            return false;
+        }
+        else{
+            return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["iban"], $data["id"]);
+        }
+    }
+
+    public function get_user_tricounts() : array
+    {
+        $query = self::execute("SELECT t.* FROM tricounts t JOIN subscriptions s ON t.id = s.tricount WHERE s.user = :id UNION (SELECT * from tricounts where creator = :id) ", ["id" => $this->id]);
+        $data = $query->fetchAll();
+
+        $array = [];
+        foreach ($data as $tricount) {
+            $array[] = new Tricount($tricount['title'], $tricount['created_at'], $tricount['creator'], $tricount['description'], $tricount['id']);
+        }
+        return $array;
+    }
+
+
+// --------------------------- Validate && Persist // Delete User ------------------------------------ 
+
+
+    public static function validate_login(string $email, string $password): array
 	{
 		$errors = [];
 		$user = User::get_user_by_email($email);
@@ -29,41 +71,8 @@ class User extends Model
 		return $hash === Tools::my_hash($clear_password);
 	}
 
-	public static function get_user_by_email(string $email): User | false
-	{
-		$query = self::execute("SELECT * FROM users WHERE mail = :email", ["email" => $email]);
-		$data = $query->fetch();
-		if ($query->rowCount() == 0) {
-			return false;
-		} else {
-			return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["iban"], $data["id"]);
-		}
-	}
-
-    public static function get_user_by_id(int $id) : User |false {
-        $query = self::execute("SELECT * FROM users WHERE id =:id", ["id"=>$id]);
-        $data = $query->fetch();
-        if($query->rowcount() == 0) {
-            return false;
-        }
-        else{
-            return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["iban"], $data["id"]);
-        }
-    }
-
-	public function get_user_tricounts() : array
-	{
-		$query = self::execute("SELECT t.* FROM tricounts t JOIN subscriptions s ON t.id = s.tricount WHERE s.user = :id UNION (SELECT * from tricounts where creator = :id) ", ["id" => $this->id]);
-		$data = $query->fetchAll();
-
-		$array = [];
-		foreach ($data as $tricount) {
-			$array[] = new Tricount($tricount['title'], $tricount['created_at'], $tricount['creator'], $tricount['description'], $tricount['id']);
-		}
-		return $array;
-	}
-
-    public static function validate_unicity(string $email) : array {
+    public static function validate_unicity(string $email) : array
+    {
         $errors = [];
         $user = self::get_user_by_email($email);
         if ($user) {
@@ -72,7 +81,8 @@ class User extends Model
         return $errors;
     }
 
-    public function validate() : array{
+    public function validate() : array
+    {
         $errors = [];
         if(!strlen($this->email) >0){
             $errors['required'] = "Email is required.";
@@ -87,14 +97,15 @@ class User extends Model
             $errors ['name_contains'] = "Name must contains only letters";
         }
          if(!preg_match("/^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/", $this->iban)){
-             $errors['iban'] = "IBAN must have an official IBAN format";
+             $errors['iban'] = "IBAN must have an official Belgian IBAN format";
          }
 
 
         return $errors;
     }
 
-    private static function validate_password(string $password) : array {
+    private static function validate_password(string $password) : array
+    {
         $errors = [];
         if (strlen($password) < 8 || strlen($password) > 16) {
             $errors['password_lenght'] = "Password length must be between 8 and 16.";
@@ -104,7 +115,8 @@ class User extends Model
         return $errors;
     }
 
-    public static function validate_passwords(string $password, string $password_confirm) : array {
+    public static function validate_passwords(string $password, string $password_confirm) : array
+    {
         $errors = self::validate_password($password);
         if ($password != $password_confirm) {
             $errors['password_confirm'] = "You have to enter twice the same password.";
@@ -112,7 +124,8 @@ class User extends Model
         return $errors;
     }
 
-    public function persist() : User {
+    public function persist() : User
+    {
         if(self::get_user_by_email($this->email)){
             self::execute("UPDATE users SET hashed_password=:password, full_name=:full_name, role=:role, iban=:iban WHERE mail=:email",
                             ["hashed_password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role, "iban"=>$this->iban]);

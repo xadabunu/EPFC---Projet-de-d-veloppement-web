@@ -6,6 +6,10 @@ require_once "model/Template.php";
 
 class ControllerOperation extends MyController
 {
+
+// --------------------------- Index + Details Operations ------------------------------------ 
+
+
     public function index(): void {}
 
     public function details(): void
@@ -32,7 +36,11 @@ class ControllerOperation extends MyController
         }
     }
 
-    public function add_operation() : void {
+// --------------------------- Add/edit Operations ------------------------------------ 
+
+
+    public function add_operation() : void
+    {
         $tricount = Tricount::get_tricount_by_id($_GET['param1']);
         $operation = '';
         $subscriptors = $tricount->get_subscriptors_with_creator();
@@ -43,9 +51,9 @@ class ControllerOperation extends MyController
         $operation_date = '';
         $initiator = '';
         if(isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
-            $title = $_POST['title'];
-            $amount = floatval($_POST['amount']);
-            $operation_date = $_POST['operation_date'];
+            $title = Tools::sanitize($_POST['title']);
+            $amount = Tools::sanitize(floatval($_POST['amount']));
+            $operation_date = Tools::sanitize($_POST['operation_date']);
             $created_at = Date("Y-m-d H:i:s");
             $initiator = $_POST['paid_by'];
             $list = self::get_weight($_POST, $tricount);
@@ -65,7 +73,8 @@ class ControllerOperation extends MyController
                                             'operation_date'=>$operation_date, 'initiator'=>$initiator]);
     }
 
-    private function is_valid_fields(array $array) : array {
+    private function is_valid_fields(array $array) : array
+    {
         $errors = [];
         if(empty($array['title'])){
             $errors ['empty_title'] = "Title is required";
@@ -99,7 +108,8 @@ class ControllerOperation extends MyController
         return $errors;
     }
 
-    public function edit_operation() : void {
+    public function edit_operation() : void
+    {
         $subscriptors = [];
         $templates = '';
         $operation = '';
@@ -112,8 +122,8 @@ class ControllerOperation extends MyController
             $templates = Template::get_templates($tricount->id);
             $list = $operation->get_repartitions();
             if(isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date'])) {
-                $operation->title = $_POST['title'];
-                $operation->amount = $_POST['amount'];
+                $operation->title = Tools::sanitize($_POST['title']);
+                $operation->amount = Tools::sanitize($_POST['amount']);
                 $operation->initiator = User::get_user_by_id($_POST['paid_by']);
                 $operation->operation_date = $_POST['operation_date'];
                 $list = self::get_weight($_POST, $tricount);
@@ -129,6 +139,7 @@ class ControllerOperation extends MyController
         (new View('edit_operation'))->show(['operation'=>$operation, 'errors'=>$errors,
                                             'subscriptors'=>$subscriptors, 'templates'=>$templates, 'list'=>$list]);
     }
+//---- Fonction private get sur le poids et les users selectionnés lors d'un add ou edit operation
 
     private function get_whom(array $array, Tricount $tricount) : array
     {   
@@ -142,7 +153,8 @@ class ControllerOperation extends MyController
         return $result;
     }
 
-    private function get_weight(array $array, Tricount $tricount) : array {
+    private function get_weight(array $array, Tricount $tricount) : array
+    {
         $list = self::get_whom($array, $tricount);
         $result = [];
         foreach($list as $sub) {
@@ -151,14 +163,23 @@ class ControllerOperation extends MyController
         return $result;
     }
 
-    public function delete_operation() : void {
+
+// --------------------------- Delete + ConfirmDelete operations ------------------------------------ 
+
+
+    public function delete_operation() : void
+    {
         $operation = Operation::get_operation_by_id($_GET['param1']);
         (new View('delete_operation'))->show(['operation'=>$operation]);
     }
 
-    public function confirm_delete_operation() : void {
+    public function confirm_delete_operation() : void
+    {
         $operation = Operation::get_operation_by_id($_GET['param1']);
         $operation->delete_operation_cascade();
         $this->redirect('tricount', 'operations', $operation->tricount->id);
     }
+
+
+
 }
