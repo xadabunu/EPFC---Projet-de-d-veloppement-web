@@ -11,8 +11,8 @@
     <div class="main">
     <header class="t2">
             <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button" id="back">Back</a>
-            <p><?= $tricount->title ?> &#11208; Edit</p>
-            <button form= "edittricountform" type="submit" class ="button save" id="save">Add</button>
+            <p><?= $tricount->title ?> &#11208; Templates</p>
+            <a href="templates/add_template/<?= $tricount->id ?>" class="button" id="add">Add</a>
     </header>
 
     <table>

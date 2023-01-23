@@ -6,7 +6,7 @@ require_once "model/Operation.php";
 
 class Template extends Model{
 
-    public function __construct(public String $title, public int $tricount, public ?int $id = 0) {
+    public function __construct(public String $title, public Tricount $tricount, public ?int $id = 0) {
         
     }
 
@@ -15,7 +15,8 @@ class Template extends Model{
             $data = $query->fetchAll();
             $array = [];
             foreach ($data as $template) {
-                $array[] = new Template($template['title'], $template['tricount'], $template['id']);
+                $tricountInstance = Tricount::get_tricount_by_id($template['tricount']);
+                $array[] = new Template($template['title'], $tricountInstance, $template['id']);
             }
             return $array;
         
@@ -32,6 +33,31 @@ class Template extends Model{
         }
         return $array;
     }
+
+    public function validate_template(): array{
+        $errors = [];
+
+        if(strlen($this->title) < 3){
+            $errors['lenght'] = "Title length must be higher than 3.";
+        }
+        return $errors;
+    }
     
+
+    public function persist_template(): Template {
+        self::execute("INSERT INTO repartition_templates(title, tricount) VALUES(:title, :tricount)",
+                        ["title"=>$this->title, 'tricount'=>$this->tricount->id]);
+        
+        
+        $this->id = Model::lastInsertId();
+        return $this;
+    }
+
+    public function persist_template_items(Template $template, array $list): void {
+        $array = array_keys($list);
+        foreach($array as $id){
+            self::execute("INSERT INTO repartitions_template_items(user, repartition_template, weight) VALUES(:user, :repartition_template, :weight)", ['user'=>$id, 'repartition_template'=>$template->id, 'weight'=>$list[$id]]);
+        }  
+    }
     
 }
