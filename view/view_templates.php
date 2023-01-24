@@ -20,8 +20,7 @@
         for($cpt = 0; $cpt != count($templates); $cpt++){ ?>
         <tr>
             <td>
-                <a><h2><?= $templates[$cpt]->title ?></h2></a> <!-- Ajouter href vers edit template -->
-                
+                <a href="templates/edit_template/<?= $tricount->id ?>/<?= $templates[$cpt]->id ?>"><h2><?= $templates[$cpt]->title ?></h2></a>
 
                 <ul>
                     <?php 

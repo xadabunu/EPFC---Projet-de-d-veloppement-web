@@ -50,11 +50,6 @@ class ControllerTemplates extends MyController{
 
     }
 
-    public function edit_template(): void {
-
-    
-    }
-
     public function add_template(): void {
         $errors = [];
         $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
@@ -128,6 +123,42 @@ class ControllerTemplates extends MyController{
         }
         return $result;
     }
+
+    public function edit_template(): void {
+        $errors = [];
+        
+            $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
+            $template = Template::get_template_by_template_id($_GET["param2"]);
+            $subscriptors = $tricount->get_subscriptors_with_creator();
+
+            $userAndWeightArray = $template->get_template_user_and_weight();
+
+            if(isset($_POST['title'])){
+                $title = $_POST['title'];
+                $list = self::get_weight($_POST, $tricount);
+                $errors = array_merge($errors, self::is_valid_fields($_POST));
+                
+    
+                $template->title = $title;
+                $errors = $template->validate_template();
+
+                if(count($errors) == 0){
+                    $template->persist_template_items($template, $list);
+                    $template->persist_template();
+                    $this->redirect('templates', 'manage_templates', $tricount->id);
+                }
+                
+            }
+
+            (new View('edit_template'))->show(['tricount'=>$tricount, 'subscriptors'=>$subscriptors, 'errors'=>$errors, 'template'=>$template, 'userAndWeightArray'=>$userAndWeightArray]);
+        
+
+        
+
+    
+    }
+    
+    
 
 }
 
