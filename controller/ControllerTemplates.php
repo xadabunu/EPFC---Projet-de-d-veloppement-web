@@ -152,13 +152,17 @@ class ControllerTemplates extends MyController{
 
             (new View('edit_template'))->show(['tricount'=>$tricount, 'subscriptors'=>$subscriptors, 'errors'=>$errors, 'template'=>$template, 'userAndWeightArray'=>$userAndWeightArray]);
         
-
-        
-
     
     }
     
-    
+    public function delete_template(): void {
+        $template = Template::get_template_by_template_id($_GET["param1"]);
+        $tricount = Tricount::get_tricount_by_id($_GET["param2"]);
+
+        $template->delete_template_items();
+        $template->delete_template();
+        $this->redirect('templates', 'manage_templates', $tricount->id);
+    }
 
 }
 

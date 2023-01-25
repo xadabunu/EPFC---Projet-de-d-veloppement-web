@@ -51,6 +51,8 @@
 
     </form>
 
+    <a href="templates/delete_template/<?= $template->id ?>/<?= $tricount->id ?>" class="button bottom2 delete">Delete this template</a>
+
     </div>
 </body>
 </html>

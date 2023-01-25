@@ -96,6 +96,6 @@ class Template extends Model{
     }
     
     public function delete_template(): void {
-
+        self::execute("DELETE FROM repartition_templates WHERE id= :id", ["id"=>$this->id]);
     }
 }
