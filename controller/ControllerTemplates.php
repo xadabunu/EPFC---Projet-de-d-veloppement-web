@@ -164,6 +164,14 @@ class ControllerTemplates extends MyController{
         $this->redirect('templates', 'manage_templates', $tricount->id);
     }
 
+
+    public static function add_template_from_operation(array $list, Template $template): void {
+        $template->persist_template();
+        $template->persist_template_items($template, $list);
+    }
+
+
+
 }
 
 

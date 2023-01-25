@@ -81,9 +81,19 @@
             Add a new repartition template
             <table>
                 <tr>
-                    <td class="check"><input type="checkbox" id="save_template" name="save_template"></td>
+                    <td class="check"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
                     <td class="template">Save this template</td> 
-                    <td>name</td>
+                    <td><input id="template_title" name="template_title" type="text" size="16" placeholder="name"></td>
+
+                    <?php if(array_key_exists('empty_template_title', $errors)){?>
+                        <p class="errorMessage"><?php echo $errors['empty_template_title'];?></p>
+                    <?php } ?>
+
+                    <?php if(array_key_exists('template_lenght', $errors)){?>
+                        <p class="errorMessage"><?php echo $errors['template_lenght'];?></p>
+                    <?php } ?>
+
+
                 </tr>
             </table>
         </form>

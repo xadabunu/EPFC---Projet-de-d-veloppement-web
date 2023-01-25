@@ -22,7 +22,7 @@
     <?php if (array_key_exists('empty_title', $errors)){ ?>
             <p class="errorMessage"><?php echo $errors['empty_title'];?></p>
         <?php } 
-            if(array_key_exists('lenght', $errors)){?>
+            if(array_key_exists('template_lenght', $errors)){?>
             <p class="errorMessage"><?php echo $errors['lenght'];?></p>
         <?php } ?>
 

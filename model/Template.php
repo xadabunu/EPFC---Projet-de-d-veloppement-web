@@ -44,7 +44,7 @@ class Template extends Model{
         $errors = [];
 
         if(strlen($this->title) < 3){
-            $errors['lenght'] = "Title length must be higher than 3.";
+            $errors['template_lenght'] = "Title length must be higher than 3.";
         }
         return $errors;
     }

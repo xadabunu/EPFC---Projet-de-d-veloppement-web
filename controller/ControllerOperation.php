@@ -3,6 +3,7 @@
 require_once "controller/MyController.php";
 require_once "model/User.php";
 require_once "model/Template.php";
+require_once "controller/ControllerTemplates.php";
 
 class ControllerOperation extends MyController
 {
@@ -53,7 +54,16 @@ class ControllerOperation extends MyController
             if(count($errors) == 0){
                 $operation = new Operation($title, $tricount, $amount, $operation_date, User::get_user_by_id($initiator), $created_at);
                 $errors = $operation->validate_operations();
+
+                if(isset($_POST["save_template_checkbox"])){
+                    $template = new Template($_POST["template_title"], $tricount);
+                    $errors = array_merge($errors, $template->validate_template());
+                }
+
+
                 if (count($errors) == 0) {
+                    ControllerTemplates::add_template_from_operation($list, $template);
+
                     $operation->persist_operation();
                     $operation->persist_repartition($operation, $list);
                     $this->redirect('tricount', 'operations', $tricount->id);
@@ -96,6 +106,10 @@ class ControllerOperation extends MyController
             }
         }
 
+        if(isset($array["save_template_checkbox"]) && empty($array["template_title"])){
+            $errors['empty_template_title'] = "Template title is required";
+        }
+
         return $errors;
     }
 
@@ -119,7 +133,17 @@ class ControllerOperation extends MyController
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST));
                 $errors = array_merge($errors, $operation->validate_operations());
+
+
+                if(isset($_POST["save_template_checkbox"])){
+                    $template = new Template($_POST["template_title"], $tricount);
+                    $errors = array_merge($errors, $template->validate_template());
+                }
+
                 if(count($errors) == 0){
+                    ControllerTemplates::add_template_from_operation($list, $template);
+
+
                     $operation->persist_repartition($operation, $list);
                     $operation->persist_operation();
                     $this->redirect('tricount', 'operations', $tricount->id);
