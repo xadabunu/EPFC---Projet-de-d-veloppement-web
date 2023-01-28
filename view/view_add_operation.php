@@ -17,7 +17,7 @@
             <button class = "button save" id="add" type="submit" form="add_operation_form">Save</button>
         </header>
         <form id="add_operation_form" action= "operation/add_operation/<?= $tricount->id ?>" method="post" class="edit">
-            <input id="title" name="title" type="text" size="16" placeholder="Title" value= '<?= $title ?>' <?php if(array_key_exists('empty_title', $errors) || array_key_exists('lenght', $errors)) {?>class = "errorInput"<?php } ?>>
+            <input id="title" name="title" type="text" size="16" placeholder="Title" value= '<?php if(isset($titleValue)){echo $titleValue;} else{ echo $title;} ?>' <?php if(array_key_exists('empty_title', $errors) || array_key_exists('lenght', $errors)) {?>class = "errorInput"<?php } ?>>
             <?php if (array_key_exists('empty_title', $errors)){ ?>
                 <p class="errorMessage"><?php echo $errors['empty_title'];?></p>
             <?php } 
@@ -26,7 +26,7 @@
             <?php } ?>
             <table class="edit" id="currency">
                 <tr class="currency">
-                    <td><input id="Amount" name="amount" type="text" size="16" placeholder="Amount" value= '<?= $amount ?>' <?php if(array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) {?>class = "errorInput"<?php } ?>></td>
+                    <td><input id="Amount" name="amount" type="text" size="16" placeholder="Amount" value= '<?php if(isset($amountValue)){echo $amountValue;} else{ echo $amount;} ?>' <?php if(array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) {?>class = "errorInput"<?php } ?>></td>
                     <td class="right">EUR</td>
                 </tr>
             </table>
@@ -38,27 +38,86 @@
                 <p class="errorMessage"><?php echo $errors['empty_amount'];?></p>
             <?php } ?>
             <label for="operation_date">Date</label>
-            <input id="operation_date" name="operation_date" type="date" value= '<?= $operation_date ?>' <?php if(array_key_exists('empty_date', $errors)) {?>class = "errorInput"<?php } ?>>
+            <input id="operation_date" name="operation_date" type="date" value= '<?php if(isset($operation_dateValue)){echo $operation_dateValue;} else{ echo $operation_date;} ?>' <?php if(array_key_exists('empty_date', $errors)) {?>class = "errorInput"<?php } ?>>
             <?php if(array_key_exists('empty_date', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['empty_date'];?></p>
             <?php } ?>
+
+
             <label for="paid_by">Paid by</label>
             <select name="paid_by" id="paid_by" class="edit edit2">
-                <option value= '<?= $initiator ?>'>-- Who paid for it ? --</option>
+
+                <?php if(isset($paid_byValue)){  ?>
+
+                    <option value="<?= $paid_byValue->id ?>" ><?= $paid_byValue->full_name ?></option>
+                <?php } else{ ?>
+                    <option value="<?= $initiator ?>" > -- Who paid for it ? -- </option>
+                <?php } ?>
+                
+
+    
                 <?php foreach($subscriptors as $subscriptor) { ?>
                     <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
                 <?php } ?>
             </select>
+
             <?php if(array_key_exists('empty_initiator', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['empty_initiator'];?></p>
             <?php } ?>
-            <label for="templates">Use repartition template <i>(optional)</i></label>
-            <select name="templates" id="templates" class="edit edit2">
-            <option selected><i>-- No, i'll use custom repartition --</i></option>
-                <?php foreach($templates as $template) { ?>
-                    <option value="<?= $template->id ?>"><?= $template->title ?></option>
+
+
+
+
+            <table>
+                <td class="subscriptor">
+                 <select name="templates" id="templates" class=edit> <!-- class css probablement à modifier -->
+                    <?php if(isset($templateChoosen)){  ?>
+                        <option  value ="<?= $templateChoosen->id ?>" selected><i><?= $templateChoosen->title ?></i></option>
+                        <option ><i>-- No, i'll use custom repartition --</i></option>
+                        <?php foreach($templates as $template) { ?>
+                          <option value="<?= $template->id ?>"><?= $template->title ?></option>
+                        <?php } ?>
+
+
+                    <?php } else{ ?>
+                        <option selected><i>-- No, i'll use custom repartition --</i></option>
+                        <?php foreach($templates as $template) { ?>
+                          <option value="<?= $template->id ?>"><?= $template->title ?></option>
+                        <?php } }?>
+                 </select>
+                </td>
+
+                <td class="subscriptor input"><input type="submit" value="Add" formaction="operation/add_operation/<?= $tricount->id ?>/<?= $template->id ?>"></td> 
+            </table>
+
+
+
+            <?php if(isset($templateChoosen)) { ?>
+
+
+                <label for="whom">For whom ? <i>(select at leat one)</i></label>
+            <ul>
+                <?php foreach($subscriptors as $subscriptor){?>
+                    <li>
+                    <table class="whom">
+                    <tr class="edit">
+                        <td class="check">
+                            <p><input type='checkbox' <?php if ( array_key_exists($subscriptor->id, $templateUserWeightList)) echo "checked"?> name='<?= $subscriptor->id ?>' value=''></p>
+                        </td>
+                        <td class="user">
+                            <?= $subscriptor->full_name ?></td>
+                        </td>
+                        <td class="weight"><p>Weight</p><input type= 'text' name= 'weight_<?= $subscriptor->id ?>' value= '<?php if(array_key_exists($subscriptor->id, $templateUserWeightList)){ echo $templateUserWeightList[$subscriptor->id]; } else { echo 1;}?>'></td>
+                    </tr></table></li>
                 <?php } ?>
-            </select>
+            </ul>
+
+
+
+        
+            <?php } else { ?>
+
+
             <label for="whom">For whom ? <i>(select at leat one)</i></label>
             <ul>
                 <?php foreach($subscriptors as $subscriptor){?>
@@ -78,6 +137,14 @@
             <?php if(array_key_exists('whom', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['whom'];?></p>
             <?php } ?>
+
+            <?php } ?>
+
+
+
+
+
+
             Add a new repartition template
             <table>
                 <tr>

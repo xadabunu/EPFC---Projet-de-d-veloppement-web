@@ -43,7 +43,79 @@ class ControllerOperation extends MyController
         $amount = '';
         $operation_date = '';
         $initiator = '';
-        if(isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
+
+
+        if(isset($_GET['param1']) && isset($_GET['param2'])){
+            // to do 
+            // 2 foreach sur les listes utilisateurs-poids de l'edit et du template choisi
+            // si les deux existent (if dans la vue), alors la case est checked dans la vue et on met le poids
+            // correspondant du template.
+            // 
+            
+            
+            
+            
+            $list = self::get_weight($_POST, $tricount);
+
+            
+            if(isset($_POST['title'])){
+                $titleValue = $_POST['title'];
+                $title = $_POST['title'];
+            }
+            if(isset($_POST['amount'])){
+                $amountValue = $_POST['amount'];
+                $amount = floatval($_POST['amount']);
+            }
+            if(isset($_POST['operation_date'])){
+                $operation_dateValue = $_POST['operation_date'];
+                $operation_date = $_POST['operation_date'];
+            }
+            if(isset($_POST['paid_by'])){
+                if(is_int($_POST['paid_by'])){
+                    $paid_byValue = User::get_user_by_id($_POST['paid_by']);
+                }
+                
+                $initiator = $_POST['paid_by'];
+            }
+            if(isset($_POST['templates']) && isset($paid_byValue)){
+                $templateChoosen = Template::get_template_by_template_id($_POST['templates']);
+                $templateUserWeightList = $templateChoosen->get_repartition_items();
+                (new View("add_operation"))->show(['tricount'=>$tricount, 'operation'=>$operation, 'subscriptors'=>$subscriptors,
+                                            'templates'=>$templates, 'errors'=>$errors, 'title'=>$title, 'amount'=>$amount,
+                                            'operation_date'=>$operation_date, 'initiator'=>$initiator,
+                                            'titleValue'=>$titleValue, 'amountValue'=>$amountValue, 'operation_dateValue'=>$operation_dateValue, 'paid_byValue'=>$paid_byValue,
+                                            'templateChoosen'=>$templateChoosen, 'templateUserWeightList'=>$templateUserWeightList]);
+
+            
+            }
+            else if(isset($paid_byValue)){
+                (new View("add_operation"))->show(['tricount'=>$tricount, 'operation'=>$operation, 'subscriptors'=>$subscriptors,
+                                            'templates'=>$templates, 'errors'=>$errors, 'title'=>$title, 'amount'=>$amount,
+                                            'operation_date'=>$operation_date, 'initiator'=>$initiator,
+                                            'titleValue'=>$titleValue, 'amountValue'=>$amountValue, 'operation_dateValue'=>$operation_dateValue, 'paid_byValue'=>$paid_byValue]);
+            }
+            else if(isset($_POST['templates'])){
+                $templateChoosen = Template::get_template_by_template_id($_POST['templates']);
+                $templateUserWeightList = $templateChoosen->get_repartition_items();
+                (new View("add_operation"))->show(['tricount'=>$tricount, 'operation'=>$operation, 'subscriptors'=>$subscriptors,
+                                            'templates'=>$templates, 'errors'=>$errors, 'title'=>$title, 'amount'=>$amount,
+                                            'operation_date'=>$operation_date, 'initiator'=>$initiator,
+                                            'titleValue'=>$titleValue, 'amountValue'=>$amountValue, 'operation_dateValue'=>$operation_dateValue,
+                                            'templateChoosen'=>$templateChoosen, 'templateUserWeightList'=>$templateUserWeightList]);
+            }
+            else{
+                (new View("add_operation"))->show(['tricount'=>$tricount, 'operation'=>$operation, 'subscriptors'=>$subscriptors,
+                                            'templates'=>$templates, 'errors'=>$errors, 'title'=>$title, 'amount'=>$amount,
+                                            'operation_date'=>$operation_date, 'initiator'=>$initiator,
+                                            'titleValue'=>$titleValue, 'amountValue'=>$amountValue, 'operation_dateValue'=>$operation_dateValue]);
+            }
+            
+            
+        }
+
+
+
+        else if(isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
             $title = $_POST['title'];
             $amount = floatval($_POST['amount']);
             $operation_date = $_POST['operation_date'];
@@ -62,7 +134,9 @@ class ControllerOperation extends MyController
 
 
                 if (count($errors) == 0) {
-                    ControllerTemplates::add_template_from_operation($list, $template);
+                    if(isset($_POST["save_template_checkbox"])){
+                        ControllerTemplates::add_template_from_operation($list, $template);
+                    }
 
                     $operation->persist_operation();
                     $operation->persist_repartition($operation, $list);
@@ -119,7 +193,50 @@ class ControllerOperation extends MyController
         $operation = '';
         $errors = [];
         $list = [];
-        if(isset($_GET['param1'])){
+
+        if(isset($_GET['param1']) && isset($_GET['param2'])){
+            // to do 
+            // 2 foreach sur les listes utilisateurs-poids de l'edit et du template choisi
+            // si les deux existent (if dans la vue), alors la case est checked dans la vue et on met le poids
+            // correspondant du template.
+            // 
+            $operation = Operation::get_operation_by_id($_GET['param1']);
+            $tricount = $operation->tricount;
+            $subscriptors = $tricount->get_subscriptors_with_creator();
+            $templates = Template::get_templates($tricount->id);
+            $list = $operation->get_repartitions();
+
+            
+            if(isset($_POST['title'])){
+                $title = $_POST['title'];
+            }
+            if(isset($_POST['amount'])){
+                $amount = $_POST['amount'];
+            }
+            if(isset($_POST['operation_date'])){
+                $operation_date = $_POST['operation_date'];
+            }
+            if(isset($_POST['paid_by'])){
+                $paid_by = User::get_user_by_id($_POST['paid_by']);
+            }
+            if(isset($_POST['templates'])){
+                $templateChoosen = Template::get_template_by_template_id($_POST['templates']);
+                $templateUserWeightList = $templateChoosen->get_repartition_items();
+                (new View('edit_operation'))->show(['operation'=>$operation, 'errors'=>$errors,
+                                            'subscriptors'=>$subscriptors, 'templates'=>$templates, 'list'=>$list,
+                                            'titleValue'=>$title, 'amountValue'=>$amount, 'operation_dateValue'=>$operation_date, 'paid_byValue'=>$paid_by,
+                                            'templateChoosen'=>$templateChoosen, 'templateUserWeightList'=>$templateUserWeightList]);
+            }
+            else{
+                (new View('edit_operation'))->show(['operation'=>$operation, 'errors'=>$errors,
+                                            'subscriptors'=>$subscriptors, 'templates'=>$templates, 'list'=>$list,
+                                             'titleValue'=>$title, 'amountValue'=>$amount, 'operation_dateValue'=>$operation_date, 'paid_byValue'=>$paid_by]);
+            }
+            
+            
+        }
+
+        else if(isset($_GET['param1'])){
             $operation = Operation::get_operation_by_id($_GET['param1']);
             $tricount = $operation->tricount;
             $subscriptors = $tricount->get_subscriptors_with_creator();
@@ -141,8 +258,9 @@ class ControllerOperation extends MyController
                 }
 
                 if(count($errors) == 0){
-                    ControllerTemplates::add_template_from_operation($list, $template);
-
+                    if(isset($_POST["save_template_checkbox"])){
+                        ControllerTemplates::add_template_from_operation($list, $template);
+                    }
 
                     $operation->persist_repartition($operation, $list);
                     $operation->persist_operation();
@@ -185,4 +303,29 @@ class ControllerOperation extends MyController
         $operation->delete_operation_cascade();
         $this->redirect('tricount', 'operations', $operation->tricount->id);
     }
+
+    public function apply_edit_template(): void{
+        if(isset($_POST['templates'])){
+            $subscriptor = $_POST['subscriptor'];
+            $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+            $tricount->persist_subscriptor($subscriptor);
+            $this->redirect('tricount', 'edit_tricount', $_GET['param1']);   
+        }   
+        else{
+            $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
+        }  
+
+    }
+
+    public function apply_add_template(): void{
+        if(isset($_POST['templates'])){
+            
+            $this->redirect('tricount', 'edit_tricount', $_GET['param1']);   
+        }   
+        else{
+            $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
+        }  
+
+    }
+
 }
