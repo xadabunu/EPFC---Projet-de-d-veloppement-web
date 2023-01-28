@@ -18,6 +18,9 @@ class ControllerMain extends MyController
 		}
 	}
 
+// --------------------------- Fonction Login && Signup -----------------------------------    
+
+
 	public function login(): void
 	{
 		$email = "";

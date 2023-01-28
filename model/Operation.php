@@ -10,6 +10,7 @@ class Operation extends Model
 
 // --------------------------- Get sur les operations ------------------------------------ 
     
+
     public static function get_operation_by_id(int $id): Operation
     {
         $query = self::execute("SELECT * FROM operations WHERE id = :id", ["id" => $id]);
@@ -39,8 +40,10 @@ class Operation extends Model
         return ($query->fetch())['next_id'];
     }
 
+
 // --------------------------- Validate && Persist // Delete && delete Cascade des operations ------------------------------------ 
 
+    
     public function validate_operations(): array
     {
         $errors = [];
@@ -85,7 +88,9 @@ class Operation extends Model
         self::execute("DELETE FROM repartitions WHERE operation= :id", ["id"=>$this->id]);
     }
 
- // --------------------------- Get sur participants && repartition // Persist repartition ------------------------------------ 
+
+// --------------------------- Get sur participants && repartition // Persist repartition ------------------------------------ 
+
 
     public function get_participants() : array
     {

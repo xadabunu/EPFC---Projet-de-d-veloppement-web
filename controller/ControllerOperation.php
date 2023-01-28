@@ -37,6 +37,7 @@ class ControllerOperation extends MyController
         }
     }
 
+
 // --------------------------- Add/edit Operations ------------------------------------ 
 
 
@@ -283,8 +284,11 @@ class ControllerOperation extends MyController
         (new View('edit_operation'))->show(['operation'=>$operation, 'errors'=>$errors,
                                             'subscriptors'=>$subscriptors, 'templates'=>$templates, 'list'=>$list]);
     }
+
+    
 //---- Fonction private get sur le poids et les users selectionnés lors d'un add ou edit operation
 
+   
     private function get_whom(array $array, Tricount $tricount) : array
     {   
         $list = $tricount->get_subscriptors_with_creator();
@@ -348,5 +352,6 @@ class ControllerOperation extends MyController
         }  
 
     }
+
 
 }
