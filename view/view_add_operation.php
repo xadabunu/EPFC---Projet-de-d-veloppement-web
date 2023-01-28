@@ -17,7 +17,7 @@
             <button class = "button save" id="add" type="submit" form="add_operation_form">Save</button>
         </header>
         <form id="add_operation_form" action= "operation/add_operation/<?= $tricount->id ?>" method="post" class="edit">
-            <input id="title" name="title" type="text" size="16" placeholder="Title" value= '<?php if(isset($titleValue)){echo $titleValue;} else{ echo $title;} ?>' <?php if(array_key_exists('empty_title', $errors) || array_key_exists('lenght', $errors)) {?>class = "errorInput"<?php } ?>>
+            <input id="title" name="title" type="text" size="16" placeholder="Title" value= '<?php if(!is_array($title)){echo $title;} else{ echo '';} ?>' <?php if(array_key_exists('empty_title', $errors) || array_key_exists('lenght', $errors)) {?>class = "errorInput"<?php } ?>>
             <?php if (array_key_exists('empty_title', $errors)){ ?>
                 <p class="errorMessage"><?php echo $errors['empty_title'];?></p>
             <?php } 
@@ -26,7 +26,7 @@
             <?php } ?>
             <table class="edit" id="currency">
                 <tr class="currency">
-                    <td><input id="Amount" name="amount" type="text" size="16" placeholder="Amount" value= '<?php if(isset($amountValue)){echo $amountValue;} else{ echo $amount;} ?>' <?php if(array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) {?>class = "errorInput"<?php } ?>></td>
+                    <td><input id="Amount" name="amount" type="text" size="16" placeholder="Amount" value= '<?php if(!is_array($amount)){echo $amount;} else{ echo '';} ?>' <?php if(array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) {?>class = "errorInput"<?php } ?>></td>
                     <td class="right">EUR</td>
                 </tr>
             </table>
@@ -38,7 +38,7 @@
                 <p class="errorMessage"><?php echo $errors['empty_amount'];?></p>
             <?php } ?>
             <label for="operation_date">Date</label>
-            <input id="operation_date" name="operation_date" type="date" value= '<?php if(isset($operation_dateValue)){echo $operation_dateValue;} else{ echo $operation_date;} ?>' <?php if(array_key_exists('empty_date', $errors)) {?>class = "errorInput"<?php } ?>>
+            <input id="operation_date" name="operation_date" type="date" value= '<?php if(!is_array($operation_date)){echo $operation_date;} else{ echo '';} ?>' <?php if(array_key_exists('empty_date', $errors)) {?>class = "errorInput"<?php } ?>>
             <?php if(array_key_exists('empty_date', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['empty_date'];?></p>
             <?php } ?>
@@ -47,11 +47,11 @@
             <label for="paid_by">Paid by</label>
             <select name="paid_by" id="paid_by" class="edit edit2">
 
-                <?php if(isset($paid_byValue)){  ?>
+                <?php if(!is_array($initiator)){  ?>
 
-                    <option value="<?= $paid_byValue->id ?>" ><?= $paid_byValue->full_name ?></option>
+                    <option value="<?= $initiator->id ?>" ><?= $initiator->full_name ?></option>
                 <?php } else{ ?>
-                    <option value="<?= $initiator ?>" > -- Who paid for it ? -- </option>
+                    <option value="" > -- Who paid for it ? -- </option>
                 <?php } ?>
                 
 
@@ -72,7 +72,7 @@
             <table>
                 <td class="subscriptor">
                  <select name="templates" id="templates" class=edit> <!-- class css probablement à modifier -->
-                    <?php if(isset($templateChoosen)){  ?>
+                    <?php if(!is_array($templateChoosen)){  ?>
                         <option  value ="<?= $templateChoosen->id ?>" selected><i><?= $templateChoosen->title ?></i></option>
                         <option ><i>-- No, i'll use custom repartition --</i></option>
                         <?php foreach($templates as $template) { ?>
@@ -93,7 +93,7 @@
 
 
 
-            <?php if(isset($templateChoosen)) { ?>
+            <?php if(!is_array($templateChoosen)) { ?>
 
 
                 <label for="whom">For whom ? <i>(select at leat one)</i></label>
