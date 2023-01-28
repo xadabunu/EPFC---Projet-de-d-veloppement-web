@@ -7,7 +7,7 @@ require_once "controller/MyController.php";
 class ControllerTricount extends MyController
 {
 
-// --------------------------- Index + Operations && Balance du  Tricount ------------------------------------ 
+// --------------------------- Index + Operations && Balance du Tricount ------------------------------------ 
 
     
     public function index(): void
@@ -128,6 +128,7 @@ class ControllerTricount extends MyController
             $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
         }      
     }
+    
 
 // --------------------------- Delete + ConfirmDelete Tricount && Delete Subs ------------------------------------ 
 
@@ -155,5 +156,4 @@ class ControllerTricount extends MyController
         $tricount->delete_tricount_cascade();
         $this->redirect('user', 'index');
     }
-
 }

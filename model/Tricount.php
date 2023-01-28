@@ -32,6 +32,7 @@ class Tricount extends Model
         return new Tricount($data['title'], $data['created_at'], User::get_user_by_id($data['creator']), $data['description'], $data['id']);
     }
 
+
 // --------------------------- Get sur les dépenses && Balance ------------------------------------ 
 
 
@@ -126,6 +127,7 @@ class Tricount extends Model
         return $array;
     }
 
+
 // --------------------------- Get Operation du tricount ------------------------------------ 
 
 
@@ -141,21 +143,22 @@ class Tricount extends Model
         return $array;
     }
 
+
 // --------------------------- Persist // Delete Subs ------------------------------------ 
 
 
-public function persist_subscriptor(int $id) : void 
-{
-    self::execute("INSERT INTO subscriptions(user, tricount) VALUES(:user, :tricount)",["user"=> $id, 'tricount'=>$this->id]);
-}
+    public function persist_subscriptor(int $id) : void 
+    {
+        self::execute("INSERT INTO subscriptions(user, tricount) VALUES(:user, :tricount)",["user"=> $id, 'tricount'=>$this->id]);
+    }
 
-public function delete_subscriptor(int $id) : void
-{
-    self::execute("DELETE FROM subscriptions WHERE user=:user_id AND tricount=:tricount_id ",["user_id"=> $id, "tricount_id"=>$this->id]);
-}
+    public function delete_subscriptor(int $id) : void
+    {
+        self::execute("DELETE FROM subscriptions WHERE user=:user_id AND tricount=:tricount_id ",["user_id"=> $id, "tricount_id"=>$this->id]);
+    }
 
 
-// --------------------------- Validate && Persist // Delete && delete Cascade des Tricounts ------------------------------------ 
+// --------------------------- Validate && Persist // Private Delete && delete Cascade des Tricounts ------------------------------------ 
 
 
     public function validate() : array
@@ -234,5 +237,4 @@ public function delete_subscriptor(int $id) : void
     {
         self::execute("DELETE FROM repartition_template_items WHERE repartition_template IN (SELECT id FROM repartition_templates WHERE tricount = :tricount_id)",["tricount_id"=>$this->id]);
     }
-
 }
