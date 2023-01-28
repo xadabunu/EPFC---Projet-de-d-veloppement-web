@@ -92,9 +92,8 @@ class Tricount extends Model
 		return $array;
     }
 
-    public function get_subscriptors_with_creator() : array
-    {
-        $query = self::execute("SELECT DISTINCT users.* FROM users, subscriptions WHERE subscriptions.user = users.id AND subscriptions.tricount= :id ORDER BY users.full_name",
+    public function get_subscriptors_with_creator() : array {
+        $query = self::execute("SELECT DISTINCT users.* FROM users, subscriptions WHERE subscriptions.user = users.id AND subscriptions.tricount= :id",
                                 ['id'=> $this->id]);
         $data = $query->fetchAll();
         $array = [];
