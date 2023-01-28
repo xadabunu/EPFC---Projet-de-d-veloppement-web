@@ -85,7 +85,7 @@
                  </select>
                 </td>
 
-                <td class="subscriptor input"><input type="submit" value="Add" formaction="operation/edit_operation/<?= $operation->id ?>/<?= $template->id ?>"></td>
+                <td class="subscriptor input"><input type="submit" value="Add" formaction="operation/apply_template_edit_operation/<?= $operation->id ?>"></td>
             </table>
 
 

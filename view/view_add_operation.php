@@ -88,7 +88,7 @@
                  </select>
                 </td>
 
-                <td class="subscriptor input"><input type="submit" value="Add" formaction="operation/add_operation/<?= $tricount->id ?>/<?= $template->id ?>"></td> 
+                <td class="subscriptor input"><input type="submit" value="Add" formaction="operation/apply_template_edit_operation/<?= $tricount->id ?>"></td> 
             </table>
 
 
