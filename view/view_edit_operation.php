@@ -36,7 +36,7 @@
                 <p class="errorMessage"><?php echo $errors['empty_amount'];?></p>
             <?php } ?>
             <label for="operation_date">Date</label>
-            <input id="operation_date" name="operation_date" type="date" value = "<?php if(!is_array($operation_dateValue)){echo $operation_dateValue;} else{ echo $operation->date;} ?>" <?php if(array_key_exists('empty_date', $errors)) {?>class = "errorInput"<?php } ?>>
+            <input id="operation_date" name="operation_date" type="date" value = "<?php if(!is_array($operation_dateValue)){echo $operation_dateValue;} else{ echo $operation->operation_date;} ?>" <?php if(array_key_exists('empty_date', $errors)) {?>class = "errorInput"<?php } ?>>
             <?php if(array_key_exists('empty_date', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['empty_date'];?></p>
             <?php } ?>
