@@ -264,10 +264,10 @@ class ControllerOperation extends MyController
             if(isset($_POST['operation_date'])){
                 $operation_date = $_POST['operation_date'];
             }
-            if(isset($_POST['paid_by']) && !is_string($_POST['paid_by'])){
+            if(isset($_POST['paid_by'])){
                 $paid_by = User::get_user_by_id($_POST['paid_by']);
             }
-            if(isset($_POST['templates']) && !is_string($_POST['templates'])){
+            if(isset($_POST['templates']) && is_numeric($_POST['templates'])){
                 $templateChoosen = Template::get_template_by_template_id($_POST['templates']);
                 $templateUserWeightList = $templateChoosen->get_repartition_items();
             }
@@ -305,10 +305,10 @@ class ControllerOperation extends MyController
         if(isset($_POST['operation_date'])){
             $operation_date = $_POST['operation_date'];
         }
-        if(isset($_POST['paid_by']) && !is_string($_POST['paid_by'])){    
+        if(isset($_POST['paid_by']) && is_numeric($_POST['paid_by'])){    
             $initiator = User::get_user_by_id($_POST['paid_by']);
         }
-        if(isset($_POST['templates']) && !is_string($_POST['templates'])){
+        if(isset($_POST['templates']) && is_numeric($_POST['templates'])){
             $templateChoosen = Template::get_template_by_template_id($_POST['templates']);
             $templateUserWeightList = $templateChoosen->get_repartition_items();
         }

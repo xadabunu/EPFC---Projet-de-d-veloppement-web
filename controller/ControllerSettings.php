@@ -30,8 +30,20 @@ class ControllerSettings extends MyController{
         $errors = [];
 
         if (isset($_POST['email']) && isset($_POST['full_name']) && isset($_POST['iban'])) {
+            $tmpUser = new User(Tools::sanitize($_POST['email']), $user->hashed_password, Tools::sanitize($_POST['full_name']), $user->role, Tools::sanitize($_POST['iban']));
 
+            $errors = array_merge($errors, $tmpUser->validate());
+            //$errors = User::validate_unicity($tmpUser->email); // y'aura toujours cette erreur ?
+
+            if(count($errors) == 0){
+                $user->email = Tools::sanitize($_POST['email']);
+                $user->full_name = Tools::sanitize($_POST['full_name']);
+                $user->iban = Tools::sanitize($_POST['iban']);
+
+                $user->persist(); 
+                $this->redirect('settings', 'my_settings');
             }
+        }
 
         (new View("edit_profile"))->show(["user" => $user, 'errors'=>$errors]);
     }
@@ -42,7 +54,23 @@ class ControllerSettings extends MyController{
         $password = '';
         $password_confirm = '';
 
+        if (isset($_POST['password']) && isset($_POST['password_confirm'])) {
+            $password = Tools::sanitize($_POST['password']);
+            $password_confirm = Tools::sanitize($_POST['password_confirm']);
+
+            $user->hashed_password = Tools::my_hash($password);
+            
+
+            $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
+
+            if(count($errors) == 0){
+                $user->persist();
+                $this->redirect('settings', 'my_settings');
+            }
+        }
+
         (new View("change_password"))->show(["user" => $user, 'errors'=>$errors, 'password_confirm'=>$password_confirm, 'password'=>$password]);
     }
+
     
 }
