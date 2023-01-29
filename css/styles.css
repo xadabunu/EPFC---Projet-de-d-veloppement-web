@@ -809,3 +809,9 @@ select-selected:after
     top: 14px;
     right: 10px;
 }
+
+.settings
+{  
+    border-color: rgb(13, 110, 253);
+    color: rgb(13,110,253);
+}

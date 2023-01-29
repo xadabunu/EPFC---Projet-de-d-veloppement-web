@@ -39,4 +39,5 @@ class ControllerUser extends MyController
         }
         (new View("list_tricount"))->show(["data" => $array, "subs_number" => $subs_nb]);
     }
+
 }
