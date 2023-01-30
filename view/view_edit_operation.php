@@ -60,15 +60,10 @@
             <?php if(array_key_exists('empty_initiator', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['empty_initiator'];?></p>
             <?php } ?>
-
-
-
             <label for="templates">Use repartition template <i>(optional)</i></label>
-
-
             <table>
                 <td class="subscriptor">
-                 <select name="templates" id="templates" class=edit> <!-- class css probablement à modifier -->
+                 <select name="templates" id="templates" class="edit"> <!-- class css probablement à modifier -->
                     <?php if(!is_array($templateChoosen)){  ?>
                         <option  value ="<?= $templateChoosen->id ?>" selected><i><?= $templateChoosen->title ?></i></option>
                         <option ><i>-- No, i'll use custom repartition --</i></option>
@@ -85,13 +80,8 @@
                  </select>
                 </td>
 
-                <td class="subscriptor input"><input type="submit" value="Add" formaction="operation/apply_template_edit_operation/<?= $operation->id ?>"></td>
+                <td class="subscriptor input"><input type="submit" value="&#8635;" formaction="operation/apply_template_edit_operation/<?= $operation->id ?>"></td>
             </table>
-
-
-
-
-
             <?php if(!is_array($templateChoosen)) { ?>
 
                 <label for="whom">For whom ? <i>(select at leat one)</i></label>
