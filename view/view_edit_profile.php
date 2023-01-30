@@ -52,6 +52,8 @@
         <?php if (array_key_exists('iban', $errors)){ ?>
             <p class="errorMessage"><?php echo $errors['iban'];?></p>
         <?php } ?>
+
+        
         
 
 
