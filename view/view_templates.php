@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf8">
     <title><?= $tricount->title ?> &#11208; Templates</title>
@@ -9,37 +10,46 @@
 </head>
 <body>
     <div class="main">
-    <header class="t2">
+        <header class="t2">
             <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button" id="back">Back</a>
             <p><?= $tricount->title ?> &#11208; Templates</p>
             <a href="templates/add_template/<?= $tricount->id ?>" class="button" id="add">Add</a>
-    </header>
-
-    <table>
-        <?php 
-        for($cpt = 0; $cpt != count($templates); $cpt++){ ?>
-        <tr>
-            <td>
-                <a href="templates/edit_template/<?= $tricount->id ?>/<?= $templates[$cpt]->id ?>"><h2><?= $templates[$cpt]->title ?></h2></a>
-
-                <ul>
-                    <?php 
-                    
-                    foreach($all_templates_items_for_view[$cpt] as $nom => $poids){ ?>
-
-                        <li>
-                            <?= $nom . ' (' . $poids . '/' . $all_weight_total[$cpt] . ')' ?>
-                        </li>
-
-                    <?php } ?>
-                </ul>
-
-
-            </td>
-        </tr>
-        <?php } ?>
-    </table>       
-
+        </header>
+        <?php if (empty($templates)) { ?>
+            <table>
+                <tr>
+                    <th class="empty">Currently no Templates !</th>
+                </tr>
+                <tr>
+                    <td class="empty">
+                        <p>Click below to add a Template!</p>
+                        <a href="templates/add_template/<?= $tricount->id ?>" class="button">Add Template</a>
+                    </td>
+                </tr>
+            </table>
+        <?php } else { ?>
+            <table>
+                <?php
+                for ($cpt = 0; $cpt != count($templates); $cpt++) { ?>
+                    <tr>
+                        <td>
+                            <a href="templates/edit_template/<?= $tricount->id ?>/<?= $templates[$cpt]->id ?>">
+                                <h2><?= $templates[$cpt]->title ?></h2>
+                            </a>
+                            <ul>
+                                <?php
+                                foreach ($all_templates_items_for_view[$cpt] as $nom => $poids) { ?>
+                                    <li>
+                                        <?= $nom . ' (' . $poids . '/' . $all_weight_total[$cpt] . ')' ?>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </td>
+                    </tr>
+            <?php }
+            } ?>
+            </table>
     </div>
 </body>
+
 </html>
