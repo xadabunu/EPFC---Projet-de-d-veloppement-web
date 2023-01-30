@@ -20,7 +20,7 @@
         for($cpt = 0; $cpt != count($templates); $cpt++){ ?>
         <tr>
             <td>
-                <a href="templates/edit_template/<?= $tricount->id ?>/<?= $templates[$cpt]->id ?>"><h2><?= $templates[$cpt]->title ?></h2></a>
+                <a href="templates/edit_template/<?= $tricount->id ?>/<?= $templates[$cpt]->id ?>"><h3><?= $templates[$cpt]->title ?></h3></a>
 
                 <ul>
                     <?php 

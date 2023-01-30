@@ -7,9 +7,9 @@ require_once "controller/MyController.php";
 class ControllerTricount extends MyController
 {
 
-// --------------------------- Index + Operations && Balance du Tricount ------------------------------------ 
+// --------------------------- Index + Operations && Balance du Tricount ------------------------------------
 
-    
+
     public function index(): void
     {
         $this->redirect("user", "my_trycounts");
@@ -21,6 +21,8 @@ class ControllerTricount extends MyController
         {
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+            if (!$tricount->has_access($user))
+                $this->redirect();
             $list = $tricount->get_operations();
             $total = $tricount->get_total_expenses();
             $user_total = $tricount->get_user_total($user->id);
@@ -30,8 +32,7 @@ class ControllerTricount extends MyController
                                         "total" => $total,
                                         "user_total" => $user_total,
                                         "alone" => $alone]);
-        }
-        else {
+        } else {
             Tools::abort("Invalid or missing argument.");
         }
     }
@@ -42,6 +43,8 @@ class ControllerTricount extends MyController
         if (isset($_GET['param1']) && is_numeric($_GET['param1']))
         {
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+            if (!$tricount->has_access($user))
+                $this->redirect();
             $list = $tricount -> get_subscriptors_with_creator();
             $amounts = [];
             foreach ($list as $sub)
@@ -93,7 +96,10 @@ class ControllerTricount extends MyController
         $title ='';
         $not_deletables = [];
         if (isset($_GET['param1'])){
+            $user = $this -> get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+            if (!$tricount->has_access($user))
+                $this->redirect();
             $title = $tricount->title;
             $creator = $tricount->creator;
             $subscriptors = $tricount->get_subscriptors();
@@ -119,8 +125,11 @@ class ControllerTricount extends MyController
     public function add_subscriptors() : void
     {
         if(isset($_POST['subscriptor'])){
+            $user = $this -> get_user_or_redirect();
             $subscriptor = $_POST['subscriptor'];
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+            if (!$tricount->has_access($user))
+                $this->redirect();
             $tricount->persist_subscriptor($subscriptor);
             $this->redirect('tricount', 'edit_tricount', $_GET['param1']);   
         }   
@@ -136,23 +145,31 @@ class ControllerTricount extends MyController
     public function delete_subscriptor() : void
     {
         if(isset($_POST['subscriptor_name'])){
+            $user = $this -> get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+            if (!$tricount->has_access($user))
+                $this->redirect();
             $subscriptor = $_POST['subscriptor_name'];
             $tricount->delete_subscriptor($subscriptor);
             $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
         }
-
     }
 
     public function delete_tricount() : void
     {
+        $user = $this -> get_user_or_redirect();
         $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+        if (!$tricount->has_access($user))
+            $this->redirect();
         (new View("delete_tricount"))->show(['tricount'=>$tricount]);
     }
 
     public function confirm_delete_tricount() : void
     {
+        $user = $this -> get_user_or_redirect();
         $tricount = tricount::get_tricount_by_id($_GET['param1']);
+        if (!$tricount->has_access($user))
+            $this->redirect();
         $tricount->delete_tricount_cascade();
         $this->redirect('user', 'index');
     }

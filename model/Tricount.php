@@ -33,6 +33,16 @@ class Tricount extends Model
     }
 
 
+// --------------------------- Méthode has_access -------------------------------------------------
+
+
+    public function has_access(User $user): bool
+    {
+        $list = $this->get_subscriptors_with_creator();
+        return in_array($user, $list);
+    }
+
+
 // --------------------------- Get sur les dépenses && Balance ------------------------------------ 
 
 

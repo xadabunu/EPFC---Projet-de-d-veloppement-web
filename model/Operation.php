@@ -41,6 +41,16 @@ class Operation extends Model
     }
 
 
+// --------------------------- Méthode has_access --------------------------------
+
+
+public function has_access(User $user): bool
+{
+    $list = $this -> get_participants();
+    return in_array($user, $list);
+}
+
+
 // --------------------------- Validate && Persist // Delete && delete Cascade des operations ------------------------------------ 
 
     
