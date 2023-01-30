@@ -34,12 +34,12 @@
                     <tr>
                         <td>
                             <a href="templates/edit_template/<?= $tricount->id ?>/<?= $templates[$cpt]->id ?>">
-                                <h2><?= $templates[$cpt]->title ?></h2>
+                                <h3><?= $templates[$cpt]->title ?></h3>
                             </a>
                             <ul>
                                 <?php
                                 foreach ($all_templates_items_for_view[$cpt] as $nom => $poids) { ?>
-                                    <li>
+                                    <li class="listyle">
                                         <?= $nom . ' (' . $poids . '/' . $all_weight_total[$cpt] . ')' ?>
                                     </li>
                                 <?php } ?>
