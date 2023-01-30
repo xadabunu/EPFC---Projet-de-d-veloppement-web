@@ -66,7 +66,7 @@ class User extends Model
 		return $errors;
 	}
 
-	private static function check_password(string $clear_password, string $hash): bool
+	public static function check_password(string $clear_password, string $hash): bool
 	{
 		return $hash === Tools::my_hash($clear_password);
 	}
@@ -135,6 +135,13 @@ class User extends Model
                             ["email" =>$this->email, "password"=>$this->hashed_password, "full_name"=>$this->full_name,"role"=>$this->role, "iban"=>$this->iban]);
         }
         $this->id = Model::lastInsertId();
+        return $this;
+    }
+
+
+    public function persist_update(): User {
+        self::execute("UPDATE users SET hashed_password=:hashed_password, full_name=:full_name, role=:role, iban=:iban WHERE id=:id",
+                            ["hashed_password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role, "iban"=>$this->iban, "id"=>$this->id]);
         return $this;
     }
 }
