@@ -59,7 +59,7 @@ class ControllerTemplates extends MyController{
             $this->redirect();
         $subscriptors = $tricount->get_subscriptors_with_creator();
         if (isset($_POST['title'])) {
-            $title = $_POST['title'];
+            $title = Tools::sanitize($_POST['title']);
             $list = self::get_weight($_POST, $tricount);
             $errors = array_merge($errors, self::is_valid_fields($_POST));
             if (count($errors) == 0) {
@@ -87,7 +87,7 @@ class ControllerTemplates extends MyController{
         $userAndWeightArray = $template->get_template_user_and_weight();
 
         if (isset($_POST['title'])) {
-            $title = $_POST['title'];
+            $title = Tools::sanitize($_POST['title']);
             $list = self::get_weight($_POST, $tricount);
             $errors = array_merge($errors, self::is_valid_fields($_POST));
             $template->title = $title;

@@ -63,12 +63,12 @@ class ControllerOperation extends MyController
         $templateUserWeightList = '';
 
         if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
-            $title = $_POST['title'];
-            $amount = floatval($_POST['amount']);
+            $title = Tools::sanitize($_POST['title']);
+            $amount = floatval(Tools::sanitize($_POST['amount']));
             $operation_date = $_POST['operation_date'];
 
             $created_at = Date("Y-m-d H:i:s");
-            $initiator = $_POST['paid_by'];
+            $initiator = Tools::sanitize($_POST['paid_by']);
             $list = self::get_weight($_POST, $tricount);
             $errors = array_merge($errors, self::is_valid_fields($_POST));
             if (count($errors) == 0) {
@@ -76,7 +76,7 @@ class ControllerOperation extends MyController
                 $errors = $operation->validate_operations();
 
                 if (isset($_POST["save_template_checkbox"])) {
-                    $template = new Template($_POST["template_title"], $tricount);
+                    $template = new Template(Tools::sanitize($_POST["template_title"]), $tricount);
                     $errors = array_merge($errors, $template->validate_template());
                 }
 
@@ -172,7 +172,7 @@ class ControllerOperation extends MyController
                 $errors = array_merge($errors, $operation->validate_operations());
 
                 if (isset($_POST["save_template_checkbox"])) {
-                    $template = new Template($_POST["template_title"], $tricount);
+                    $template = new Template(Tools::sanitize($_POST["template_title"]), $tricount);
                     $errors = array_merge($errors, $template->validate_template());
                 }
 
@@ -265,19 +265,19 @@ class ControllerOperation extends MyController
         $list = $operation->get_repartitions();
 
         if (isset($_POST['title'])) {
-            $title = $_POST['title'];
+            $title = Tools::sanitize($_POST['title']);
         }
         if (isset($_POST['amount'])) {
-            $amount = $_POST['amount'];
+            $amount = Tools::sanitize($_POST['amount']);
         }
         if (isset($_POST['operation_date'])) {
             $operation_date = $_POST['operation_date'];
         }
         if (isset($_POST['paid_by'])) {
-            $paid_by = User::get_user_by_id($_POST['paid_by']);
+            $paid_by = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
         }
         if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
-            $templateChoosen = Template::get_template_by_template_id($_POST['templates']);
+            $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
             $templateUserWeightList = $templateChoosen->get_repartition_items();
         }
 
@@ -307,19 +307,19 @@ class ControllerOperation extends MyController
         $templateUserWeightList = '';
 
         if (isset($_POST['title'])) {
-            $title = $_POST['title'];
+            $title = Tools::sanitize($_POST['title']);
         }
         if (isset($_POST['amount'])) {
-            $amount = $_POST['amount'];
+            $amount = Tools::sanitize($_POST['amount']);
         }
         if (isset($_POST['operation_date'])) {
             $operation_date = $_POST['operation_date'];
         }
         if (isset($_POST['paid_by']) && is_numeric($_POST['paid_by'])) {
-            $initiator = User::get_user_by_id($_POST['paid_by']);
+            $initiator = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
         }
         if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
-            $templateChoosen = Template::get_template_by_template_id($_POST['templates']);
+            $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
             $templateUserWeightList = $templateChoosen->get_repartition_items();
         }
 

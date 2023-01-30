@@ -126,7 +126,7 @@ class ControllerTricount extends MyController
     {
         if(isset($_POST['subscriptor'])){
             $user = $this -> get_user_or_redirect();
-            $subscriptor = $_POST['subscriptor'];
+            $subscriptor = Tools::sanitize($_POST['subscriptor']);
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             if (!$tricount->has_access($user))
                 $this->redirect();
@@ -149,7 +149,7 @@ class ControllerTricount extends MyController
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             if (!$tricount->has_access($user))
                 $this->redirect();
-            $subscriptor = $_POST['subscriptor_name'];
+            $subscriptor = Tools::sanitize($_POST['subscriptor_name']);
             $tricount->delete_subscriptor($subscriptor);
             $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
         }
