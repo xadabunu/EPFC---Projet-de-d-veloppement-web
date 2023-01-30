@@ -43,7 +43,7 @@
             <label for="paid_by">Paid by</label>
             <select name="paid_by" id="paid_by" class="edit edit2">
 
-            <?php if(!is_array($paid_byValue)){  ?>
+            <?php if(!is_array($paid_byValue) && !is_string($initiator) ){  ?>
 
                 <option value="<?= $paid_byValue->id ?>" ><?= $paid_byValue->full_name ?></option>
             <?php } else{ ?>
