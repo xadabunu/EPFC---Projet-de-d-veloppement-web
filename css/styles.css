@@ -137,6 +137,12 @@ a.circle:visited
     font-weight: bold;
 }
 
+tr.currency td:first-child
+{
+    width: 100%;
+    padding: 0;
+}
+
 .payement_info
 {
     display: flex;
@@ -808,4 +814,10 @@ select-selected:after
     position: absolute;
     top: 14px;
     right: 10px;
+}
+
+.settings
+{  
+    border-color: rgb(13, 110, 253);
+    color: rgb(13,110,253);
 }

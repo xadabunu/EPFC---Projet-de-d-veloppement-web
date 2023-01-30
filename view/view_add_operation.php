@@ -53,33 +53,22 @@
                 <?php } else{ ?>
                     <option value="" > -- Who paid for it ? -- </option>
                 <?php } ?>
-                
-
-    
                 <?php foreach($subscriptors as $subscriptor) { ?>
                     <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
                 <?php } ?>
             </select>
-
-
             <?php if(array_key_exists('empty_initiator', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['empty_initiator'];?></p>
             <?php } ?>
-
-
-
-
             <table>
                 <td class="subscriptor">
-                 <select name="templates" id="templates" class=edit> <!-- class css probablement à modifier -->
+                 <select name="templates" id="templates" class="edit"> <!-- class css probablement à modifier -->
                     <?php if(!is_array($templateChoosen)){  ?>
                         <option  value ="<?= $templateChoosen->id ?>" selected><i><?= $templateChoosen->title ?></i></option>
                         <option ><i>-- No, i'll use custom repartition --</i></option>
                         <?php foreach($templates as $template) { ?>
                           <option value="<?= $template->id ?>"><?= $template->title ?></option>
                         <?php } ?>
-
-
                     <?php } else{ ?>
                         <option selected><i>-- No, i'll use custom repartition --</i></option>
                         <?php foreach($templates as $template) { ?>
@@ -88,14 +77,9 @@
                  </select>
                 </td>
 
-                <td class="subscriptor input"><input type="submit" value="Add" formaction="operation/apply_template_add_operation/<?= $tricount->id ?>"></td> 
+                <td class="subscriptor input"><input type="submit" value="&#8635;" formaction="operation/apply_template_add_operation/<?= $tricount->id ?>"></td> 
             </table>
-
-
-
             <?php if(!is_array($templateChoosen)) { ?>
-
-
                 <label for="whom">For whom ? <i>(select at leat one)</i></label>
             <ul>
                 <?php foreach($subscriptors as $subscriptor){?>
@@ -112,15 +96,8 @@
                     </tr></table></li>
                 <?php } ?>
             </ul>
-
-
-
-        
             <?php } else { ?>
-
-
             <label for="whom">For whom ? <i>(select at leat one)</i></label>
-
             <ul>
                 <?php foreach($subscriptors as $subscriptor){?>
                     <li>
@@ -141,12 +118,6 @@
             <?php } ?>
 
             <?php } ?>
-
-
-
-
-
-
             Add a new repartition template
             <table>
                 <tr>
@@ -161,8 +132,6 @@
                     <?php if(array_key_exists('template_lenght', $errors)){?>
                         <p class="errorMessage"><?php echo $errors['template_lenght'];?></p>
                     <?php } ?>
-
-
                 </tr>
             </table>
         </form>

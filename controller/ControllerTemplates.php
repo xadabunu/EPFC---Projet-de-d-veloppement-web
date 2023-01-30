@@ -3,7 +3,7 @@
 require_once "controller/MyController.php";
 require_once "model/Template.php";
 require_once "model/User.php";
-
+require_once "model/Tricount.php";
 
 class ControllerTemplates extends MyController{
 
@@ -21,7 +21,10 @@ class ControllerTemplates extends MyController{
         $all_weight_total = [];
         $UsernameWeight = [];
         if(isset($_GET["param1"])){
+            $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
+            if (!$tricount->has_access($user))
+                $this->redirect();
             $templates = Template::get_templates($tricount->id);
             foreach($templates as $template){
                 $all_templates_items[] = $template->get_repartition_items();
@@ -50,7 +53,10 @@ class ControllerTemplates extends MyController{
     public function add_template(): void
     {
         $errors = [];
+        $user = $this->get_user_or_redirect();
         $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
+        if (!$tricount->has_access($user))
+            $this->redirect();
         $subscriptors = $tricount->get_subscriptors_with_creator();
         if (isset($_POST['title'])) {
             $title = $_POST['title'];
@@ -72,7 +78,10 @@ class ControllerTemplates extends MyController{
     public function edit_template(): void
     {
         $errors = [];
+        $user = $this->get_user_or_redirect();
         $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
+        if (!$tricount->has_access($user))
+            $this->redirect();
         $template = Template::get_template_by_template_id($_GET["param2"]);
         $subscriptors = $tricount->get_subscriptors_with_creator();
         $userAndWeightArray = $template->get_template_user_and_weight();
@@ -158,17 +167,31 @@ class ControllerTemplates extends MyController{
 
     public function delete_template(): void
     {
-        $template = Template::get_template_by_template_id($_GET["param1"]);
-        $tricount = Tricount::get_tricount_by_id($_GET["param2"]);
-        (new View('delete_template'))->show(['template'=>$template, 'tricount'=>$tricount]);
+        if (isset($_GET['param1'])) {
+            $template = Template::get_template_by_template_id($_GET["param1"]);
+            $user = $this->get_user_or_redirect();
+            $tricount = Tricount::get_tricount_by_id($_GET["param2"]);
+            if (!$tricount->has_access($user))
+                $this->redirect();
+            (new View('delete_template'))->show(['template'=>$template, 'tricount'=>$tricount]);
+        } else {
+            Tools::abort("Invalid or missing argument");
+        }
     }
 
-    public function confirm_delete_template()
+    public function confirm_delete_template(): void
     {
-        $template = Template::get_template_by_template_id($_GET["param1"]);
-        $tricount = $template->tricount->id;
-        $template->delete_template_items();
-        $template->delete_template();
-        $this->redirect('templates', 'manage_templates', $template->tricount->id);
+        if (isset($_GET['param1'])) {
+            $template = Template::get_template_by_template_id($_GET["param1"]);
+            $user = $this->get_user_or_redirect();
+            $tricount = $template->tricount;
+            if (!$tricount->has_access($user))
+                $this->redirect();
+            $template->delete_template_items();
+            $template->delete_template();
+            $this->redirect('templates', 'manage_templates', $template->tricount->id);
+        } else {
+            Tools::abort("Invalid or missing argument");
+        }
     }
 }
