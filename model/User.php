@@ -127,13 +127,14 @@ class User extends Model
     public function persist() : User
     {
         self::execute("INSERT INTO users(mail, hashed_password, full_name, role, iban) VALUES(:email, :password, :full_name, :role, :iban)",
-                            ["email" =>$this->email, "password"=>$this->hashed_password, "full_name"=>$this->full_name,"role"=>$this->role, "iban"=>$this->iban]);        
+                        ["email" =>$this->email, "password"=>$this->hashed_password, "full_name"=>$this->full_name,"role"=>$this->role, "iban"=>$this->iban]);        
         $this->id = Model::lastInsertId();
         return $this;
     }
 
 
-    public function persist_update(): User {
+    public function persist_update(): User
+    {
         self::execute("UPDATE users SET hashed_password=:hashed_password, full_name=:full_name, role=:role, iban=:iban WHERE id=:id",
                             ["hashed_password"=>$this->hashed_password, "full_name"=>$this->full_name, "role"=>$this->role, "iban"=>$this->iban, "id"=>$this->id]);
         return $this;

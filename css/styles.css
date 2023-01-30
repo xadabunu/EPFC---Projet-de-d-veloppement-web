@@ -37,6 +37,34 @@ body
     margin: 0;
 }
 
+a.bottomrightcorner{
+    position: relative;
+    top: 45%;
+    left: 90%;
+}
+
+a.bottomposition{
+    position: relative;
+    top: 50%;
+}
+
+a.settings{
+    color:rgb(13, 110, 253);
+    background-color: white;
+    border-color: rgb(13, 110, 253);
+}
+
+a.settings:visited{
+    color:rgb(13, 110, 253);
+    background-color: white;
+    border-color: rgb(13, 110, 253);
+}
+
+a.settings:hover{
+    color: white;
+    background-color: rgb(13, 110, 253);
+}
+
 a
 {
     text-decoration: none;
@@ -687,6 +715,11 @@ table#currency
     margin-bottom: 15px;
 }
 
+.listyle{
+    list-style-type: circle;
+    list-style-position: inside;
+}
+
 ul
 {
     padding-left: 0;
@@ -816,8 +849,4 @@ select-selected:after
     right: 10px;
 }
 
-.settings
-{  
-    border-color: rgb(13, 110, 253);
-    color: rgb(13,110,253);
-}
+
