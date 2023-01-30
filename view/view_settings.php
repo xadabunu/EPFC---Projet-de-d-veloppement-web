@@ -21,9 +21,9 @@
     <p>What can I do for you ?</p>
 
 
-    <a href="settings/edit_profile" class="button bottom2 settings">Edit profile</a>
-    <a href="settings/change_password" class="button bottom2 settings" >Change password</a>
-    <a href="main/logout" class="button bottom2 delete">Logout</a>
+    <a href="settings/edit_profile" class="button bottom2 settings bottomposition">Edit profile</a>
+    <a href="settings/change_password" class="button bottom2 settings bottomposition" >Change password</a>
+    <a href="main/logout" class="button bottom2 delete bottomposition">Logout</a>
 
 
 

@@ -27,7 +27,7 @@
                     
                     foreach($all_templates_items_for_view[$cpt] as $nom => $poids){ ?>
 
-                        <li>
+                        <li class="listyle">
                             <?= $nom . ' (' . $poids . '/' . $all_weight_total[$cpt] . ')' ?>
                         </li>
 

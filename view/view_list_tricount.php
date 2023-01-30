@@ -44,7 +44,7 @@
             <?php } ?>
         </table>
         <?php } ?>
-        <a href="settings/my_settings"><i class="fa fa-cog fa-2x" aria-hidden="true" style="color:goldenrod"></i></a>
+        <a href="settings/my_settings" class="bottomrightcorner"><i class="fa fa-cog fa-2x" aria-hidden="true" style="color:goldenrod"></i></a>
 
     </div>
 

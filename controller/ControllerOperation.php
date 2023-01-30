@@ -305,7 +305,6 @@ class ControllerOperation extends MyController
         $initiator = [];
         $templateChoosen = [];
         $templateUserWeightList = '';
-        $list = self::get_weight($_POST, $tricount);
 
         if (isset($_POST['title'])) {
             $title = $_POST['title'];
