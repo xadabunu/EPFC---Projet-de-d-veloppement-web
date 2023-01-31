@@ -23,7 +23,8 @@ class ControllerTemplates extends MyController
         $all_templates_items_for_view = [];
         $all_weight_total = [];
         $UsernameWeight = [];
-        if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
+
+        if (isset($_GET["param1"]) && is_numeric($_GET["param1"])) {
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))

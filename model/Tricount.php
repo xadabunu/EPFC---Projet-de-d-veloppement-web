@@ -34,6 +34,17 @@ class Tricount extends Model
         return new Tricount($data['title'], $data['created_at'], User::get_user_by_id($data['creator']), $data['description'], $data['id']);
     }
 
+    public static function get_all_tricounts_id(): array
+    {
+        $list = (self::execute("SELECT id FROM tricounts", []))->fetchAll();
+        $res = [];
+
+        foreach ($list as $var)
+            $res[] = $var['id'];
+
+        return $res;
+    }
+
 
 // --------------------------- Méthode has_access -------------------------------------------------
 

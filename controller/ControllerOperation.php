@@ -7,7 +7,7 @@ require_once "controller/ControllerTemplates.php";
 
 class ControllerOperation extends MyController
 {
-// --------------------------- Index + Details Operations ------------------------------------ 
+    // --------------------------- Index + Details Operations ------------------------------------ 
 
     public function index(): void
     {
@@ -46,56 +46,61 @@ class ControllerOperation extends MyController
 
     public function add_operation(): void
     {
-        $tricount = Tricount::get_tricount_by_id($_GET['param1']);
-        $user = $this->get_user_or_redirect();
-        if (!$tricount->has_access($user))
-            $this->redirect();
-        $operation = '';
-        $subscriptors = $tricount->get_subscriptors_with_creator();
-        $templates = Template::get_templates($tricount->id);
-        $errors = [];
-        $title = [];
-        $amount = [];
-        $operation_date = [];
-        $initiator = [];
-        $templateChoosen = [];
-        $templateUserWeightList = '';
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
+            $user = $this->get_user_or_redirect();
+            if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
+                $this->redirect();
+            $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+            if (!$tricount->has_access($user))
+                $this->redirect();
+            $operation = '';
+            $subscriptors = $tricount->get_subscriptors_with_creator();
+            $templates = Template::get_templates($tricount->id);
+            $errors = [];
+            $title = [];
+            $amount = [];
+            $operation_date = [];
+            $initiator = [];
+            $templateChoosen = [];
+            $templateUserWeightList = '';
 
-        if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
-            $title = Tools::sanitize($_POST['title']);
-            $amount = floatval(Tools::sanitize($_POST['amount']));
-            $operation_date = $_POST['operation_date'];
+            if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
+                $title = Tools::sanitize($_POST['title']);
+                $amount = floatval(Tools::sanitize($_POST['amount']));
+                $operation_date = $_POST['operation_date'];
 
-            $created_at = Date("Y-m-d H:i:s");
-            $initiator = Tools::sanitize($_POST['paid_by']);
-            $list = self::get_weight($_POST, $tricount);
-            $errors = array_merge($errors, self::is_valid_fields($_POST));
-            if (count($errors) == 0) {
-                $operation = new Operation($title, $tricount, $amount, $operation_date, User::get_user_by_id($initiator), $created_at);
-                $errors = $operation->validate_operations();
-
-                if (isset($_POST["save_template_checkbox"])) {
-                    $template = new Template(Tools::sanitize($_POST["template_title"]), $tricount);
-                    $errors = array_merge($errors, $template->validate_template());
-                }
-
+                $created_at = Date("Y-m-d H:i:s");
+                $initiator = Tools::sanitize($_POST['paid_by']);
+                $list = self::get_weight($_POST, $tricount);
+                $errors = array_merge($errors, self::is_valid_fields($_POST));
                 if (count($errors) == 0) {
+                    $operation = new Operation($title, $tricount, $amount, $operation_date, User::get_user_by_id($initiator), $created_at);
+                    $errors = $operation->validate_operations();
+
                     if (isset($_POST["save_template_checkbox"])) {
-                        ControllerTemplates::add_template_from_operation($list, $template);
+                        $template = new Template(Tools::sanitize($_POST["template_title"]), $tricount);
+                        $errors = array_merge($errors, $template->validate_template());
                     }
 
-                    $operation->persist_operation();
-                    $operation->persist_repartition($operation, $list);
-                    $this->redirect('tricount', 'operations', $tricount->id);
+                    if (count($errors) == 0) {
+                        if (isset($_POST["save_template_checkbox"])) {
+                            ControllerTemplates::add_template_from_operation($list, $template);
+                        }
+
+                        $operation->persist_operation();
+                        $operation->persist_repartition($operation, $list);
+                        $this->redirect('tricount', 'operations', $tricount->id);
+                    }
                 }
             }
-        }
-        (new View("add_operation"))->show([
-            'tricount' => $tricount, 'operation' => $operation, 'subscriptors' => $subscriptors,
-            'templates' => $templates, 'errors' => $errors, 'title' => $title, 'amount' => $amount,
-            'operation_date' => $operation_date, 'initiator' => $initiator,
-            'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList
-        ]);
+            (new View("add_operation"))->show([
+                'tricount' => $tricount, 'operation' => $operation, 'subscriptors' => $subscriptors,
+                'templates' => $templates, 'errors' => $errors, 'title' => $title, 'amount' => $amount,
+                'operation_date' => $operation_date, 'initiator' => $initiator,
+                'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList
+            ]);
+        } else
+            Tools::abort("Invalid or missing argument.");
     }
 
     private function is_valid_fields(array $array): array
@@ -154,6 +159,9 @@ class ControllerOperation extends MyController
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $operation = Operation::get_operation_by_id($_GET['param1']);
             $user = $this->get_user_or_redirect();
+            if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
+                $this->redirect();
+            $operation = Operation::get_operation_by_id($_GET['param1']);
             if (!$operation->tricount->has_access($user))
                 $this->redirect();
             $tricount = $operation->tricount;
@@ -196,7 +204,8 @@ class ControllerOperation extends MyController
         }
     }
 
-//---- Fonction private get sur le poids et les users selectionnés lors d'un add ou edit operation
+
+    //---- Fonction private get sur le poids et les users selectionnés lors d'un add ou edit operation
 
     private function get_whom(array $array, Tricount $tricount): array
     {
@@ -221,13 +230,15 @@ class ControllerOperation extends MyController
     }
 
 
-// --------------------------- Delete + ConfirmDelete operations ------------------------------------ 
+    // --------------------------- Delete + ConfirmDelete operations ------------------------------------ 
 
 
     public function delete_operation(): void
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
             $user = $this->get_user_or_redirect();
+            if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
+            $this->redirect();
             $operation = Operation::get_operation_by_id($_GET['param1']);
             if (!$operation->tricount->has_access($user))
                 $this->redirect();
@@ -241,6 +252,8 @@ class ControllerOperation extends MyController
     public function confirm_delete_operation(): void
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
+            if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
+            $this->redirect();
             $operation = Operation::get_operation_by_id($_GET['param1']);
             $operation->delete_operation_cascade();
             $this->redirect('tricount', 'operations', $operation->tricount->id);
@@ -248,9 +261,10 @@ class ControllerOperation extends MyController
         else{
             Tools::abort('Invalid or missing argument.');
         }       
+
     }
 
-// --------------------------- Apply template for add/edit operation ------------------------------------ 
+    // --------------------------- Apply template for add/edit operation ------------------------------------ 
 
     public function apply_template_edit_operation(): void
     {
@@ -266,79 +280,97 @@ class ControllerOperation extends MyController
         $templateChoosen = [];
         $templateUserWeightList = '';
 
-        $user = $this->get_user_or_redirect();
-        $operation = Operation::get_operation_by_id($_GET['param1']);
-        if (!$operation->tricount->has_access($user))
-            $this->redirect();
-        $tricount = $operation->tricount;
-        $subscriptors = $tricount->get_subscriptors_with_creator();
-        $templates = Template::get_templates($tricount->id);
-        $list = $operation->get_repartitions();
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
+            $user = $this->get_user_or_redirect();
+            if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
+                $this->redirect();
+            $operation = Operation::get_operation_by_id($_GET['param1']);
+            if (!$operation->tricount->has_access($user))
+                $this->redirect();
+            $tricount = $operation->tricount;
+            $subscriptors = $tricount->get_subscriptors_with_creator();
+            $templates = Template::get_templates($tricount->id);
+            $list = $operation->get_repartitions();
 
-        if (isset($_POST['title'])) {
-            $title = Tools::sanitize($_POST['title']);
-        }
-        if (isset($_POST['amount'])) {
-            $amount = Tools::sanitize($_POST['amount']);
-        }
-        if (isset($_POST['operation_date'])) {
-            $operation_date = $_POST['operation_date'];
-        }
-        if (isset($_POST['paid_by'])) {
-            $paid_by = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
-        }
-        if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
-            $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
-            $templateUserWeightList = $templateChoosen->get_repartition_items();
-        }
+            if (isset($_POST['title'])) {
+                $title = Tools::sanitize($_POST['title']);
+            }
+            if (isset($_POST['amount'])) {
+                $amount = Tools::sanitize($_POST['amount']);
+            }
+            if (isset($_POST['operation_date'])) {
+                $operation_date = $_POST['operation_date'];
+            }
+            if (isset($_POST['paid_by'])) {
+                $paid_by = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
+            }
+            if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
+                $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
+                $templateUserWeightList = $templateChoosen->get_repartition_items();
+            } else if (isset($_POST['templates']) && is_string($_POST['templates'])) {
+                if (strcmp($_POST['templates'], "No ill use custom repartition") == 0) {
+                    $templateChoosen = $_POST['templates'];
+                }
+            }
 
-        (new View('edit_operation'))->show([
-            'operation' => $operation, 'errors' => $errors,
-            'subscriptors' => $subscriptors, 'templates' => $templates, 'list' => $list,
-            'titleValue' => $title, 'amountValue' => $amount, 'operation_dateValue' => $operation_date, 'paid_byValue' => $paid_by,
-            'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList
-        ]);
+            (new View('edit_operation'))->show([
+                'operation' => $operation, 'errors' => $errors,
+                'subscriptors' => $subscriptors, 'templates' => $templates, 'list' => $list,
+                'titleValue' => $title, 'amountValue' => $amount, 'operation_dateValue' => $operation_date, 'paid_byValue' => $paid_by,
+                'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList
+            ]);
+        } else
+            Tools::abort("Invalid or missing arument.");
     }
 
     public function apply_template_add_operation(): void
     {
-        $user = $this->get_user_or_redirect();
-        $tricount = Tricount::get_tricount_by_id($_GET['param1']);
-        if (!$tricount->has_access($user))
-            $this->redirect();
-        $operation = '';
-        $subscriptors = $tricount->get_subscriptors_with_creator();
-        $templates = Template::get_templates($tricount->id);
-        $errors = [];
-        $title = [];
-        $amount = [];
-        $operation_date = [];
-        $initiator = [];
-        $templateChoosen = [];
-        $templateUserWeightList = '';
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
+            $user = $this->get_user_or_redirect();
+            if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
+                $this->redirect();
+            $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+            if (!$tricount->has_access($user))
+                $this->redirect();
+            $operation = '';
+            $subscriptors = $tricount->get_subscriptors_with_creator();
+            $templates = Template::get_templates($tricount->id);
+            $errors = [];
+            $title = [];
+            $amount = [];
+            $operation_date = [];
+            $initiator = [];
+            $templateChoosen = [];
+            $templateUserWeightList = '';
 
-        if (isset($_POST['title'])) {
-            $title = Tools::sanitize($_POST['title']);
-        }
-        if (isset($_POST['amount'])) {
-            $amount = Tools::sanitize($_POST['amount']);
-        }
-        if (isset($_POST['operation_date'])) {
-            $operation_date = $_POST['operation_date'];
-        }
-        if (isset($_POST['paid_by']) && is_numeric($_POST['paid_by'])) {
-            $initiator = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
-        }
-        if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
-            $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
-            $templateUserWeightList = $templateChoosen->get_repartition_items();
-        }
 
-        (new View("add_operation"))->show([
-            'tricount' => $tricount, 'operation' => $operation, 'subscriptors' => $subscriptors,
-            'templates' => $templates, 'errors' => $errors, 'title' => $title, 'amount' => $amount,
-            'operation_date' => $operation_date, 'initiator' => $initiator,
-            'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList
-        ]);
+            if (isset($_POST['title'])) {
+                $title = Tools::sanitize($_POST['title']);
+            }
+            if (isset($_POST['amount'])) {
+                $amount = Tools::sanitize($_POST['amount']);
+            }
+            if (isset($_POST['operation_date'])) {
+                $operation_date = $_POST['operation_date'];
+            }
+            if (isset($_POST['paid_by']) && is_numeric($_POST['paid_by'])) {
+                $initiator = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
+            }
+            if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
+                $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
+                $templateUserWeightList = $templateChoosen->get_repartition_items();
+            } else if (isset($_POST['templates']) && is_string($_POST['templates'])) {
+                if (strcmp($_POST['templates'], "No ill use custom repartition") == 0) {
+                    $templateChoosen = $_POST['templates'];
+                }
+            }
+            (new View("add_operation"))->show([
+                'tricount' => $tricount, 'operation' => $operation, 'subscriptors' => $subscriptors,
+                'templates' => $templates, 'errors' => $errors, 'title' => $title, 'amount' => $amount,
+                'operation_date' => $operation_date, 'initiator' => $initiator,
+                'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList
+            ]);
+        } else
+            Tools::abort("Invalid or missing arument.");
     }
 }

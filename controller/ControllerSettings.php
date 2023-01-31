@@ -88,4 +88,5 @@ class ControllerSettings extends MyController
 
         return $errors;
     }
+
 }

@@ -75,16 +75,16 @@
                 <tr>
                     <td class="subscriptor">
                         <select name="templates" id="templates" class="edit">
-                            <?php if (!is_array($templateChoosen)) { ?>
+                            <?php if (!is_array($templateChoosen) && !is_string($templateChoosen)) { ?>
                                 <option value="<?= $templateChoosen->id ?>" selected><i><?= $templateChoosen->title ?></i></option>
-                                <option>-- No, i'll use custom repartition --</option>
+                                <option value="No ill use custom repartition">-- No, i'll use custom repartition --</option>
                                 <?php foreach ($templates as $template) {
                                     if ($template != $templateChoosen) { ?>
                                         <option value="<?= $template->id ?>"><?= $template->title ?></option>
                                 <?php }
                                 } ?>
                             <?php } else { ?>
-                                <option selected>-- No, i'll use custom repartition --</option>
+                                <option value="No ill use custom repartition" selected>-- No, i'll use custom repartition --</option>
                                 <?php foreach ($templates as $template) { ?>
                                     <option value="<?= $template->id ?>"><?= $template->title ?></option>
                             <?php }
@@ -94,7 +94,7 @@
                     <td class="subscriptor input"><input type="submit" value="&#8635;" formaction="operation/apply_template_add_operation/<?= $tricount->id ?>"></td>
                 </tr>
             </table>
-            <?php if (!is_array($templateChoosen)) { ?>
+            <?php if (!is_array($templateChoosen) && !is_string($templateChoosen)) { ?>
                 <label>For whom ? <i>(select at leat one)</i></label>
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?>
@@ -117,7 +117,33 @@
                         </li>
                     <?php } ?>
                 </ul>
-            <?php } else { ?>
+
+            <?php } else if (is_string($templateChoosen)) { if(strcmp($templateChoosen, "No ill use custom repartition") == 0){ ?>    
+
+                <label>For whom ? <i>(select at leat one)</i></label>
+
+                <ul>
+                    <?php foreach ($subscriptors as $subscriptor) { ?>
+                        <li>
+                            <table class="whom">
+                                <tr class="edit">
+                                    <td class="check">
+                                        <p><input type='checkbox' name='<?= $subscriptor->id ?>' value=''></p>
+                                    </td>
+                                    <td class="user">
+                                        <?= $subscriptor->full_name ?>
+                                    </td>
+                                    <td class="weight">
+                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='1'>
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+                    <?php } ?>
+                </ul>
+
+
+            <?php } } else { ?>
                 <label>For whom ? (select at leat one)</label>
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?>
