@@ -67,9 +67,10 @@
                     <?php if(!is_array($templateChoosen)){  ?>
                         <option  value ="<?= $templateChoosen->id ?>" selected><i><?= $templateChoosen->title ?></i></option>
                         <option ><i>-- No, i'll use custom repartition --</i></option>
-                        <?php foreach($templates as $template) { ?>
-                          <option value="<?= $template->id ?>"><?= $template->title ?></option>
-                        <?php } ?>
+                        <?php foreach($templates as $template) { 
+                            if($template != $templateChoosen){ ?>
+                                <option value="<?= $template->id ?>"><?= $template->title ?></option>
+                        <?php }} ?>
 
 
                     <?php } else{ ?>

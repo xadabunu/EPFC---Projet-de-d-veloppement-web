@@ -7,8 +7,7 @@ require_once "controller/ControllerTemplates.php";
 
 class ControllerOperation extends MyController
 {
-
-    // --------------------------- Index + Details Operations ------------------------------------ 
+// --------------------------- Index + Details Operations ------------------------------------ 
 
     public function index(): void
     {
@@ -195,7 +194,7 @@ class ControllerOperation extends MyController
         ]);
     }
 
-    //---- Fonction private get sur le poids et les users selectionnés lors d'un add ou edit operation
+//---- Fonction private get sur le poids et les users selectionnés lors d'un add ou edit operation
 
     private function get_whom(array $array, Tricount $tricount): array
     {
@@ -220,7 +219,7 @@ class ControllerOperation extends MyController
     }
 
 
-    // --------------------------- Delete + ConfirmDelete operations ------------------------------------ 
+// --------------------------- Delete + ConfirmDelete operations ------------------------------------ 
 
 
     public function delete_operation(): void
@@ -239,7 +238,7 @@ class ControllerOperation extends MyController
         $this->redirect('tricount', 'operations', $operation->tricount->id);
     }
 
-    // --------------------------- Apply template for add/edit operation ------------------------------------ 
+// --------------------------- Apply template for add/edit operation ------------------------------------ 
 
     public function apply_template_edit_operation(): void
     {

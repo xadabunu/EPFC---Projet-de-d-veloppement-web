@@ -53,9 +53,10 @@
                 <?php } else{ ?>
                     <option value="" > -- Who paid for it ? -- </option>
                 <?php } ?>
-                <?php foreach($subscriptors as $subscriptor) { ?>
-                    <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
-                <?php } ?>
+                <?php foreach($subscriptors as $subscriptor) { 
+                    if($subscriptor != $initiator){ ?>
+                        <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
+                    <?php } } ?>
             </select>
             <?php if(array_key_exists('empty_initiator', $errors)){?>
                 <p class="errorMessage"><?php echo $errors['empty_initiator'];?></p>
@@ -66,9 +67,10 @@
                     <?php if(!is_array($templateChoosen)){  ?>
                         <option  value ="<?= $templateChoosen->id ?>" selected><i><?= $templateChoosen->title ?></i></option>
                         <option ><i>-- No, i'll use custom repartition --</i></option>
-                        <?php foreach($templates as $template) { ?>
-                          <option value="<?= $template->id ?>"><?= $template->title ?></option>
-                        <?php } ?>
+                        <?php foreach($templates as $template) {
+                            if($template != $templateChoosen){ ?>
+                                <option value="<?= $template->id ?>"><?= $template->title ?></option>
+                        <?php }} ?>
                     <?php } else{ ?>
                         <option selected><i>-- No, i'll use custom repartition --</i></option>
                         <?php foreach($templates as $template) { ?>
