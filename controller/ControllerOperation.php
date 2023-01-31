@@ -170,7 +170,7 @@ class ControllerOperation extends MyController
 
             if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date'])) {
                 $operation->title = Tools::sanitize($_POST['title']);
-                $operation->amount = Tools::sanitize($_POST['amount']);
+                $operation->amount = floatval(Tools::sanitize($_POST['amount']));
                 $operation->initiator = User::get_user_by_id($_POST['paid_by']);
                 $operation->operation_date = $_POST['operation_date'];
                 $list = self::get_weight($_POST, $tricount);
@@ -294,6 +294,10 @@ class ControllerOperation extends MyController
             if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
                 $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
                 $templateUserWeightList = $templateChoosen->get_repartition_items();
+            } else if (isset($_POST['templates']) && is_string($_POST['templates'])) {
+                if (strcmp($_POST['templates'], "No ill use custom repartition") == 0) {
+                    $templateChoosen = $_POST['templates'];
+                }
             }
 
             (new View('edit_operation'))->show([
@@ -326,6 +330,7 @@ class ControllerOperation extends MyController
             $templateChoosen = [];
             $templateUserWeightList = '';
 
+
             if (isset($_POST['title'])) {
                 $title = Tools::sanitize($_POST['title']);
             }
@@ -341,8 +346,11 @@ class ControllerOperation extends MyController
             if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
                 $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
                 $templateUserWeightList = $templateChoosen->get_repartition_items();
+            } else if (isset($_POST['templates']) && is_string($_POST['templates'])) {
+                if (strcmp($_POST['templates'], "No ill use custom repartition") == 0) {
+                    $templateChoosen = $_POST['templates'];
+                }
             }
-
             (new View("add_operation"))->show([
                 'tricount' => $tricount, 'operation' => $operation, 'subscriptors' => $subscriptors,
                 'templates' => $templates, 'errors' => $errors, 'title' => $title, 'amount' => $amount,

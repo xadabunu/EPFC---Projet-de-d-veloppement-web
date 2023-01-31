@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8">
     <title><?= $tricount->title ?> &#11208; Edit template</title>
-    <base href="<?= $web_root ?>" />
+    <base href="<?= $web_root ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/styles.css" rel="stylesheet" type="text/css" />
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -28,7 +28,7 @@
                 <p class="errorMessage"><?php echo $errors['length']; ?></p>
             <?php } ?>
 
-            <label for="whom">Template items :</label>
+            <label>Template items :</label>
             <ul>
                 <?php foreach ($userAndWeightArray as $nom => $idAndWeightArray) { ?>
                     <li>
@@ -38,7 +38,7 @@
                                     <p><input type='checkbox' name='<?= $idAndWeightArray[0] ?>' value='' checked></p>
                                 </td>
                                 <td class="user">
-                                    <?= $nom ?></td>
+                                    <?= $nom ?>
                                 </td>
                                 <td class="weight">
                                     <p>Weight</p><input type='text' name='weight_<?= $idAndWeightArray[0] ?>' value='<?= $idAndWeightArray[1] ?>'>

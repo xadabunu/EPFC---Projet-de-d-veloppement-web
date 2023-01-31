@@ -17,6 +17,7 @@
             <button class="button save" id="add" type="submit" form="add_operation_form">Save</button>
         </header>
         <form id="add_operation_form" action="operation/add_operation/<?= $tricount->id ?>" method="post" class="edit">
+
             <input id="title" name="title" type="text" placeholder="Title" value='<?php if (!is_array($title)) {echo $title;} else {echo '';} ?>' 
                                                                                             <?php if (array_key_exists('empty_title', $errors) || array_key_exists('length', $errors)) { ?>class="errorInput" <?php } ?>>
             <?php if (array_key_exists('empty_title', $errors)) { ?>
@@ -27,8 +28,11 @@
             <?php } ?>
             <table class="edit" id="currency">
                 <tr class="currency">
-                    <td><input id="Amount" name="amount" type="text" placeholder="Amount" value='<?php if (!is_array($amount)) {echo $amount;} else {echo '';} ?>'
-                                                                                                <?php if (array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) { ?>class="errorInput" <?php } ?>></td>
+                    <td><input id="Amount" name="amount" type="text" placeholder="Amount" value='<?php if (!is_array($amount)) {
+                                                                                                        echo $amount;
+                                                                                                    } else {
+                                                                                                        echo '';
+                                                                                                    } ?>' <?php if (array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) { ?>class="errorInput" <?php } ?>></td>
                     <td class="right">EUR</td>
                 </tr>
             </table>
@@ -57,10 +61,11 @@
                 <?php } else { ?>
                     <option value=""> -- Who paid for it ? -- </option>
                 <?php } ?>
-                <?php foreach($subscriptors as $subscriptor) { 
-                    if($subscriptor != $initiator){ ?>
+                <?php foreach ($subscriptors as $subscriptor) {
+                    if ($subscriptor != $initiator) { ?>
                         <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
-                    <?php } } ?>
+                <?php }
+                } ?>
 
             </select>
             <?php if (array_key_exists('empty_initiator', $errors)) { ?>
@@ -70,15 +75,16 @@
                 <tr>
                     <td class="subscriptor">
                         <select name="templates" id="templates" class="edit">
-                            <?php if (!is_array($templateChoosen)) { ?>
+                            <?php if (!is_array($templateChoosen) && !is_string($templateChoosen)) { ?>
                                 <option value="<?= $templateChoosen->id ?>" selected><i><?= $templateChoosen->title ?></i></option>
-                                <option>-- No, i'll use custom repartition --</option>
-                                <?php foreach($templates as $template) {
-                            if($template != $templateChoosen){ ?>
-                                <option value="<?= $template->id ?>"><?= $template->title ?></option>
-                        <?php }} ?>
+                                <option value="No ill use custom repartition">-- No, i'll use custom repartition --</option>
+                                <?php foreach ($templates as $template) {
+                                    if ($template != $templateChoosen) { ?>
+                                        <option value="<?= $template->id ?>"><?= $template->title ?></option>
+                                <?php }
+                                } ?>
                             <?php } else { ?>
-                                <option selected>-- No, i'll use custom repartition --</option>
+                                <option value="No ill use custom repartition" selected>-- No, i'll use custom repartition --</option>
                                 <?php foreach ($templates as $template) { ?>
                                     <option value="<?= $template->id ?>"><?= $template->title ?></option>
                             <?php }
@@ -88,7 +94,7 @@
                     <td class="subscriptor input"><input type="submit" value="&#8635;" formaction="operation/apply_template_add_operation/<?= $tricount->id ?>"></td>
                 </tr>
             </table>
-            <?php if (!is_array($templateChoosen)) { ?>
+            <?php if (!is_array($templateChoosen) && !is_string($templateChoosen)) { ?>
                 <label>For whom ? <i>(select at leat one)</i></label>
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?>
@@ -111,7 +117,33 @@
                         </li>
                     <?php } ?>
                 </ul>
-            <?php } else { ?>
+
+            <?php } else if (is_string($templateChoosen)) { if(strcmp($templateChoosen, "No ill use custom repartition") == 0){ ?>    
+
+                <label>For whom ? <i>(select at leat one)</i></label>
+
+                <ul>
+                    <?php foreach ($subscriptors as $subscriptor) { ?>
+                        <li>
+                            <table class="whom">
+                                <tr class="edit">
+                                    <td class="check">
+                                        <p><input type='checkbox' name='<?= $subscriptor->id ?>' value=''></p>
+                                    </td>
+                                    <td class="user">
+                                        <?= $subscriptor->full_name ?>
+                                    </td>
+                                    <td class="weight">
+                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='1'>
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+                    <?php } ?>
+                </ul>
+
+
+            <?php } } else { ?>
                 <label>For whom ? (select at leat one)</label>
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?>
@@ -153,3 +185,6 @@
             </table>
         </form>
     </div>
+</body>
+
+</html>
