@@ -130,7 +130,7 @@
                             <table class="whom">
                                 <tr class="edit">
                                     <td class="check">
-                                        <p><input type='checkbox' checked name='<?= $subscriptor->id ?>' value=''></p>
+                                        <p><input type='checkbox' name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
                                         <?= $subscriptor->full_name ?>
