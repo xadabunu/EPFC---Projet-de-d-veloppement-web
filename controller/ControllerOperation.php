@@ -18,7 +18,7 @@ class ControllerOperation extends MyController
         if (isset($_GET['param1'])) {
             $user = $this->get_user_or_redirect();
             $op = Operation::get_operation_by_id($_GET['param1']);
-            if (!$op->has_access($user))
+            if (!$op->tricount->has_access($user))
                 $this->redirect();
             $list = $op->get_participants();
             $amounts = [];
@@ -41,10 +41,10 @@ class ControllerOperation extends MyController
     }
 
 
-// --------------------------- Add/edit Operations ------------------------------------
+    // --------------------------- Add/edit Operations ------------------------------------
 
 
-    public function add_operation() : void
+    public function add_operation(): void
     {
         $tricount = Tricount::get_tricount_by_id($_GET['param1']);
         $user = $this->get_user_or_redirect();
@@ -154,7 +154,7 @@ class ControllerOperation extends MyController
         if (isset($_GET['param1'])) {
             $operation = Operation::get_operation_by_id($_GET['param1']);
             $user = $this->get_user_or_redirect();
-            if (!$operation->has_access($user))
+            if (!$operation->tricount->has_access($user))
                 $this->redirect();
             $tricount = $operation->tricount;
             $subscriptors = $tricount->get_subscriptors_with_creator();
@@ -226,7 +226,7 @@ class ControllerOperation extends MyController
     {
         $user = $this->get_user_or_redirect();
         $operation = Operation::get_operation_by_id($_GET['param1']);
-        if (!$operation->has_access($user))
+        if (!$operation->tricount->has_access($user))
             $this->redirect();
         (new View('delete_operation'))->show(['operation' => $operation]);
     }
@@ -256,7 +256,7 @@ class ControllerOperation extends MyController
 
         $user = $this->get_user_or_redirect();
         $operation = Operation::get_operation_by_id($_GET['param1']);
-        if (!$operation->has_access($user))
+        if (!$operation->tricount->has_access($user))
             $this->redirect();
         $tricount = $operation->tricount;
         $subscriptors = $tricount->get_subscriptors_with_creator();

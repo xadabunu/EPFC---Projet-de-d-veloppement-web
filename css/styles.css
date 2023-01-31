@@ -1,86 +1,80 @@
-*
-{
+* {
     font-family: Arial, Helvetica, sans-serif;
     outline: none;
 }
 
-button:hover, input[type="submit"]:hover, td.input:hover
-{
-    cursor : pointer;
+button:hover,
+input[type="submit"]:hover,
+td.input:hover {
+    cursor: pointer;
 }
 
-.main
-{
+.main {
     height: 100vh;
     aspect-ratio: 9/16;
     background-color: rgb(255, 255, 255);
     margin-left: auto;
     margin-right: auto;
-    padding: 0 20px 5px 20px;
+    padding: 0 20px;
     color: rgb(33, 37, 41);
     position: relative;
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
     overflow-x: hidden;
-    font-size : 150%;
+    font-size: 150%;
 }
 
-.main::-webkit-scrollbar
-{
+.main::-webkit-scrollbar {
     width: 0;
 }
 
-body
-{
+body {
     background-color: rgb(171, 206, 236);
     margin: 0;
 }
 
-a.bottomrightcorner{
+a.bottomrightcorner {
     position: relative;
     top: 45%;
     left: 90%;
 }
 
-a.bottomposition{
+a.bottomposition {
     position: relative;
     top: 50%;
 }
 
-a.settings{
-    color:rgb(13, 110, 253);
+a.settings {
+    color: rgb(13, 110, 253);
     background-color: white;
     border-color: rgb(13, 110, 253);
 }
 
-a.settings:visited{
-    color:rgb(13, 110, 253);
+a.settings:visited {
+    color: rgb(13, 110, 253);
     background-color: white;
     border-color: rgb(13, 110, 253);
 }
 
-a.settings:hover{
+a.settings:hover {
     color: white;
     background-color: rgb(13, 110, 253);
 }
 
-a
-{
+a {
     text-decoration: none;
     color: rgb(33, 37, 41);
 }
 
-.button
-{
-    width : min-content;
+.button {
+    width: min-content;
     padding: 10px;
     border: 2px solid;
     border-radius: 10px;
 }
 
-footer
-{
+footer {
     display: flex;
     position: sticky;
     bottom: 0;
@@ -90,55 +84,48 @@ footer
     margin: auto -20px 0 -20px;
 }
 
-footer > div > p
-{
+footer>div>p {
     font-size: 60%;
     margin: 5px 10px;
     padding-top: 5px;
 }
 
-footer > div:last-child > p
-{
+footer>div:last-child>p {
     text-align: right;
 }
 
-footer > .button
-{
+footer>.button {
     font-size: 75%;
     margin: 15px;
 }
 
-a#back
-{
+a#back {
     border-color: red;
     color: red;
 }
 
-#next, #previous, #add
-{
+#next,
+#previous,
+#add {
     background-color: rgb(13, 110, 253);
     border-color: rgb(13, 110, 253);
     color: white;
 }
 
-a#next
-{
+a#next {
     margin-left: auto;
 }
 
-a#previous
-{
+a#previous {
     margin-right: auto;
 }
 
-#add
-{
+#add {
     margin-right: 15px;
     margin-left: auto;
 }
 
-a.circle
-{
+a.circle {
     font-size: 115%;
     padding: 5px 10px;
     background-color: rgb(13, 110, 253);
@@ -152,44 +139,37 @@ a.circle
     margin-left: 60px;
 }
 
-a.circle:visited
-{
+a.circle:visited {
     color: white;
 }
 
-.amount
-{
+.amount {
     text-align: center;
     margin-top: 30px;
     margin-bottom: 15px;
     font-weight: bold;
 }
 
-tr.currency td:first-child
-{
+tr.currency td:first-child {
     width: 100%;
     padding: 0;
 }
 
-.payement_info
-{
+.payement_info {
     display: flex;
     justify-content: space-between;
 }
 
-a:visited
-{
+a:visited {
     text-decoration: none;
     color: rgb(33, 37, 41);
 }
 
-a:hover
-{
+a:hover {
     color: rgb(90, 167, 235);
 }
 
-header
-{
+header {
     position: sticky;
     top: 0;
     padding: 20px 10px;
@@ -198,34 +178,29 @@ header
     justify-content: center;
 }
 
-header > p
-{
+header>p {
     font-weight: bold;
-    font-size : 85%;
+    font-size: 85%;
     text-align: center;
 }
 
-header > *
-{
+header>* {
     width: max-content;
     margin: auto;
     padding: 10px;
 }
 
-.t1
-{
+.t1 {
     background-color: rgb(13, 110, 253);
     color: white;
 }
 
-.t2
-{
+.t2 {
     background-color: rgb(227, 242, 253);
     color: rgb(102, 109, 114);
 }
 
-table
-{
+table {
     border: 2px solid rgb(223, 223, 223);
     border-radius: 10px;
     border-spacing: 0;
@@ -233,36 +208,30 @@ table
     margin: 10px 0 40px 0;
 }
 
-td > p
-{
+td>p {
     margin: 5px 10px;
     font-size: 85%;
 }
 
-td > p:last-child
-{
+td>p:last-child {
     font-size: 70%;
 }
 
-td
-{
+td {
     border-bottom: 2px solid rgb(223, 223, 223);
     border-collapse: collapse;
     padding: 20px;
 }
 
-tr:last-child td
-{
+tr:last-child td {
     border-bottom: none;
 }
 
-td.right
-{
+td.right {
     text-align: right;
 }
 
-form
-{
+form {
     display: flex;
     justify-content: center;
     align-content: center;
@@ -274,168 +243,148 @@ form
     padding: 25px;
 }
 
-.connect
-{
+.connect {
     margin: 35% auto 0 auto;
 }
 
-.connect2
-{
-    margin : 22% auto 0 auto;
+.connect2 {
+    margin: 22% auto 0 auto;
 }
 
-.formtitle
-{
-   padding-bottom: 25px;
-   display: flex;
-   justify-content: center;
-   border-bottom: 2px solid rgb(227, 227, 227);
-   margin-bottom: 25px;
+.formtitle {
+    padding-bottom: 25px;
+    display: flex;
+    justify-content: center;
+    border-bottom: 2px solid rgb(227, 227, 227);
+    margin-bottom: 25px;
 }
 
-form > *
-{
+form>* {
     width: 100%;
     margin-top: 10px;
 }
 
-th.empty
-{
+th.empty {
     font-weight: 550;
     padding: 10px 0;
     border-bottom: 2px solid rgb(227, 227, 227);
     background-color: rgb(247, 247, 247);
 }
 
-td.empty
-{
+td.empty {
     text-align: center;
     padding-bottom: 30px;
 }
 
-td.empty > p
-{
+td.empty>p {
     padding-top: 20px;
     padding-bottom: 30px;
 }
 
-td.empty > a
-{
+td.empty>a {
     background-color: rgb(13, 110, 253);
     border-color: rgb(13, 110, 253);
     color: white;
 }
 
-p.balance
-{
+p.balance {
     display: flex;
     justify-content: center;
     width: 100%;
     text-align: center;
 }
 
-tr.balance
-{
+tr.balance {
     width: 100%;
     display: flex;
 }
 
-a#balance, .manage:visited
-{
+a#balance,
+.manage:visited {
     background-color: rgb(60, 179, 113);
     width: 100%;
     border-color: rgb(60, 179, 113);
     color: white;
 }
 
-table.balance
-{
+table.balance {
     border: none;
     border-collapse: separate;
     border-spacing: 0 20px;
     margin: 10px 0 0 0;
 }
 
-td.balance
-{
+td.balance {
     width: 50%;
     margin-right: 0;
     border-bottom: none;
     padding: 0;
 }
 
-td.negative
-{
+td.negative {
     display: flex;
     justify-content: right;
 }
 
-td.positive
-{
+td.positive {
     display: flex;
     justify-content: left;
 }
 
-p.positive, p.negative, p.left, p.right
-{
+p.positive,
+p.negative,
+p.left,
+p.right {
     padding: 10px 0;
 }
 
-p.negative, p.positive
-{
+p.negative,
+p.positive {
     white-space: nowrap;
     vertical-align: middle;
 }
 
-p.positive
-{
+p.positive {
     background-color: rgb(60, 179, 113);
     padding-left: 10px;
     margin-left: 0px;
 }
 
-p.right
-{
+p.right {
     text-align: left;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 }
 
-p.negative
-{
+p.negative {
     background-color: rgb(255, 99, 71);
     padding-right: 10px;
     margin-right: 0px;
 }
 
-p.left
-{
+p.left {
     text-align: right;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
 
-p.left:not(.negative)
-{
+p.left:not(.negative) {
     padding-right: 10px;
 }
 
 
-p.inner
-{
+p.inner {
     position: absolute;
     margin: 10px;
     font-size: 70%;
     padding: 6px 0;
 }
 
-p.inner.left
-{
+p.inner.left {
     padding-right: 10px;
 }
 
-.save
-{
+.save {
     font-size: 75%;
     background-color: rgb(13, 110, 253);
     border-color: rgb(13, 110, 253);
@@ -443,26 +392,29 @@ p.inner.left
     padding: 15px;
 }
 
-.save:hover, #add:hover, .circle:hover, td.subscriptor.input:hover > input, #next:hover, #previous:hover, .login:hover, td.empty .button:hover
-{
+.save:hover,
+#add:hover,
+.circle:hover,
+td.subscriptor.input:hover>input,
+#next:hover,
+#previous:hover,
+.login:hover,
+td.empty .button:hover {
     background-color: white;
     color: rgb(13, 110, 253);
 }
 
-td.subscriptor.input:hover
-{
+td.subscriptor.input:hover {
     background-color: white;
     border: 2px solid rgb(13, 110, 253);
 }
 
-h3
-{
+h3 {
     margin-bottom: 0;
     font-size: 90%;
 }
 
-.edit
-{
+.edit {
     border: none;
     font-size: 80%;
     margin-top: 10px;
@@ -470,181 +422,161 @@ h3
     width: inherit;
 }
 
-.bottom2
-{
+.bottom2 {
     width: inherit;
     text-align: center;
     margin-top: 5px;
     font-size: 75%;
 }
 
-.delete2
-{
+.delete2 {
     font-size: 100%;
 }
 
-.delete, .delete:visited, #back:hover
-{
+.delete,
+.delete:visited,
+#back:hover {
     background-color: rgb(220, 53, 69);
     border-color: rgb(220, 53, 69);
     color: white;
 }
 
-.delete:hover, td.empty > a.btn_delete:hover
-{
+.delete:hover,
+td.empty>a.btn_delete:hover {
     background-color: white;
     color: rgb(220, 53, 69);
 }
 
-.manage
-{
+.manage {
     background-color: rgb(60, 179, 113);
     border-color: rgb(60, 179, 113);
     color: white;
 }
 
-.manage:hover, #balance:hover
-{
+.manage:hover,
+#balance:hover {
     background-color: white;
     color: rgb(60, 179, 113);
 }
 
-.subs
-{
+.subs {
     text-align: left;
     margin-bottom: 0;
 }
 
-table.subs td
-{
-    font-size : 65%;
+table.subs td {
+    font-size: 65%;
 }
 
-.link
-{
+.link {
     position: sticky;
     padding: 0;
 }
 
-form.link
-{
+form.link {
     border: none;
 }
 
-tr.pop .pop
-{
+tr.pop .pop {
     width: min-content;
     height: min-content;
     margin: 0;
 }
 
-tr.pop td
-{
+tr.pop td {
     width: 90%;
 }
 
-input, textarea
-{
-    font-size : 75%;
-    border-radius : 10px;
-    padding : 2%;
-    height: auto ;
+input,
+textarea {
+    font-size: 75%;
+    border-radius: 10px;
+    padding: 2%;
+    height: auto;
     width: 95%;
     border: 2px solid rgb(223, 223, 223);
 }
 
-.login
-{
-    font-size : 75%;
-    margin : 5% auto;
+.login {
+    font-size: 75%;
+    margin: 5% auto;
     margin-bottom: 0%;
-    border-radius : 10px;
-    padding : 2%; 
+    border-radius: 10px;
+    padding: 2%;
     background-color: rgb(13, 110, 253);
-    border-color : rgb(13, 110, 253);
-    color : white;
-    width : 100%;
+    border-color: rgb(13, 110, 253);
+    color: white;
+    width: 100%;
 }
 
-.join
-{
+.join {
     font-size: 70%;
     text-align: center;
 }
 
-a.bottom
-{
-    font-size : 75%;   
-    border-radius : 10px;
-    padding : 2%; 
+a.bottom {
+    font-size: 75%;
+    border-radius: 10px;
+    padding: 2%;
     text-align: center;
     height: 0% auto;
-    width : 95%;   
+    width: 95%;
 }
 
-form > h3
-{
+form>h3 {
     font-size: large;
     font-weight: lighter;
     margin-top: 2%;
 }
 
-.errorMessage
-{
-    color :rgb(220, 53, 69);
+.errorMessage {
+    color: rgb(220, 53, 69);
     font-size: 50%;
-    margin-bottom : 1%;
+    margin-bottom: 1%;
     font-weight: bold;
 }
 
-.confirm_delete
-{
-    margin : 50% auto;
+.confirm_delete {
+    margin: 50% auto;
 }
 
-td.empty > a.btn_cancel
-{
-    background-color: rgb(108,117,125);
-    border-color: rgb(108,117,125);
+td.empty>a.btn_cancel {
+    background-color: rgb(108, 117, 125);
+    border-color: rgb(108, 117, 125);
 }
 
-td.empty > a.btn_cancel:hover
-{
+td.empty>a.btn_cancel:hover {
     background-color: white;
-    color: rgb(108,117,125);
+    color: rgb(108, 117, 125);
 }
 
-td.empty > a.btn_delete
-{
+td.empty>a.btn_delete {
     background-color: rgb(220, 53, 69);
-    border-color:rgb(220, 53, 69);
-    color : white;
+    border-color: rgb(220, 53, 69);
+    color: white;
 }
 
-td.empty > .text_confirm, .text_confirm_title
-{
-    color:rgb(220, 53, 69);
+td.empty>.text_confirm,
+.text_confirm_title {
+    color: rgb(220, 53, 69);
 }
 
-td.empty > .text_confirm_title
-{
+td.empty>.text_confirm_title {
     font-size: 150%;
 }
 
-.errorInput
-{ 
-    border : 2px solid rgb(220, 53, 69);;
+.errorInput {
+    border: 2px solid rgb(220, 53, 69);
+    ;
 }
 
-td.subscriptor
-{
+td.subscriptor {
     padding: 0;
     height: min-content;
     font-size: 130%;
 }
 
-td.subscriptor.input
-{
+td.subscriptor.input {
     background-color: rgb(13, 110, 253);
     border: 2px solid rgb(13, 110, 253);
     border-top-right-radius: 5px;
@@ -653,34 +585,30 @@ td.subscriptor.input
     padding: 5px 15px;
 }
 
-td.subscriptor > input
-{
+td.subscriptor>input {
     border: none;
     background: none;
     color: white;
 }
 
-select#subscriptor
-{
+select#subscriptor {
     border: none;
     font-size: 65%;
     padding: 0.5em 35% 0.5em 1em;
     /* padding-left: 1em; */
 }
 
-form#subscriptor > table
-{
+form#subscriptor>table {
     margin-bottom: 2%;
 }
 
-tr.currency input, tr.currency input:focus
-{
+tr.currency input,
+tr.currency input:focus {
     border: none;
     outline: none;
 }
 
-tr.currency
-{
+tr.currency {
     border: solid 2px rgb(223, 223, 223);
     border-radius: 10px;
     display: flex;
@@ -688,13 +616,11 @@ tr.currency
     font-size: 100%;
 }
 
-tr.currency > td
-{
+tr.currency>td {
     padding: 10px;
 }
 
-tr.currency .right
-{
+tr.currency .right {
     background-color: rgb(233, 236, 239);
     border-left: 2px solid rgb(233, 233, 223);
     font-size: 90%;
@@ -702,97 +628,83 @@ tr.currency .right
     vertical-align: middle;
 }
 
-table#currency
-{
+table#currency {
     margin-bottom: 15px;
 }
 
-.edit2
-{
+.edit2 {
     border: 2px solid rgb(223, 223, 223);
     border-radius: 10px;
     padding: 2%;
     margin-bottom: 15px;
 }
 
-.listyle{
+.listyle {
     list-style-type: circle;
     list-style-position: inside;
 }
 
-ul
-{
+ul {
     padding-left: 0;
 }
 
-li
-{
+li {
     list-style: none;
 }
 
-table.whom
-{
+table.whom {
     width: 100%;
     margin-bottom: 10px;
 }
 
-table.whom tr
-{
+table.whom tr {
     display: flex;
     margin-top: 0;
 }
 
-table.whom td
-{
+table.whom td {
     padding: 2%;
 }
 
-td.check
-{
+td.check {
     border-right: 2px solid rgb(223, 223, 223);
     background-color: rgb(233, 236, 239);
     width: 8%;
 }
 
-td.user
-{
+td.user {
     border-right: 2px solid rgb(223, 223, 223);
     background-color: rgb(233, 236, 239);
     width: 70%;
     font-size: 120%;
 }
 
-table.whom td.weight
-{
+table.whom td.weight {
     width: min-content;
     padding: 0;
 }
 
-td.weight input
-{
+td.weight input {
     border: none;
     margin-left: 15%;
     font-size: 100%;
-    width : 20%;
+    width: 20%;
 }
 
-td.weight p
-{
+td.weight p {
     font-size: 100%;
     color: rgb(117, 120, 123);
     padding: 0;
     margin: 10% 10px 0 10px;
 }
 
-td.template
-{
+td.template {
     border-right: 2px solid rgb(223, 223, 223);
     background-color: rgb(233, 236, 239);
     width: 35%;
 }
 
-.contains_input
-{
+.contains_input {
     margin: 10px auto;
     position: relative;
     display: flex;
@@ -800,8 +712,7 @@ td.template
     justify-content: center;
 }
 
-.icon
-{
+.icon {
     position: absolute;
     left: 15px;
     top: 0;
@@ -812,41 +723,40 @@ td.template
     justify-content: center;
 }
 
-.contains_input > input
-{
+.contains_input>input {
     padding-left: 13%;
 }
 
-.fa-trash-o
-{
-    color : rgb(220, 53, 69);
+.fa-trash-o {
+    color: rgb(220, 53, 69);
 }
 
-p#confirm_title
-{
-    padding-bottom : 0;
+p#confirm_title {
+    padding-bottom: 0;
 }
 
-.x
-{
-    color : rgb(220, 53, 69);
+.x {
+    color: rgb(220, 53, 69);
     background: none;
-    font-weight:bolder;
-    border : none;
-    font-size : 200%; 
+    font-weight: bolder;
+    border: none;
+    font-size: 200%;
 }
 
-p.inner.left.bold, p.right.bold, p.left.bold, p.inner.bold
-{
+p.inner.left.bold,
+p.right.bold,
+p.left.bold,
+p.inner.bold {
     font-weight: bold;
 }
 
-select-selected:after
-{
+select-selected:after {
     content: "";
     position: absolute;
     top: 14px;
     right: 10px;
 }
 
-
+#template_title {
+    border: none;
+}

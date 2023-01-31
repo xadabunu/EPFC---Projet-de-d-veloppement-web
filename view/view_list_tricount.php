@@ -29,20 +29,20 @@
                     </td>
                 </tr>
             </table>
-            <?php } else { ?>
-        <table>
-            <?php foreach ($data as $tricount) { ?>
-                <tr>
-                    <td>
-                        <p><b><a href="tricount/operations/<?= $tricount->id ?>"><?= $tricount->title ?></a></b></p>
-                        <p><?= $tricount->description ?></p>
-                    </td>
-                    <td class="right">
-                        <p><?= $subs_number[$tricount->id] ?></p>
-                    </td>
-                </tr>
-            <?php } ?>
-        </table>
+        <?php } else { ?>
+            <table>
+                <?php foreach ($data as $tricount) { ?>
+                    <tr>
+                        <td>
+                            <p><b><a href="tricount/operations/<?= $tricount->id ?>"><?= $tricount->title ?></a></b></p>
+                            <p><?= $tricount->description ?></p>
+                        </td>
+                        <td class="right">
+                            <p><?= $subs_number[$tricount->id] ?></p>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </table>
         <?php } ?>
         <a href="settings/my_settings" class="bottomrightcorner"><i class="fa fa-cog fa-2x" aria-hidden="true" style="color:goldenrod"></i></a>
 

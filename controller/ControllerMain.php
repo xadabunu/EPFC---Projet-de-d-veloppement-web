@@ -9,48 +9,50 @@ require_once "framework/Tools.php";
 class ControllerMain extends MyController
 {
 
-	public function index(): void
-	{
-		if ($this->user_logged()) {
-			$this->redirect("user", "my_tricounts");
-		} else {
-			$this->redirect("main", "login");
-		}
-	}
+    public function index(): void
+    {
+        if ($this->user_logged()) {
+            $this->redirect("user", "my_tricounts");
+        } else {
+            $this->redirect("main", "login");
+        }
+    }
 
-// --------------------------- Fonction Login && Signup -----------------------------------    
+    // --------------------------- Fonction Login && Signup -----------------------------------    
 
 
-	public function login(): void
-	{
-		$email = "";
-		$password = "";
-		$errors = [];
+    public function login(): void
+    {
+        $email = "";
+        $password = "";
+        $errors = [];
 
-		if (isset($_POST['email']) && isset($_POST['password'])) {
-			$email = Tools::sanitize($_POST['email']);
-			$password = Tools::sanitize($_POST['password']);
+        if (isset($_POST['email']) && isset($_POST['password'])) {
+            $email = Tools::sanitize($_POST['email']);
+            $password = Tools::sanitize($_POST['password']);
 
-			$errors = User::validate_login($email, $password);
-			if (count($errors) == 0) {
-				$this->log_user(User::get_user_by_email($email), $controller = "user");
-			}
-		}
-		(new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors]);
-	}    
+            $errors = User::validate_login($email, $password);
+            if (count($errors) == 0) {
+                $this->log_user(User::get_user_by_email($email), $controller = "user");
+            }
+        }
+        (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors]);
+    }
 
-    public function signup() : void
+    public function signup(): void
     {
         $email = '';
-        $role='user';
+        $role = 'user';
         $full_name = '';
         $iban = '';
         $password = '';
         $password_confirm = '';
         $errors = [];
 
-        if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['password_confirm'])
-            && isset($_POST['full_name']) && isset($_POST['iban'])) {
+        if (
+            isset($_POST['email']) && isset($_POST['password']) && isset($_POST['password_confirm'])
+            && isset($_POST['full_name']) && isset($_POST['iban'])
+        ) {
 
             $email = Tools::sanitize($_POST['email']);
             $full_name = Tools::sanitize($_POST['full_name']);
@@ -62,15 +64,14 @@ class ControllerMain extends MyController
             $errors = User::validate_unicity($email);
             $errors = array_merge($errors, $user->validate());
             $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
-            if(count($errors) == 0){
+            if (count($errors) == 0) {
                 $user->persist();
                 $this->log_user($user);
             }
         }
-        (new View("signup"))->show(["email"=>$email, "password"=>$password, "password_confirm"=>$password_confirm,
-                                   "full_name"=>$full_name, "iban"=>$iban, "errors"=>$errors]);
+        (new View("signup"))->show([
+            "email" => $email, "password" => $password, "password_confirm" => $password_confirm,
+            "full_name" => $full_name, "iban" => $iban, "errors" => $errors
+        ]);
     }
 }
-
-
-

@@ -27,7 +27,7 @@
 			<?php } ?>
 			<div class="contains_input">
 				<span class="icon"><i class="fa fa-lock" aria-hidden="true"></i></span>
-			<input type="password" id="password" name="password" value="<?= $password ?>" <?php if (array_key_exists('wrong_password', $errors)) { ?>class="errorInput" <?php } ?>>
+				<input type="password" id="password" name="password" value="<?= $password ?>" <?php if (array_key_exists('wrong_password', $errors)) { ?>class="errorInput" <?php } ?>>
 			</div>
 			<?php if (array_key_exists('wrong_password', $errors)) { ?>
 				<p class="errorMessage"><?php echo $errors['wrong_password']; ?></p>

@@ -12,7 +12,7 @@ class ControllerUser extends MyController
     {
         $this->my_tricounts();
     }
-// --------------------------- Liste des tricounts ------------------------------------ 
+    // --------------------------- Liste des tricounts ------------------------------------ 
 
 
     public function my_tricounts(): void
@@ -39,5 +39,4 @@ class ControllerUser extends MyController
         }
         (new View("list_tricount"))->show(["data" => $array, "subs_number" => $subs_nb]);
     }
-
 }

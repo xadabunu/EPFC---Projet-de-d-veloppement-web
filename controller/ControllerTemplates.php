@@ -1,18 +1,21 @@
-<?php 
+<?php
 
 require_once "controller/MyController.php";
 require_once "model/Template.php";
 require_once "model/User.php";
 require_once "model/Tricount.php";
 
-class ControllerTemplates extends MyController{
+class ControllerTemplates extends MyController
+{
 
-// --------------------------- Index + Manage Template ------------------------------------ 
+    // --------------------------- Index + Manage Template ------------------------------------ 
 
 
-    public function index(): void {}
+    public function index(): void
+    {
+    }
 
-    public function manage_templates(): void 
+    public function manage_templates(): void
     {
         $templates = [];
         $tricount = "";
@@ -20,18 +23,18 @@ class ControllerTemplates extends MyController{
         $all_templates_items_for_view = [];
         $all_weight_total = [];
         $UsernameWeight = [];
-        if(isset($_GET["param1"])){
+        if (isset($_GET["param1"])) {
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))
                 $this->redirect();
             $templates = Template::get_templates($tricount->id);
-            foreach($templates as $template){
+            foreach ($templates as $template) {
                 $all_templates_items[] = $template->get_repartition_items();
             }
-            foreach($all_templates_items as $template_item){
+            foreach ($all_templates_items as $template_item) {
                 $poids = 0;
-                foreach($template_item as $key => $Value){
+                foreach ($template_item as $key => $Value) {
                     $tmpUser = User::get_user_by_id($key)->full_name;
                     $UsernameWeight[$tmpUser] = $Value;
                     $poids += $Value;
@@ -41,13 +44,14 @@ class ControllerTemplates extends MyController{
                 $UsernameWeight = [];
                 $all_weight_total[] = $poids;
             }
-            (new View('templates'))->show(['templates'=>$templates, 'tricount'=>$tricount, 'all_templates_items_for_view'=>$all_templates_items_for_view, 'all_weight_total'=>$all_weight_total]);
+            (new View('templates'))->show(['templates' => $templates, 'tricount' => $tricount, 'all_templates_items_for_view' => $all_templates_items_for_view, 'all_weight_total' => $all_weight_total]);
+        } else {
+            Tools::abort("Invalid or missing argument.");
         }
-        else{Tools::abort("Invalid or missing argument.");}
     }
 
 
-// --------------------------- Add/Edit Template && Add Template depuis Operation + Private valid field ------------------------------------ 
+    // --------------------------- Add/Edit Template && Add Template depuis Operation + Private valid field ------------------------------------ 
 
 
     public function add_template(): void
@@ -108,22 +112,22 @@ class ControllerTemplates extends MyController{
         $template->persist_template_items($template, $list);
     }
 
-    private function is_valid_fields(array $array) : array
+    private function is_valid_fields(array $array): array
     {
         $errors = [];
-        if(empty($array['title'])){
-            $errors ['empty_title'] = "Title is required";
+        if (empty($array['title'])) {
+            $errors['empty_title'] = "Title is required";
         }
-        
+
         $cpt = 0;
         $list = [];
-        foreach($array as $var) {
-            if(is_numeric($var)){
+        foreach ($array as $var) {
+            if (is_numeric($var)) {
                 $cpt += 1;
                 $list[] = $var;
             }
         }
-        if($cpt == 0){
+        if ($cpt == 0) {
             $errors['whom'] = "You must choose at least one person";
         }
         foreach ($list as $var) {
@@ -136,33 +140,33 @@ class ControllerTemplates extends MyController{
     }
 
 
-//---- Fonction private get sur le poids et les users selectionnés lors d'un add ou edit operation
-    
+    //---- Fonction private get sur le poids et les users selectionnés lors d'un add ou edit operation
 
-    private function get_whom(array $array, Tricount $tricount) : array
-    {   
+
+    private function get_whom(array $array, Tricount $tricount): array
+    {
         $list = $tricount->get_subscriptors_with_creator();
         $result = [];
-        foreach($list as $sub) {
-            if(array_key_exists($sub->id, $array)){
+        foreach ($list as $sub) {
+            if (array_key_exists($sub->id, $array)) {
                 $result[] = $sub;
             }
         }
         return $result;
     }
 
-    private function get_weight(array $array, Tricount $tricount) : array
+    private function get_weight(array $array, Tricount $tricount): array
     {
         $list = self::get_whom($array, $tricount);
         $result = [];
-        foreach($list as $sub) {
-            $result[$sub->id] = $array['weight_'.$sub->id];
+        foreach ($list as $sub) {
+            $result[$sub->id] = $array['weight_' . $sub->id];
         }
         return $result;
     }
 
 
-// --------------------------- Delete + ConfirmDelete Template ------------------------------------ 
+    // --------------------------- Delete + ConfirmDelete Template ------------------------------------ 
 
 
     public function delete_template(): void
@@ -173,7 +177,7 @@ class ControllerTemplates extends MyController{
             $tricount = Tricount::get_tricount_by_id($_GET["param2"]);
             if (!$tricount->has_access($user))
                 $this->redirect();
-            (new View('delete_template'))->show(['template'=>$template, 'tricount'=>$tricount]);
+            (new View('delete_template'))->show(['template' => $template, 'tricount' => $tricount]);
         } else {
             Tools::abort("Invalid or missing argument");
         }

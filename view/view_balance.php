@@ -21,14 +21,20 @@
                 <tr class="balance">
                     <?php if ($amounts[$sub->id] >= 0) { ?>
                         <td class="balance">
-                            <p class="left<?php if ($sub->id === $user->id) {echo " bold";} ?>" ><?= $sub->full_name ?><?php if ($sub->id === $user->id) {echo " (me)";} ?></p>
+                            <p class="left<?php if ($sub->id === $user->id) {
+                                                echo " bold";
+                                            } ?>"><?= $sub->full_name ?><?php if ($sub->id === $user->id) {
+                                                                                                                            echo " (me)";
+                                                                                                                        } ?></p>
                         </td>
                         <td class="positive balance">
-                            <p class="<?php if ($amounts[$sub->id] != 0) { echo "positive";} ?> right<?php if ($sub->id === $user->id) {echo " bold";} ?>" style="width: <?= abs($amounts[$sub->id] / $max * 100) ?>%;"><p class="inner" ><?= round($amounts[$sub->id], 2) ?> €</p>
+                            <p class="<?php if ($amounts[$sub->id] != 0) {echo "positive";} ?> right<?php if ($sub->id === $user->id) {echo " bold";} ?>" style="width: <?= abs($amounts[$sub->id] / $max * 100) ?>%;">
+                            <p class="inner"><?= round($amounts[$sub->id], 2) ?> €</p>
                         </td>
                     <?php } else { ?>
                         <td class="negative balance">
-                            <p class="negative left" style="width: <?= abs($amounts[$sub->id] / $max * 100) ?>%;"><p class="inner left<?php if ($sub->id === $user->id) {echo " bold";} ?>"><?= round($amounts[$sub->id], 2) ?> €</p>
+                            <p class="negative left" style="width: <?= abs($amounts[$sub->id] / $max * 100) ?>%;">
+                            <p class="inner left<?php if ($sub->id === $user->id) {echo " bold";} ?>"><?= round($amounts[$sub->id], 2) ?> €</p>
                         </td>
                         <td class="balance">
                             <p class="right<?php if ($sub->id === $user->id) {echo " bold";} ?>"><?= $sub->full_name ?><?php if ($sub->id === $user->id) {echo " (me)";} ?></p>
