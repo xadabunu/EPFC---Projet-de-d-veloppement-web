@@ -88,19 +88,21 @@ class User extends Model
         if (!strlen($this->email) > 0) {
             $errors['required'] = "Email is required.";
         }
-        if (!preg_match('/^[a-zA-Z0-9]{1,20}[@]{1}[a-zA-A0-9]{1,15}[.]{1}[a-z]{1,7}$/', $this->email)) {
-            $errors['validity'] = "Not a valid email address";
+        if (strlen($this->email) > 256) {
+            $errors['email_length'] = "Email address can't be longer then 256 characters.";
         }
-        if (!(strlen($this->full_name) >= 3)) {
-            $errors['length'] = "Pseudo length must be higher than 3.";
+        if (!preg_match('/^[a-zA-Z0-9]{1,20}[@]{1}[a-zA-A0-9]{1,15}[.]{1}[a-z]{1,7}$/', $this->email)) {
+            $errors['validity'] = "Not a valid email address.";
+        }
+        if (!(strlen($this->full_name) >= 3) || strlen($this->full_name > 256)) {
+            $errors['length'] = "Name length must be between 3 and 256.";
         }
         if (!preg_match("/^[a-zA-Z][a-zA-Z0]*$/", $this->full_name)) {
-            $errors['name_contains'] = "Name must contains only letters";
+            $errors['name_contains'] = "Name must contains only letters.";
         }
         if (!preg_match("/^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/", $this->iban)) {
-            $errors['iban'] = "IBAN must have an official Belgian IBAN format";
+            $errors['iban'] = "IBAN must have an official Belgian IBAN format.";
         }
-
 
         return $errors;
     }

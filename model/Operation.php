@@ -46,6 +46,17 @@ class Operation extends Model
         return ($query->fetch())['next_id'];
     }
 
+    public static function get_all_operations_id(): array
+    {
+        $list = (self::execute("SELECT id FROM operations", []))->fetchAll();
+        $res = [];
+
+        foreach ($list as $var)
+            $res[] = $var['id'];
+
+        return $res;
+    }
+
 
     // --------------------------- Méthode has_access --------------------------------
 
