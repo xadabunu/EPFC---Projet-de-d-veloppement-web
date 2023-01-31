@@ -2,12 +2,13 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf8">
+    <meta charset="utf-8">
     <title><?= $tricount->title ?> &#11208; Templates</title>
     <base href="<?= $web_root ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
 </head>
+
 <body>
     <div class="main">
         <header class="t2">

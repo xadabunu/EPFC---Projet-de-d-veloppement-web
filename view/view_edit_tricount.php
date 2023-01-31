@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="utf8">
+    <meta charset="utf-8">
     <title><?= $tricount->title ?> &#11208; Edit</title>
-    <base href="<?= $web_root ?>" />
+    <base href="<?= $web_root ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/styles.css" rel="stylesheet" type="text/css" />
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
@@ -15,13 +15,13 @@
         <header class="t2">
             <a href="tricount/operations/<?= $tricount->id ?>" class="button" id="back">Back</a>
             <p><?= $title ?> &#11208; Edit</p>
-            <button form= "edittricountform" type="submit" class ="button save" id="add">Save</button>
+            <button form="edittricountform" type="submit" class="button save" id="add">Save</button>
         </header>
         <h3>Settings</h3>
         <form id="edittricountform" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post" class="edit">
             <!-- <input type="submit" value="Save" formaction="tricount/edit_tricount/<?= $tricount->id ?>" class="button save" id= "add"> -->
             <label>Title :</label>
-            <input id="title" name="title" type="text" value="<?= $tricount->title ?>" <?php if(array_key_exists('required', $errors) || array_key_exists('title_lenght', $errors) || array_key_exists('unique_title', $errors)) {?>class = "errorInput"<?php } ?>>
+            <input id="title" name="title" type="text" value="<?= $tricount->title ?>" <?php if (array_key_exists('required', $errors) || array_key_exists('title_lenght', $errors) || array_key_exists('unique_title', $errors)) { ?>class="errorInput" <?php } ?>>
             <?php if (array_key_exists('required', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['required']; ?></p>
             <?php }
@@ -32,7 +32,7 @@
                 <p class="errorMessage"><?php echo $errors['unique_title']; ?></p>
             <?php } ?>
             <label>Description (optional) :</label>
-            <textarea id="description" name="description" rows="3" placeholder="Description" <?php if(array_key_exists('description_lenght', $errors)) {?>class = "errorInput"<?php } ?>><?= $tricount->description ?></textarea>
+            <textarea id="description" name="description" rows="3" placeholder="Description" <?php if (array_key_exists('description_lenght', $errors)) { ?>class="errorInput" <?php } ?>><?= $tricount->description ?></textarea>
             <?php if (array_key_exists('description_lenght', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['description_lenght']; ?></p>
             <?php } ?>
@@ -57,17 +57,19 @@
                 </tr>
             <?php } ?>
         </table>
-        <form id="subscriptor" name="subscriptor" method="POST" class="edit">
+        <form name="subscriptor" method="POST" class="edit">
             <table>
-                <td class="subscriptor">
-                    <select name="subscriptor" id="subscriptor">
-                        <option selected disabled>--Add a new subscriber--</option>
-                        <?php foreach ($cbo_users as $cbo_user) { ?>
-                            <option value="<?= $cbo_user->id ?>"><?= $cbo_user->full_name ?></option>
-                        <?php } ?>
-                    </select>
-                </td>
-                <td class="subscriptor input"><input type="submit" value="Add" formaction="tricount/add_subscriptors/<?= $tricount->id ?>"></td>
+                <tr>
+                    <td class="subscriptor">
+                        <select name="subscriptor" id="subscriptor">
+                            <option selected disabled>--Add a new subscriber--</option>
+                            <?php foreach ($cbo_users as $cbo_user) { ?>
+                                <option value="<?= $cbo_user->id ?>"><?= $cbo_user->full_name ?></option>
+                            <?php } ?>
+                        </select>
+                    </td>
+                    <td class="subscriptor input"><input type="submit" value="Add" formaction="tricount/add_subscriptors/<?= $tricount->id ?>"></td>
+                </tr>
             </table>
         </form>
         <a href="templates/manage_templates/<?= $tricount->id ?>" class="button bottom2 manage">Manage repartition template</a>

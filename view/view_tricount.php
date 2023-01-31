@@ -17,31 +17,32 @@
             <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button" id="add">Edit</a>
         </header>
         <?php if (empty($list)) { ?>
-            <?php if ($alone) {?>
-            <table>
-                <tr>
-                    <th class="empty">You are alone!</th>
-                </tr>
-                <tr>
-                    <td class="empty">
-                        <p>Click below to add your friends!</p>
-                        <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button">Add Friends</a>
-                    </td>
-                </tr>
-            </table>
+            <?php if ($alone) { ?>
+                <table>
+                    <tr>
+                        <th class="empty">You are alone!</th>
+                    </tr>
+                    <tr>
+                        <td class="empty">
+                            <p>Click below to add your friends!</p>
+                            <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button">Add Friends</a>
+                        </td>
+                    </tr>
+                </table>
             <?php } else { ?>
-            <table>
-                <tr>
-                    <th class="empty">Your tricount is empty!</th>
-                </tr>
-                <tr>
-                    <td class="empty">
-                        <p>Click below to add your first expense!</p>
-                        <a href="operation/add_operation/<?= $tricount->id ?>" class="button">Add an expense</a>
-                    </td>
-                </tr>
-            </table>
-        <?php } } else { ?>
+                <table>
+                    <tr>
+                        <th class="empty">Your tricount is empty!</th>
+                    </tr>
+                    <tr>
+                        <td class="empty">
+                            <p>Click below to add your first expense!</p>
+                            <a href="operation/add_operation/<?= $tricount->id ?>" class="button">Add an expense</a>
+                        </td>
+                    </tr>
+                </table>
+            <?php }
+        } else { ?>
             <p class="balance"><a href="tricount/balance/<?= $tricount->id ?>" class="button" id="balance"><b>&#8644;</b> View balance</a></p>
             <table>
                 <?php foreach ($list as $operation) { ?>

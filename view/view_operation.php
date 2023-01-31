@@ -14,7 +14,7 @@
         <header class="t2">
             <a href="tricount/operations/<?= $operation->tricount->id ?>" class="button" id="back">Back</a>
             <p><?php echo $operation->tricount->title ?> &#11208; <?= $operation->title ?></p>
-            <a href ="operation/edit_operation/<?= $operation->id ?>" class= "button" id= "add">Edit</a>
+            <a href="operation/edit_operation/<?= $operation->id ?>" class="button" id="add">Edit</a>
         </header>
         <div>
             <div class="amount"><?php echo number_format($operation->amount, 2) ?> €</div>
@@ -46,4 +46,5 @@
         </footer>
     </div>
 </body>
+
 </html>
