@@ -13,7 +13,7 @@ class ControllerSettings extends MyController
         $this->redirect("settings", "my_settings");
     }
 
-    // --------------------------- Vue Settings ------------------------------------ 
+// --------------------------- Vue Settings ------------------------------------ 
 
     public function my_settings(): void
     {
@@ -21,7 +21,7 @@ class ControllerSettings extends MyController
         (new View("settings"))->show(["user" => $user]);
     }
 
-    // --------------------------- Fonctions ------------------------------------ 
+// --------------------------- Fonctions ------------------------------------ 
 
 
     public function edit_profile(): void

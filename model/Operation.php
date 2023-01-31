@@ -10,7 +10,7 @@ class Operation extends Model
     {
     }
 
-    // --------------------------- Get sur les operations ------------------------------------ 
+// --------------------------- Get sur les operations ------------------------------------ 
 
 
     public static function get_operation_by_id(int $id): Operation
@@ -47,7 +47,7 @@ class Operation extends Model
     }
 
 
-    // --------------------------- Méthode has_access --------------------------------
+// --------------------------- Méthode has_access --------------------------------
 
 
     public function has_access(User $user): bool
@@ -57,7 +57,7 @@ class Operation extends Model
     }
 
 
-    // --------------------------- Validate && Persist // Delete && delete Cascade des operations ------------------------------------ 
+// --------------------------- Validate && Persist // Delete && delete Cascade des operations ------------------------------------ 
 
 
     public function validate_operations(): array
@@ -113,7 +113,7 @@ class Operation extends Model
     }
 
 
-    // --------------------------- Get sur participants && repartition // Persist repartition ------------------------------------ 
+// --------------------------- Get sur participants && repartition // Persist repartition ------------------------------------ 
 
 
     public function get_participants(): array

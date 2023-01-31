@@ -7,12 +7,12 @@ require_once "controller/MyController.php";
 class ControllerTricount extends MyController
 {
 
-    // --------------------------- Index + Operations && Balance du Tricount ------------------------------------
+// --------------------------- Index + Operations && Balance du Tricount ------------------------------------
 
 
     public function index(): void
     {
-        $this->redirect("user", "my_trycounts");
+        $this->redirect("user", "my_tricounts");
     }
 
     public function operations(): void
@@ -63,7 +63,7 @@ class ControllerTricount extends MyController
     }
 
 
-    // --------------------------- Add/Edit Tricount && Add Subs ------------------------------------ 
+// --------------------------- Add/Edit Tricount && Add Subs ------------------------------------ 
 
 
     public function add_tricount(): void
@@ -95,7 +95,7 @@ class ControllerTricount extends MyController
         $errors = [];
         $title = '';
         $not_deletables = [];
-        if (isset($_GET['param1'])) {
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             if (!$tricount->has_access($user))
@@ -111,7 +111,7 @@ class ControllerTricount extends MyController
                 $errors = array_merge($errors, $tricount->validate());
                 if (count($errors) == 0) {
                     $tricount->persist_tricount();
-                    $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
+                    $this->redirect('tricount', 'operations', $tricount->id);
                 }
             }
             (new View("edit_tricount"))->show([
@@ -124,22 +124,26 @@ class ControllerTricount extends MyController
     }
 
     public function add_subscriptors(): void
-    {
-        if (isset($_POST['subscriptor'])) {
-            $user = $this->get_user_or_redirect();
-            $subscriptor = Tools::sanitize($_POST['subscriptor']);
-            $tricount = Tricount::get_tricount_by_id($_GET['param1']);
-            if (!$tricount->has_access($user))
-                $this->redirect();
-            $tricount->persist_subscriptor($subscriptor);
-            $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
-        } else {
-            $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
+    {   
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
+            if (isset($_POST['subscriptor'])) {
+                $user = $this->get_user_or_redirect();
+                $subscriptor = Tools::sanitize($_POST['subscriptor']);
+                $tricount = Tricount::get_tricount_by_id($_GET['param1']);
+                if (!$tricount->has_access($user))
+                    $this->redirect();
+                $tricount->persist_subscriptor($subscriptor);
+                $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
+            } else {
+                $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
+            }
+        }else{
+            Tools::abort('Invalid or missing argument.');
         }
-    }
+    }    
 
 
-    // --------------------------- Delete + ConfirmDelete Tricount && Delete Subs ------------------------------------ 
+// --------------------------- Delete + ConfirmDelete Tricount && Delete Subs ------------------------------------ 
 
 
     public function delete_subscriptor(): void
@@ -157,12 +161,17 @@ class ControllerTricount extends MyController
 
     public function delete_tricount(): void
     {
+        if(isset($_GET['param1'])){
         $user = $this->get_user_or_redirect();
         $tricount = Tricount::get_tricount_by_id($_GET['param1']);
         if (!$tricount->has_access($user))
             $this->redirect();
         (new View("delete_tricount"))->show(['tricount' => $tricount]);
-    }
+        }
+        else{
+            Tools::abort("Invalid or missing argument");
+        }
+    }    
 
     public function confirm_delete_tricount(): void
     {

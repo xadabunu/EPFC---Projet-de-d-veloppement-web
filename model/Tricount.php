@@ -12,7 +12,7 @@ class Tricount extends Model
     {
     }
 
-    // --------------------------- Get sur les Tricounts ------------------------------------ 
+// --------------------------- Get sur les Tricounts ------------------------------------ 
 
 
     public static function get_tricounts_list(int $id): array
@@ -35,7 +35,7 @@ class Tricount extends Model
     }
 
 
-    // --------------------------- Méthode has_access -------------------------------------------------
+// --------------------------- Méthode has_access -------------------------------------------------
 
 
     public function has_access(User $user): bool
@@ -45,7 +45,7 @@ class Tricount extends Model
     }
 
 
-    // --------------------------- Get sur les dépenses && Balance ------------------------------------ 
+// --------------------------- Get sur les dépenses && Balance ------------------------------------ 
 
 
     public function get_total_expenses(): float
@@ -88,7 +88,7 @@ class Tricount extends Model
     }
 
 
-    // --------------------------- Get sur les Subs ------------------------------------ 
+// --------------------------- Get sur les Subs ------------------------------------ 
 
 
     public function get_number_of_participants(): int
@@ -151,7 +151,7 @@ class Tricount extends Model
     }
 
 
-    // --------------------------- Get Operation du tricount ------------------------------------ 
+// --------------------------- Get Operation du tricount ------------------------------------ 
 
 
     public function get_operations(): array
@@ -166,7 +166,7 @@ class Tricount extends Model
     }
 
 
-    // --------------------------- Persist // Delete Subs ------------------------------------ 
+// --------------------------- Persist // Delete Subs ------------------------------------ 
 
 
     public function persist_subscriptor(int $id): void
@@ -180,7 +180,7 @@ class Tricount extends Model
     }
 
 
-    // --------------------------- Validate && Persist // Private Delete && delete Cascade des Tricounts ------------------------------------ 
+// --------------------------- Validate && Persist // Private Delete && delete Cascade des Tricounts ------------------------------------ 
 
 
     public function validate(): array

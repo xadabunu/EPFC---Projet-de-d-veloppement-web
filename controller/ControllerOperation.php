@@ -15,7 +15,7 @@ class ControllerOperation extends MyController
 
     public function details(): void
     {
-        if (isset($_GET['param1'])) {
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $user = $this->get_user_or_redirect();
             $op = Operation::get_operation_by_id($_GET['param1']);
             if (!$op->tricount->has_access($user))
@@ -41,7 +41,7 @@ class ControllerOperation extends MyController
     }
 
 
-    // --------------------------- Add/edit Operations ------------------------------------
+// --------------------------- Add/edit Operations ------------------------------------
 
 
     public function add_operation(): void
@@ -151,7 +151,7 @@ class ControllerOperation extends MyController
         $templateChoosen = [];
         $templateUserWeightList = '';
 
-        if (isset($_GET['param1'])) {
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $operation = Operation::get_operation_by_id($_GET['param1']);
             $user = $this->get_user_or_redirect();
             if (!$operation->tricount->has_access($user))
@@ -163,7 +163,7 @@ class ControllerOperation extends MyController
 
             if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date'])) {
                 $operation->title = Tools::sanitize($_POST['title']);
-                $operation->amount = Tools::sanitize($_POST['amount']);
+                $operation->amount = floatval(Tools::sanitize($_POST['amount']));
                 $operation->initiator = User::get_user_by_id($_POST['paid_by']);
                 $operation->operation_date = $_POST['operation_date'];
                 $list = self::get_weight($_POST, $tricount);
@@ -185,13 +185,15 @@ class ControllerOperation extends MyController
                     $this->redirect('tricount', 'operations', $tricount->id);
                 }
             }
-        }
         (new View('edit_operation'))->show([
             'operation' => $operation, 'errors' => $errors,
             'subscriptors' => $subscriptors, 'templates' => $templates, 'list' => $list,
             'titleValue' => $title, 'amountValue' => $amount, 'operation_dateValue' => $operation_date, 'paid_byValue' => $paid_by,
             'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList
         ]);
+        }else{
+            Tools::abort("Invalid or missing argument");
+        }
     }
 
 //---- Fonction private get sur le poids et les users selectionnés lors d'un add ou edit operation
@@ -224,18 +226,28 @@ class ControllerOperation extends MyController
 
     public function delete_operation(): void
     {
-        $user = $this->get_user_or_redirect();
-        $operation = Operation::get_operation_by_id($_GET['param1']);
-        if (!$operation->tricount->has_access($user))
-            $this->redirect();
-        (new View('delete_operation'))->show(['operation' => $operation]);
-    }
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
+            $user = $this->get_user_or_redirect();
+            $operation = Operation::get_operation_by_id($_GET['param1']);
+            if (!$operation->tricount->has_access($user))
+                $this->redirect();
+            (new View('delete_operation'))->show(['operation' => $operation]);
+            }
+        else{
+            Tools::abort('Invalid or missing arguments.');
+        }
+    }    
 
     public function confirm_delete_operation(): void
     {
-        $operation = Operation::get_operation_by_id($_GET['param1']);
-        $operation->delete_operation_cascade();
-        $this->redirect('tricount', 'operations', $operation->tricount->id);
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
+            $operation = Operation::get_operation_by_id($_GET['param1']);
+            $operation->delete_operation_cascade();
+            $this->redirect('tricount', 'operations', $operation->tricount->id);
+        }
+        else{
+            Tools::abort('Invalid or missing argument.');
+        }       
     }
 
 // --------------------------- Apply template for add/edit operation ------------------------------------ 

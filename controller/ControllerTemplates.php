@@ -8,7 +8,7 @@ require_once "model/Tricount.php";
 class ControllerTemplates extends MyController
 {
 
-    // --------------------------- Index + Manage Template ------------------------------------ 
+// --------------------------- Index + Manage Template ------------------------------------ 
 
 
     public function index(): void
@@ -23,7 +23,7 @@ class ControllerTemplates extends MyController
         $all_templates_items_for_view = [];
         $all_weight_total = [];
         $UsernameWeight = [];
-        if (isset($_GET["param1"])) {
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))
@@ -51,60 +51,70 @@ class ControllerTemplates extends MyController
     }
 
 
-    // --------------------------- Add/Edit Template && Add Template depuis Operation + Private valid field ------------------------------------ 
+// --------------------------- Add/Edit Template && Add Template depuis Operation + Private valid field ------------------------------------ 
 
 
     public function add_template(): void
     {
-        $errors = [];
-        $user = $this->get_user_or_redirect();
-        $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
-        if (!$tricount->has_access($user))
-            $this->redirect();
-        $subscriptors = $tricount->get_subscriptors_with_creator();
-        if (isset($_POST['title'])) {
-            $title = Tools::sanitize($_POST['title']);
-            $list = self::get_weight($_POST, $tricount);
-            $errors = array_merge($errors, self::is_valid_fields($_POST));
-            if (count($errors) == 0) {
-                $template = new Template($title, $tricount);
-                $errors = $template->validate_template();
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
+            $errors = [];
+            $user = $this->get_user_or_redirect();
+            $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
+            if (!$tricount->has_access($user))
+                $this->redirect();
+            $subscriptors = $tricount->get_subscriptors_with_creator();
+            if (isset($_POST['title'])) {
+                $title = Tools::sanitize($_POST['title']);
+                $list = self::get_weight($_POST, $tricount);
+                $errors = array_merge($errors, self::is_valid_fields($_POST));
                 if (count($errors) == 0) {
-                    $template->persist_template();
-                    $template->persist_template_items($template, $list);
-                    $this->redirect('templates', 'manage_templates', $tricount->id);
+                    $template = new Template($title, $tricount);
+                    $errors = $template->validate_template();
+                    if (count($errors) == 0) {
+                        $template->persist_template();
+                        $template->persist_template_items($template, $list);
+                        $this->redirect('templates', 'manage_templates', $tricount->id);
+                    }
                 }
             }
+            (new View('add_template'))->show(['tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors]);
         }
-        (new View('add_template'))->show(['tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors]);
+        else{
+            Tools::abort('Invalid or missing argument.');
+        }
     }
 
     public function edit_template(): void
     {
-        $errors = [];
-        $user = $this->get_user_or_redirect();
-        $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
-        if (!$tricount->has_access($user))
-            $this->redirect();
-        $template = Template::get_template_by_template_id($_GET["param2"]);
-        $subscriptors = $tricount->get_subscriptors_with_creator();
-        $userAndWeightArray = $template->get_template_user_and_weight();
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
+            $errors = [];
+            $user = $this->get_user_or_redirect();
+            $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
+            if (!$tricount->has_access($user))
+                $this->redirect();
+            $template = Template::get_template_by_template_id($_GET["param2"]);
+            $subscriptors = $tricount->get_subscriptors_with_creator();
+            $userAndWeightArray = $template->get_template_user_and_weight();
 
-        if (isset($_POST['title'])) {
-            $title = Tools::sanitize($_POST['title']);
-            $list = self::get_weight($_POST, $tricount);
-            $errors = array_merge($errors, self::is_valid_fields($_POST));
-            $template->title = $title;
-            $errors = $template->validate_template();
+            if (isset($_POST['title'])) {
+                $title = Tools::sanitize($_POST['title']);
+                $list = self::get_weight($_POST, $tricount);
+                $errors = array_merge($errors, self::is_valid_fields($_POST));
+                $template->title = $title;
+                $errors = $template->validate_template();
 
-            if (count($errors) == 0) {
-                $template->persist_template_items($template, $list);
-                $template->persist_template();
-                $this->redirect('templates', 'manage_templates', $tricount->id);
+                if (count($errors) == 0) {
+                    $template->persist_template_items($template, $list);
+                    $template->persist_template();
+                    $this->redirect('templates', 'manage_templates', $tricount->id);
+                }
             }
+            (new View('edit_template'))->show(['tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors, 'template' => $template, 'userAndWeightArray' => $userAndWeightArray]);
         }
-        (new View('edit_template'))->show(['tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors, 'template' => $template, 'userAndWeightArray' => $userAndWeightArray]);
-    }
+        else{
+            Tools::abort('Invalid or missing argument');
+        }
+    }    
 
     public static function add_template_from_operation(array $list, Template $template): void
     {
@@ -140,7 +150,7 @@ class ControllerTemplates extends MyController
     }
 
 
-    //---- Fonction private get sur le poids et les users selectionnés lors d'un add ou edit operation
+//---- Fonction private get sur le poids et les users selectionnés lors d'un add ou edit operation
 
 
     private function get_whom(array $array, Tricount $tricount): array
@@ -166,12 +176,12 @@ class ControllerTemplates extends MyController
     }
 
 
-    // --------------------------- Delete + ConfirmDelete Template ------------------------------------ 
+// --------------------------- Delete + ConfirmDelete Template ------------------------------------ 
 
 
     public function delete_template(): void
     {
-        if (isset($_GET['param1'])) {
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $template = Template::get_template_by_template_id($_GET["param1"]);
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param2"]);
@@ -185,7 +195,7 @@ class ControllerTemplates extends MyController
 
     public function confirm_delete_template(): void
     {
-        if (isset($_GET['param1'])) {
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $template = Template::get_template_by_template_id($_GET["param1"]);
             $user = $this->get_user_or_redirect();
             $tricount = $template->tricount;

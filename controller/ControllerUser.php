@@ -12,7 +12,7 @@ class ControllerUser extends MyController
     {
         $this->my_tricounts();
     }
-    // --------------------------- Liste des tricounts ------------------------------------ 
+// --------------------------- Liste des tricounts ------------------------------------ 
 
 
     public function my_tricounts(): void

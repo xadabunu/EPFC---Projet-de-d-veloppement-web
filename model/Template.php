@@ -11,7 +11,7 @@ class Template extends Model
     {
     }
 
-    // --------------------------- Get sur les Template ------------------------------------ 
+// --------------------------- Get sur les Template ------------------------------------ 
 
     public static function get_templates(int $id): array
     {
@@ -61,7 +61,7 @@ class Template extends Model
     }
 
 
-    // --------------------------- Validate && Persist ------------------------------------ 
+// --------------------------- Validate && Persist ------------------------------------ 
 
 
     public function validate_template(): array
@@ -100,7 +100,7 @@ class Template extends Model
     }
 
 
-    // --------------------------- Delete Template ------------------------------------ 
+// --------------------------- Delete Template ------------------------------------ 
 
 
     public function delete_template_items(): void

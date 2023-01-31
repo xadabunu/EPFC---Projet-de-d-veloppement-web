@@ -10,7 +10,7 @@ class User extends Model
     {
     }
 
-    // --------------------------- Get sur User ------------------------------------ 
+// --------------------------- Get sur User ------------------------------------ 
 
 
     public static function get_user_by_email(string $email): User | false
@@ -48,7 +48,7 @@ class User extends Model
     }
 
 
-    // --------------------------- Validate && Persist // Delete User ------------------------------------ 
+// --------------------------- Validate && Persist // Delete User ------------------------------------ 
 
 
     public static function validate_login(string $email, string $password): array
@@ -94,7 +94,7 @@ class User extends Model
         if (!(strlen($this->full_name) >= 3)) {
             $errors['length'] = "Pseudo length must be higher than 3.";
         }
-        if (!preg_match("/^[a-zA-Z][a-zA-Z0]*$/", $this->full_name)) {
+        if (!preg_match("/^[A-Za-zÀ-ÿ]*$/", $this->full_name)) {
             $errors['name_contains'] = "Name must contains only letters";
         }
         if (!preg_match("/^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/", $this->iban)) {
