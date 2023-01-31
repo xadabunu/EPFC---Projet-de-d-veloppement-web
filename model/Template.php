@@ -68,7 +68,7 @@ class Template extends Model
     {
         $errors = [];
         if (strlen($this->title) < 3 || strlen($this->title) > 256) {
-            $errors['template_lenght'] = "Title length must be between 3 and 256.";
+            $errors['template_length'] = "Title length must be between 3 and 256.";
         }
         return $errors;
     }

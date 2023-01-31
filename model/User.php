@@ -92,7 +92,7 @@ class User extends Model
             $errors['validity'] = "Not a valid email address";
         }
         if (!(strlen($this->full_name) >= 3)) {
-            $errors['lenght'] = "Pseudo length must be higher than 3.";
+            $errors['length'] = "Pseudo length must be higher than 3.";
         }
         if (!preg_match("/^[a-zA-Z][a-zA-Z0]*$/", $this->full_name)) {
             $errors['name_contains'] = "Name must contains only letters";
@@ -109,7 +109,7 @@ class User extends Model
     {
         $errors = [];
         if (strlen($password) < 8 || strlen($password) > 16) {
-            $errors['password_lenght'] = "Password length must be between 8 and 16.";
+            $errors['password_length'] = "Password length must be between 8 and 16.";
         }
         if (!((preg_match("/[A-Z]/", $password)) && preg_match("/\d/", $password) && preg_match("/['\";:,.\/?!\\-]/", $password))) {
             $errors['password_format'] = "Password must contain one uppercase letter, one number and one punctuation mark.";

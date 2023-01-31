@@ -21,12 +21,12 @@
                                                                                                 echo $titleValue;
                                                                                             } else {
                                                                                                 echo $operation->title;
-                                                                                            } ?>" <?php if (array_key_exists('empty_title', $errors) || array_key_exists('lenght', $errors)) { ?>class="errorInput" <?php } ?>>
+                                                                                            } ?>" <?php if (array_key_exists('empty_title', $errors) || array_key_exists('length', $errors)) { ?>class="errorInput" <?php } ?>>
             <?php if (array_key_exists('empty_title', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['empty_title']; ?></p>
             <?php }
-            if (array_key_exists('lenght', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['lenght']; ?></p>
+            if (array_key_exists('length', $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors['length']; ?></p>
             <?php } ?>
             <table class="edit" id="currency">
                 <tr class="currency">
@@ -154,8 +154,8 @@
                         <p class="errorMessage"><?php echo $errors['empty_template_title']; ?></p>
                     <?php } ?>
 
-                    <?php if (array_key_exists('template_lenght', $errors)) { ?>
-                        <p class="errorMessage"><?php echo $errors['template_lenght']; ?></p>
+                    <?php if (array_key_exists('template_length', $errors)) { ?>
+                        <p class="errorMessage"><?php echo $errors['template_length']; ?></p>
                     <?php } ?>
                 </tr>
             </table>

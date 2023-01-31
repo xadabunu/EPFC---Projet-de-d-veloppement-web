@@ -27,10 +27,10 @@
             <?php } ?>
             <div class="contains_input">
                 <span class="icon"><i class="fa fa-user" aria-hidden="true"></i></span>
-                <input id="full_name" name="full_name" type="text" placeholder="Full Name" value="<?= $full_name ?>" <?php if (array_key_exists('lenght', $errors) || array_key_exists('name_contains', $errors)) { ?>class="errorInput" <?php } ?>>
+                <input id="full_name" name="full_name" type="text" placeholder="Full Name" value="<?= $full_name ?>" <?php if (array_key_exists('length', $errors) || array_key_exists('name_contains', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
-            <?php if (array_key_exists('lenght', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['lenght']; ?></p>
+            <?php if (array_key_exists('length', $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors['length']; ?></p>
             <?php }
             if (array_key_exists('name_contains', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['name_contains']; ?></p>
@@ -44,10 +44,10 @@
             <?php } ?>
             <div class="contains_input">
                 <span class="icon"><i class="fa fa-lock" aria-hidden="true"></i></span>
-                <input id="password" name="password" type="password" placeholder="Password" value="<?= $password ?>" <?php if (array_key_exists('password_lenght', $errors) || array_key_exists('password_format', $errors)) { ?>class="errorInput" <?php } ?>>
+                <input id="password" name="password" type="password" placeholder="Password" value="<?= $password ?>" <?php if (array_key_exists('password_length', $errors) || array_key_exists('password_format', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
-            <?php if (array_key_exists('password_lenght', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['password_lenght']; ?></p>
+            <?php if (array_key_exists('password_length', $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors['password_length']; ?></p>
             <?php }
             if (array_key_exists('password_format', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['password_format']; ?></p>

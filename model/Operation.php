@@ -64,10 +64,10 @@ class Operation extends Model
     {
         $errors = [];
         if (!(strlen($this->title) >= 3)) {
-            $errors['lenght'] = "Title length must be higher than 3.";
+            $errors['length'] = "Title length must be higher than 3.";
         }
         elseif (strlen($this->title) > 256) {
-            $errors['lenght'] = "Title can't be longer than 256 characters.";
+            $errors['length'] = "Title can't be longer than 256 characters.";
         }
         if (($this->amount) <= 0) {
             $errors['amount'] = "Amount must be positive";
