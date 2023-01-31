@@ -17,8 +17,11 @@
             <button class="button save" id="add" type="submit" form="add_operation_form">Save</button>
         </header>
         <form id="add_operation_form" action="operation/add_operation/<?= $tricount->id ?>" method="post" class="edit">
-            <input id="title" name="title" type="text" placeholder="Title" value='<?php if (!is_array($title)) {echo $title;} else {echo '';} ?>' 
-                                                                                            <?php if (array_key_exists('empty_title', $errors) || array_key_exists('lenght', $errors)) { ?>class="errorInput" <?php } ?>>
+            <input id="title" name="title" type="text" placeholder="Title" value='<?php if (!is_array($title)) {
+                                                                                        echo $title;
+                                                                                    } else {
+                                                                                        echo '';
+                                                                                    } ?>' <?php if (array_key_exists('empty_title', $errors) || array_key_exists('lenght', $errors)) { ?>class="errorInput" <?php } ?>>
             <?php if (array_key_exists('empty_title', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['empty_title']; ?></p>
             <?php }
@@ -27,8 +30,11 @@
             <?php } ?>
             <table class="edit" id="currency">
                 <tr class="currency">
-                    <td><input id="Amount" name="amount" type="text" placeholder="Amount" value='<?php if (!is_array($amount)) {echo $amount;} else {echo '';} ?>'
-                                                                                                <?php if (array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) { ?>class="errorInput" <?php } ?>></td>
+                    <td><input id="Amount" name="amount" type="text" placeholder="Amount" value='<?php if (!is_array($amount)) {
+                                                                                                        echo $amount;
+                                                                                                    } else {
+                                                                                                        echo '';
+                                                                                                    } ?>' <?php if (array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) { ?>class="errorInput" <?php } ?>></td>
                     <td class="right">EUR</td>
                 </tr>
             </table>
@@ -57,10 +63,11 @@
                 <?php } else { ?>
                     <option value=""> -- Who paid for it ? -- </option>
                 <?php } ?>
-                <?php foreach($subscriptors as $subscriptor) { 
-                    if($subscriptor != $initiator){ ?>
+                <?php foreach ($subscriptors as $subscriptor) {
+                    if ($subscriptor != $initiator) { ?>
                         <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
-                    <?php } } ?>
+                <?php }
+                } ?>
 
             </select>
             <?php if (array_key_exists('empty_initiator', $errors)) { ?>
@@ -73,10 +80,11 @@
                             <?php if (!is_array($templateChoosen)) { ?>
                                 <option value="<?= $templateChoosen->id ?>" selected><i><?= $templateChoosen->title ?></i></option>
                                 <option>-- No, i'll use custom repartition --</option>
-                                <?php foreach($templates as $template) {
-                            if($template != $templateChoosen){ ?>
-                                <option value="<?= $template->id ?>"><?= $template->title ?></option>
-                        <?php }} ?>
+                                <?php foreach ($templates as $template) {
+                                    if ($template != $templateChoosen) { ?>
+                                        <option value="<?= $template->id ?>"><?= $template->title ?></option>
+                                <?php }
+                                } ?>
                             <?php } else { ?>
                                 <option selected>-- No, i'll use custom repartition --</option>
                                 <?php foreach ($templates as $template) { ?>
@@ -153,3 +161,6 @@
             </table>
         </form>
     </div>
+</body>
+
+</html>
