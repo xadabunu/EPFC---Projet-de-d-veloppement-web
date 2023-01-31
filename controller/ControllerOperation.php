@@ -279,6 +279,11 @@ class ControllerOperation extends MyController
             $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
             $templateUserWeightList = $templateChoosen->get_repartition_items();
         }
+        else if(isset($_POST['templates']) && is_string($_POST['templates'])){
+            if (strcmp($_POST['templates'], "No ill use custom repartition") == 0){
+                $templateChoosen = $_POST['templates'];
+            }
+        }
 
         (new View('edit_operation'))->show([
             'operation' => $operation, 'errors' => $errors,
