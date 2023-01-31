@@ -19,13 +19,13 @@
 
         <form id="addtemplateform" action="templates/add_template/<?= $tricount->id ?>" method="post" class="edit">
             <label for="title">Title :</label>
-            <input id="title" name="title" type="text" size="16" <?php if (array_key_exists('empty_title', $errors) || array_key_exists('lenght', $errors)) { ?>class="errorInput" <?php } ?>>
+            <input id="title" name="title" type="text" size="16" <?php if (array_key_exists('empty_title', $errors) || array_key_exists('length', $errors)) { ?>class="errorInput" <?php } ?>>
 
             <?php if (array_key_exists('empty_title', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['empty_title']; ?></p>
             <?php }
-            if (array_key_exists('template_lenght', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['lenght']; ?></p>
+            if (array_key_exists('template_length', $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors['length']; ?></p>
             <?php } ?>
 
             <label>Template items :</label>

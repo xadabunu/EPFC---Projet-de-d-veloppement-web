@@ -642,6 +642,7 @@ table#currency {
 .listyle {
     list-style-type: circle;
     list-style-position: inside;
+    font-size: 85%;
 }
 
 ul {
