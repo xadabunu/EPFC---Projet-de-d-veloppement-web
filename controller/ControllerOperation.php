@@ -7,7 +7,7 @@ require_once "controller/ControllerTemplates.php";
 
 class ControllerOperation extends MyController
 {
-    // --------------------------- Index + Details Operations ------------------------------------ 
+// --------------------------- Index + Details Operations ------------------------------------ 
 
     public function index(): void
     {
@@ -69,17 +69,18 @@ class ControllerOperation extends MyController
                 $title = Tools::sanitize($_POST['title']);
                 $amount = floatval(Tools::sanitize($_POST['amount']));
                 $operation_date = $_POST['operation_date'];
-
                 $created_at = Date("Y-m-d H:i:s");
-                $initiator = Tools::sanitize($_POST['paid_by']);
+                $initiator = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST));
+
                 if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
                     $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
                     $templateUserWeightList = $templateChoosen->get_repartition_items();
                 }
+
                 if (count($errors) == 0) {
-                    $operation = new Operation($title, $tricount, $amount, $operation_date, User::get_user_by_id($initiator), $created_at);
+                    $operation = new Operation($title, $tricount, $amount, $operation_date, $initiator, $created_at);
                     $errors = $operation->validate_operations();
 
                     if (isset($_POST["save_template_checkbox"])) {
@@ -215,7 +216,7 @@ class ControllerOperation extends MyController
     }
 
 
-    //---- Fonction private get sur le poids et les users selectionnés lors d'un add ou edit operation
+//---- Fonction private get sur le poids et les users selectionnés lors d'un add ou edit operation
 
     private function get_whom(array $array, Tricount $tricount): array
     {
@@ -240,7 +241,7 @@ class ControllerOperation extends MyController
     }
 
 
-    // --------------------------- Delete + ConfirmDelete operations ------------------------------------ 
+// --------------------------- Delete + ConfirmDelete operations ------------------------------------ 
 
 
     public function delete_operation(): void
@@ -274,7 +275,7 @@ class ControllerOperation extends MyController
 
     }
 
-    // --------------------------- Apply template for add/edit operation ------------------------------------ 
+// --------------------------- Apply template for add/edit operation ------------------------------------ 
 
     public function apply_template_edit_operation(): void
     {

@@ -90,7 +90,6 @@ class Tricount extends Model
         );
         $paid = $query->fetch()['sum'];
         $spent = 0;
-
         $list = $this->get_operations();
         foreach ($list as $op) {
             $spent += $op->get_user_amount($user_id);

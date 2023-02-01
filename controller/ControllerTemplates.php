@@ -64,13 +64,16 @@ class ControllerTemplates extends MyController
             if (!$tricount->has_access($user))
                 $this->redirect();
             $subscriptors = $tricount->get_subscriptors_with_creator();
+
             if (isset($_POST['title'])) {
                 $title = Tools::sanitize($_POST['title']);
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST));
+
                 if (count($errors) == 0) {
                     $template = new Template($title, $tricount);
                     $errors = $template->validate_template();
+                    
                     if (count($errors) == 0) {
                         $template->persist_template();
                         $template->persist_template_items($template, $list);

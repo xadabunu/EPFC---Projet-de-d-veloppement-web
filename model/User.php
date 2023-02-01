@@ -39,7 +39,6 @@ class User extends Model
     {
         $query = self::execute("SELECT t.* FROM tricounts t JOIN subscriptions s ON t.id = s.tricount WHERE s.user = :id UNION (SELECT * from tricounts where creator = :id) ", ["id" => $this->id]);
         $data = $query->fetchAll();
-
         $array = [];
         foreach ($data as $tricount) {
             $array[] = new Tricount($tricount['title'], $tricount['created_at'], User::get_user_by_id($tricount['creator']), $tricount['description'], $tricount['id']);
