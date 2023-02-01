@@ -70,7 +70,9 @@ class ControllerOperation extends MyController
                 $amount = floatval(Tools::sanitize($_POST['amount']));
                 $operation_date = $_POST['operation_date'];
                 $created_at = Date("Y-m-d H:i:s");
-                $initiator = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
+                if(is_numeric($_POST['paid_by'])){
+                    $initiator = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
+                }
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST));
 
