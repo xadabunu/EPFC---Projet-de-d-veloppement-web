@@ -63,6 +63,7 @@ class ControllerOperation extends MyController
             $initiator = [];
             $templateChoosen = [];
             $templateUserWeightList = '';
+            $list = '';
 
             if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
                 $title = Tools::sanitize($_POST['title']);
@@ -73,6 +74,10 @@ class ControllerOperation extends MyController
                 $initiator = Tools::sanitize($_POST['paid_by']);
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST));
+                if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
+                    $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
+                    $templateUserWeightList = $templateChoosen->get_repartition_items();
+                }
                 if (count($errors) == 0) {
                     $operation = new Operation($title, $tricount, $amount, $operation_date, User::get_user_by_id($initiator), $created_at);
                     $errors = $operation->validate_operations();
@@ -96,7 +101,7 @@ class ControllerOperation extends MyController
             (new View("add_operation"))->show([
                 'tricount' => $tricount, 'operation' => $operation, 'subscriptors' => $subscriptors,
                 'templates' => $templates, 'errors' => $errors, 'title' => $title, 'amount' => $amount,
-                'operation_date' => $operation_date, 'initiator' => $initiator,
+                'operation_date' => $operation_date, 'initiator' => $initiator, 'list'=>$list,
                 'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList
             ]);
         } else
@@ -177,6 +182,11 @@ class ControllerOperation extends MyController
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST));
                 $errors = array_merge($errors, $operation->validate_operations());
+
+                if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
+                    $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
+                    $templateUserWeightList = $templateChoosen->get_repartition_items();
+                }
 
                 if (isset($_POST["save_template_checkbox"])) {
                     $template = new Template(Tools::sanitize($_POST["template_title"]), $tricount);
@@ -342,6 +352,7 @@ class ControllerOperation extends MyController
             $initiator = [];
             $templateChoosen = [];
             $templateUserWeightList = '';
+            $list = '';
 
 
             if (isset($_POST['title'])) {
@@ -367,7 +378,7 @@ class ControllerOperation extends MyController
             (new View("add_operation"))->show([
                 'tricount' => $tricount, 'operation' => $operation, 'subscriptors' => $subscriptors,
                 'templates' => $templates, 'errors' => $errors, 'title' => $title, 'amount' => $amount,
-                'operation_date' => $operation_date, 'initiator' => $initiator,
+                'operation_date' => $operation_date, 'initiator' => $initiator, 'list'=>$list,
                 'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList
             ]);
         } else

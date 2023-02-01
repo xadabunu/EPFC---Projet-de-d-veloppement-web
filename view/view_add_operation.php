@@ -128,7 +128,7 @@
                             <table class="whom">
                                 <tr class="edit">
                                     <td class="check">
-                                        <p><input type='checkbox' name='<?= $subscriptor->id ?>' value=''></p>
+                                        <p><input type='checkbox' checked name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
                                         <?= $subscriptor->full_name ?>
@@ -144,14 +144,14 @@
 
 
             <?php } } else { ?>
-                <label>For whom ? (select at leat one)</label>
+                <label>For whom ? <i>(select at leat one)</i></label>
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?>
                         <li>
                             <table class="whom">
                                 <tr class="edit">
                                     <td class="check">
-                                        <p><input type="checkbox" name="<?= $subscriptor->id ?>" value=''>
+                                        <p><input type="checkbox" checked name="<?= $subscriptor->id ?>" value=''>
                                     </td>
                                     <td class="user"><?= $subscriptor->full_name ?></td>
                                     <td class="weight">
