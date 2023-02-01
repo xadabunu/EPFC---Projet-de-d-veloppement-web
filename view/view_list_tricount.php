@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="<?= $web_root ?>">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <title>Your Tricounts</title>
 </head>
 
@@ -44,7 +44,7 @@
                 <?php } ?>
             </table>
         <?php } ?>
-        <a href="settings/my_settings" class="bottomrightcorner"><i class="fa fa-cog fa-2x" aria-hidden="true" style="color:goldenrod"></i></a>
+        <a href="settings/my_settings" class="bottomrightcorner"><i class="fa-solid fa-gear fa-xl" aria-hidden="true" style="color:goldenrod"></i></a>
 
     </div>
 
