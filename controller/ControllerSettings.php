@@ -31,7 +31,6 @@ class ControllerSettings extends MyController
 
         if (isset($_POST['email']) && isset($_POST['full_name']) && isset($_POST['iban'])) {
             $tmpUser = new User(Tools::sanitize($_POST['email']), $user->hashed_password, Tools::sanitize($_POST['full_name']), $user->role, Tools::sanitize($_POST['iban']));
-
             $errors = array_merge($errors, $tmpUser->validate());
             //$errors = User::validate_unicity($tmpUser->email); // y'aura toujours cette erreur ?
 
@@ -39,12 +38,10 @@ class ControllerSettings extends MyController
                 $user->email = Tools::sanitize($_POST['email']);
                 $user->full_name = Tools::sanitize($_POST['full_name']);
                 $user->iban = Tools::sanitize($_POST['iban']);
-
                 $user->persist_update();
                 $this->redirect('settings', 'my_settings');
             }
         }
-
         (new View("edit_profile"))->show(["user" => $user, 'errors' => $errors]);
     }
 

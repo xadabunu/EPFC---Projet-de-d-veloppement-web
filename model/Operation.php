@@ -50,7 +50,6 @@ class Operation extends Model
     {
         $list = (self::execute("SELECT id FROM operations", []))->fetchAll();
         $res = [];
-
         foreach ($list as $var)
             $res[] = $var['id'];
 

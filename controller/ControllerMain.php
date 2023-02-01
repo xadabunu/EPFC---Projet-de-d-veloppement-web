@@ -30,7 +30,6 @@ class ControllerMain extends MyController
         if (isset($_POST['email']) && isset($_POST['password'])) {
             $email = Tools::sanitize($_POST['email']);
             $password = Tools::sanitize($_POST['password']);
-
             $errors = User::validate_login($email, $password);
             if (count($errors) == 0) {
                 $this->log_user(User::get_user_by_email($email), $controller = "user");
@@ -59,7 +58,6 @@ class ControllerMain extends MyController
             $iban = Tools::sanitize($_POST['iban']);
             $password = Tools::sanitize($_POST['password']);
             $password_confirm = Tools::sanitize($_POST['password_confirm']);
-
             $user = new User($email, Tools::my_hash($password), $full_name, $role, $iban);
             $errors = User::validate_unicity($email);
             $errors = array_merge($errors, $user->validate());

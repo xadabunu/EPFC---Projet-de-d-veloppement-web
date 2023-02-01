@@ -77,6 +77,7 @@ class ControllerTricount extends MyController
         $creator = '';
         $description = '';
         $errors = [];
+
         if (isset($_POST['title'])) {
             $title = Tools::sanitize($_POST['title']);
             $description = Tools::sanitize($_POST['description']);
@@ -99,6 +100,7 @@ class ControllerTricount extends MyController
         $errors = [];
         $title = '';
         $not_deletables = [];
+
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $user = $this->get_user_or_redirect();
             if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
@@ -111,10 +113,12 @@ class ControllerTricount extends MyController
             $subscriptors = $tricount->get_subscriptors();
             $cbo_users = $tricount->get_cbo_users();
             $not_deletables = $tricount->get_not_deletables();
+
             if (isset($_POST['title']) || isset($_POST['description'])) {
                 $tricount->title = Tools::sanitize($_POST['title']);
                 $tricount->description = Tools::sanitize($_POST['description']);
                 $errors = array_merge($errors, $tricount->validate());
+
                 if (count($errors) == 0) {
                     $tricount->persist_tricount();
                     $this->redirect('tricount', 'operations', $tricount->id);
@@ -172,7 +176,7 @@ class ControllerTricount extends MyController
 
     public function delete_tricount(): void
     {
-        if(isset($_GET['param1'])){
+        if(isset($_GET['param1']) && is_numeric($_GET['param1'])){
         $user = $this->get_user_or_redirect();
         if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
             $this->redirect();
