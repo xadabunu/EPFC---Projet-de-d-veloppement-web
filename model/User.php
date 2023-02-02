@@ -93,7 +93,7 @@ class User extends Model
         if (!preg_match('/^[a-zA-Z0-9]{1,20}[@]{1}[a-zA-A0-9]{1,15}[.]{1}[a-z]{1,7}$/', $this->email)) {
             $errors['validity'] = "Not a valid email address.";
         }
-        if (!(strlen($this->full_name) >= 3) || strlen($this->full_name > 256)) {
+        if ((strlen($this->full_name) < 3) || strlen($this->full_name) > 256) {
             $errors['length'] = "Name length must be between 3 and 256.";
         }
         if (!preg_match("/^[A-Za-zÀ-ÿ]*$/", $this->full_name)) {
@@ -140,8 +140,8 @@ class User extends Model
     public function persist_update(): User
     {
         self::execute(
-            "UPDATE users SET hashed_password=:hashed_password, full_name=:full_name, role=:role, iban=:iban WHERE id=:id",
-            ["hashed_password" => $this->hashed_password, "full_name" => $this->full_name, "role" => $this->role, "iban" => $this->iban, "id" => $this->id]
+            "UPDATE users SET hashed_password=:hashed_password, full_name=:full_name, role=:role, iban=:iban, mail= :mail WHERE id=:id",
+            ["mail" =>$this->email, "hashed_password" => $this->hashed_password, "full_name" => $this->full_name, "role" => $this->role, "iban" => $this->iban, "id" => $this->id]
         );
         return $this;
     }

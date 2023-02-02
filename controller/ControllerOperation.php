@@ -188,9 +188,6 @@ class ControllerOperation extends MyController
                 $operation->initiator = User::get_user_by_id($_POST['paid_by']);
                 $operation->operation_date = $_POST['operation_date'];
                 $list = self::get_weight($_POST, $tricount);
-
-                
-
                 $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
                 $errors = array_merge($errors, $operation->validate_operations());
 
