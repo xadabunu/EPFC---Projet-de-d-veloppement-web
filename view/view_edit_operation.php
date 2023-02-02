@@ -168,6 +168,12 @@
                     <?php } ?>
                 </ul>
             <?php } ?>
+
+            <?php if (array_key_exists('whom', $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors['whom']; ?></p>
+            <?php } ?>
+
+
             Add a new repartition template
             <table>
                 <tr>
@@ -184,9 +190,7 @@
                     <?php } ?>
                 </tr>
             </table>
-            <?php if (array_key_exists('whom', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['whom']; ?></p>
-            <?php } ?>
+            
             <a href="operation/delete_operation/<?= $operation->id ?>" class="button bottom2 delete delete2">Delete this operation</a>
         </form>
     </div>
