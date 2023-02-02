@@ -12,7 +12,7 @@
 
 <body>
 	<div class="main">
-		<header class="t1"><span class="icon"><i class="fa-solid fa-dragon" aria-hidden="true"></i></span>Tricount</header>
+		<header class="t1"><span class="icon"><i class="fa-solid fa-dragon fa-xl" aria-hidden="true"></i></span>Tricount</header>
 		<form action="main/login" method="POST" class="connect">
 			<div class="formtitle">Sign In</div>
 			<div class="contains_input">

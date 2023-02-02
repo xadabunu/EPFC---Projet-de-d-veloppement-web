@@ -34,30 +34,30 @@ body {
     margin: 0;
 }
 
-a.bottomrightcorner {
-    position: relative;
-    top: 45%;
-    left: 90%;
+.bottomrightcorner {
+    position: absolute;
+    top: 4%;
+    left: 5%;
 }
 
-a.bottomposition {
+.bottomposition {
     position: relative;
     top: 50%;
 }
 
-a.settings {
+.settings {
     color: rgb(13, 110, 253);
     background-color: white;
     border-color: rgb(13, 110, 253);
 }
 
-a.settings:visited {
+.settings:visited {
     color: rgb(13, 110, 253);
     background-color: white;
     border-color: rgb(13, 110, 253);
 }
 
-a.settings:hover {
+.settings:hover {
     color: white;
     background-color: rgb(13, 110, 253);
 }
@@ -125,7 +125,7 @@ a#previous {
     margin-left: auto;
 }
 
-a.circle {
+.circle {
     font-size: 115%;
     padding: 5px 10px;
     background-color: rgb(13, 110, 253);
@@ -139,7 +139,7 @@ a.circle {
     margin-left: 60px;
 }
 
-a.circle:visited {
+.circle:visited {
     color: white;
 }
 
@@ -425,7 +425,7 @@ h3 {
 .bottom2 {
     width: inherit;
     text-align: center;
-    margin-top: 5px;
+    margin: 5px 0;
     font-size: 75%;
 }
 
@@ -442,7 +442,7 @@ h3 {
 }
 
 .delete:hover,
-td.empty>a.btn_delete:hover {
+td.empty>.btn_delete:hover {
     background-color: white;
     color: rgb(220, 53, 69);
 }
@@ -514,12 +514,11 @@ textarea {
     text-align: center;
 }
 
-a.bottom {
+.bottom {
     font-size: 75%;
     border-radius: 10px;
     padding: 2%;
     text-align: center;
-    height: 0% auto;
     width: 95%;
 }
 
@@ -540,17 +539,17 @@ form>h3 {
     margin: 50% auto;
 }
 
-td.empty>a.btn_cancel {
+td.empty>.btn_cancel {
     background-color: rgb(108, 117, 125);
     border-color: rgb(108, 117, 125);
 }
 
-td.empty>a.btn_cancel:hover {
+td.empty>.btn_cancel:hover {
     background-color: white;
     color: rgb(108, 117, 125);
 }
 
-td.empty>a.btn_delete {
+td.empty>.btn_delete {
     background-color: rgb(220, 53, 69);
     border-color: rgb(220, 53, 69);
     color: white;
@@ -760,4 +759,13 @@ select-selected:after {
 
 #template_title {
     border: none;
+}
+
+.fa-dragon {
+    margin-bottom: 18px;
+}
+
+.fa-flip-horizontal {
+    position: absolute;
+    right: 10;
 }
