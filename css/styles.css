@@ -37,7 +37,14 @@ body {
 .bottomrightcorner {
     position: absolute;
     top: 4%;
-    left: 5%;
+    left: -2%;
+    transition: .5s;
+}
+
+.bottomrightcorner:hover {
+    translate: 100%;
+    rotate: 180deg;
+    scale: 1.2;
 }
 
 .bottomposition {
@@ -385,11 +392,11 @@ p.inner.left {
 }
 
 .save {
-    font-size: 75%;
+    font-size: 90%;
     background-color: rgb(13, 110, 253);
     border-color: rgb(13, 110, 253);
     color: white;
-    padding: 15px;
+    padding: 10px;
 }
 
 .save:hover,
