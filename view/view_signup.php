@@ -12,7 +12,7 @@
 
 <body>
     <div class="main">
-        <header class="t1">Sign Up</header>
+        <header class="t1"><span class="icon"><i class="fa-solid fa-dragon fa-xl" aria-hidden="true"></i></span>Sign Up</header>
         <form id="signupform" action="main/signup" method="post" class="connect2">
             <div class="formtitle">Sign Up</div>
             <div class="contains_input">
