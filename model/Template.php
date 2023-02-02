@@ -47,17 +47,11 @@ class Template extends Model
     {
         $query = self::execute("SELECT user, weight FROM repartition_template_items WHERE repartition_template = :id", ["id" => $this->id]);
         $data = $query->fetchAll();
-        $array = [];
-        foreach ($data as $userAndWeight) {
-            $user = User::get_user_by_id($userAndWeight[0]);
-            $weight = $userAndWeight[1];
-            $subArray = [];
-            $subArray[] = $user->id;
-            $subArray[] = $weight;
-            $array[$user->full_name] = $subArray;
+        $list = [];
+        foreach ($data as $var) {
+            $list[$var['user']] = $var['weight'];
         }
-        ksort($array);
-        return $array;
+        return $list;
     }
 
 

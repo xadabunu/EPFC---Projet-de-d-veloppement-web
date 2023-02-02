@@ -29,25 +29,27 @@
             <?php } ?>
 
             <label>Template items :</label>
-            <ul>
-                <?php foreach ($userAndWeightArray as $nom => $idAndWeightArray) { ?>
-                    <li>
-                        <table class="whom">
-                            <tr class="edit">
-                                <td class="check">
-                                    <p><input type='checkbox' name='<?= $idAndWeightArray[0] ?>' value='' checked></p>
-                                </td>
-                                <td class="user">
-                                    <?= $nom ?>
-                                </td>
-                                <td class="weight">
-                                    <p>Weight</p><input type='text' name='weight_<?= $idAndWeightArray[0] ?>' value='<?= $idAndWeightArray[1] ?>'>
-                                </td>
-                            </tr>
-                        </table>
-                    </li>
-                <?php } ?>
-            </ul>
+
+                <ul>
+                    <?php foreach ($subscriptors as $subscriptor) { ?>
+                        <li>
+                            <table class="whom">
+                                <tr class="edit">
+                                    <td class="check">
+                                        <p><input type='checkbox' <?php if (array_key_exists($subscriptor->id, $list)) echo "checked" ?> name='<?= $subscriptor->id ?>' value=''></p>
+                                    </td>
+                                    <td class="user">
+                                        <?= $subscriptor->full_name ?>
+                                    </td>
+                                    <td class="weight">
+                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php if (array_key_exists($subscriptor->id, $list)) echo $list[$subscriptor->id] ?>'>
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+                    <?php } ?>
+                </ul>
+
 
             <?php if (array_key_exists('whom', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['whom']; ?></p>

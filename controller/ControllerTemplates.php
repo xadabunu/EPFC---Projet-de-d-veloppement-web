@@ -113,7 +113,7 @@ class ControllerTemplates extends MyController
                     $this->redirect('templates', 'manage_templates', $tricount->id);
                 }
             }
-            (new View('edit_template'))->show(['tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors, 'template' => $template, 'userAndWeightArray' => $userAndWeightArray]);
+            (new View('edit_template'))->show(['tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors, 'template' => $template, 'list' => $userAndWeightArray]);
         }
         else{
             Tools::abort('Invalid or missing argument');
