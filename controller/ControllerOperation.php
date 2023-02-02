@@ -74,7 +74,7 @@ class ControllerOperation extends MyController
                     $initiator = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
                 }
                 $list = self::get_weight($_POST, $tricount);
-                $errors = array_merge($errors, self::is_valid_fields($_POST));
+                $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
 
                 if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
                     $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
@@ -111,7 +111,7 @@ class ControllerOperation extends MyController
             Tools::abort("Invalid or missing argument.");
     }
 
-    private function is_valid_fields(array $array): array
+    private function is_valid_fields(array $array, Tricount $tricount): array
     {
         $errors = [];
         if (empty($array['title'])) {
@@ -133,6 +133,11 @@ class ControllerOperation extends MyController
                 $cpt += 1;
                 $list[] = $var;
             }
+        }
+        $numberChecked = self::get_whom($array, $tricount);
+
+        if(count($numberChecked) == 0 ){
+            $errors['whom'] = "You must choose at least one person";
         }
         if ($cpt == 0) {
             $errors['whom'] = "You must choose at least one person";
@@ -183,7 +188,10 @@ class ControllerOperation extends MyController
                 $operation->initiator = User::get_user_by_id($_POST['paid_by']);
                 $operation->operation_date = $_POST['operation_date'];
                 $list = self::get_weight($_POST, $tricount);
-                $errors = array_merge($errors, self::is_valid_fields($_POST));
+
+                
+
+                $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
                 $errors = array_merge($errors, $operation->validate_operations());
 
                 if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {

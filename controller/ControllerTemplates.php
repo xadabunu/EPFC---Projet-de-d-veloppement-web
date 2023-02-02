@@ -68,7 +68,7 @@ class ControllerTemplates extends MyController
             if (isset($_POST['title'])) {
                 $title = Tools::sanitize($_POST['title']);
                 $list = self::get_weight($_POST, $tricount);
-                $errors = array_merge($errors, self::is_valid_fields($_POST));
+                $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
 
                 if (count($errors) == 0) {
                     $template = new Template($title, $tricount);
@@ -103,9 +103,9 @@ class ControllerTemplates extends MyController
             if (isset($_POST['title'])) {
                 $title = Tools::sanitize($_POST['title']);
                 $list = self::get_weight($_POST, $tricount);
-                $errors = array_merge($errors, self::is_valid_fields($_POST));
+                $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
                 $template->title = $title;
-                $errors = $template->validate_template();
+                $errors = array_merge($errors, $template->validate_template());
 
                 if (count($errors) == 0) {
                     $template->persist_template_items($template, $list);
@@ -126,7 +126,7 @@ class ControllerTemplates extends MyController
         $template->persist_template_items($template, $list);
     }
 
-    private function is_valid_fields(array $array): array
+    private function is_valid_fields(array $array, Tricount $tricount): array
     {
         $errors = [];
         if (empty($array['title'])) {
@@ -141,6 +141,13 @@ class ControllerTemplates extends MyController
                 $list[] = $var;
             }
         }
+
+        $numberChecked = self::get_whom($array, $tricount);
+
+        if(count($numberChecked) == 0 ){
+            $errors['whom'] = "You must choose at least one person";
+        }
+
         if ($cpt == 0) {
             $errors['whom'] = "You must choose at least one person";
         }

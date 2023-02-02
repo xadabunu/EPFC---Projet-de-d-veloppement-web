@@ -25,7 +25,7 @@
                 <p class="errorMessage"><?php echo $errors['empty_title']; ?></p>
             <?php }
             if (array_key_exists('template_length', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['length']; ?></p>
+                <p class="errorMessage"><?php echo $errors['template_length']; ?></p>
             <?php } ?>
 
             <label>Template items :</label>
