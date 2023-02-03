@@ -149,12 +149,13 @@ class Tricount extends Model
         return $array;
     }
 
-    public function get_not_deletables(): array  // Renvoie les participants qui ne peuvent pas être supprimé d'un tricount //
+    public function get_deletables(): array  // Renvoie les participants qui ne peuvent pas être supprimé d'un tricount //
     {
-        $operations = $this->get_operations();
+        $subs = $this->get_subscriptors();
         $array = [];
-        foreach ($operations as $operation) {
-            $array = array_merge($array, $operation->get_participants());
+        foreach ($subs as $sub) {
+            if ($this->get_balance($sub->id) == 0)
+                $array[] = $sub;
         }
 
         return $array;

@@ -99,7 +99,7 @@ class ControllerTricount extends MyController
         $creator = '';
         $errors = [];
         $title = '';
-        $not_deletables = [];
+        $deletables = [];
 
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $user = $this->get_user_or_redirect();
@@ -112,7 +112,7 @@ class ControllerTricount extends MyController
             $creator = $tricount->creator;
             $subscriptors = $tricount->get_subscriptors();
             $cbo_users = $tricount->get_cbo_users();
-            $not_deletables = $tricount->get_not_deletables();
+            $deletables = $tricount->get_deletables();
 
             if (isset($_POST['title']) || isset($_POST['description'])) {
                 $tricount->title = Tools::sanitize($_POST['title']);
@@ -126,7 +126,7 @@ class ControllerTricount extends MyController
             }
             (new View("edit_tricount"))->show([
                 'tricount' => $tricount, 'subscriptors' => $subscriptors, 'creator' => $creator,
-                'errors' => $errors, 'cbo_users' => $cbo_users, 'title' => $title, 'not_deletables' => $not_deletables
+                'errors' => $errors, 'cbo_users' => $cbo_users, 'title' => $title, 'deletables' => $deletables
             ]);
         } else {
             Tools::abort("Invalid or missing argument.");

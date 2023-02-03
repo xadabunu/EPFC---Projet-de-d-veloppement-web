@@ -47,7 +47,7 @@
                 <tr class="pop">
                     <td><?= $subscriptor->full_name ?></td>
                     <td class="link">
-                        <?php if (!in_array($subscriptor, $not_deletables)) { ?>
+                        <?php if (in_array($subscriptor, $deletables)) { ?>
                             <form id="delete_sub" class="link" action='tricount/delete_subscriptor/<?= $tricount->id ?>' method='post'>
                                 <input type='text' name='subscriptor_name' value='<?= $subscriptor->id ?>' hidden>
                                 <button type="submit" class="pop x"><i class="fa-regular fa-trash-can fa-sm" aria-hidden="true"></i></button>
