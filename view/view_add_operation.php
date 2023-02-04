@@ -162,11 +162,16 @@
                         </li>
                     <?php } ?>
                 </ul>
-                <?php if (array_key_exists("whom", $errors)) { ?>
-                    <p class="errorMessage"><?php echo $errors["whom"]; ?></p>
-                <?php } ?>
 
             <?php } ?>
+
+            <?php if (array_key_exists("whom", $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors["whom"]; ?></p>
+            <?php } ?>
+            <?php if (array_key_exists('weight', $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors['weight']; ?></p>
+            <?php } ?>
+
             Add a new repartition template
             <table>
                 <tr <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>

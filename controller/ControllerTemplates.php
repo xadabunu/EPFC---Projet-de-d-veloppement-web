@@ -133,27 +133,17 @@ class ControllerTemplates extends MyController
             $errors['empty_title'] = "Title is required";
         }
 
-        $cpt = 0;
-        $list = [];
-        foreach ($array as $var) {
-            if (is_numeric($var)) {
-                $cpt += 1;
-                $list[] = $var;
-            }
-        }
-
         $numberChecked = self::get_whom($array, $tricount);
 
         if(count($numberChecked) == 0 ){
             $errors['whom'] = "You must choose at least one person";
         }
 
-        if ($cpt == 0) {
-            $errors['whom'] = "You must choose at least one person";
-        }
-        foreach ($list as $var) {
-            if ($var <= 0) {
-                $errors['whom'] = "Weight must be strictly positive";
+        foreach($array as $key => $item){ 
+            if(substr($key, 0, 6) == "weight"){
+                if(!is_numeric($item) || intval($item) < 1){
+                    $errors['weight'] = "Weight must be a strictly positive numeric value";
+                }
             }
         }
 

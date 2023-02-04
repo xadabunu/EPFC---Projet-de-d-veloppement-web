@@ -50,11 +50,15 @@
                     <?php } ?>
                 </ul>
 
-
             <?php if (array_key_exists('whom', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['whom']; ?></p>
             <?php } ?>
+            <?php if (array_key_exists('weight', $errors)) { ?>
+                <p class="errorMessage"><?php echo $errors['weight']; ?></p>
+            <?php } ?>
+
         </form>
+
         <a href="templates/delete_template/<?= $template->id ?>/<?= $tricount->id ?>" class="button bottom2 delete">Delete this template</a>
     </div>
 </body>
