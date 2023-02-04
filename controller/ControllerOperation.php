@@ -68,6 +68,9 @@ class ControllerOperation extends MyController
             if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
                 $title = Tools::sanitize($_POST['title']);
                 $amount = floatval(Tools::sanitize($_POST['amount']));
+                if ($amount <= 0){
+                    $errors ['amount'] = 'Amount must be strictly positive' ;
+                }
                 $operation_date = $_POST['operation_date'];
                 $created_at = Date("Y-m-d H:i:s");
                 if(is_numeric($_POST['paid_by'])){
@@ -128,10 +131,11 @@ class ControllerOperation extends MyController
         }
         $cpt = 0;
         $list = [];
-        foreach ($array as $var) {
-            if (is_numeric($var)) {
+        $keys = array_keys($array);
+        foreach ($keys as $key) {
+            if ($key != "amount" && is_numeric($array[$key])) {
                 $cpt += 1;
-                $list[] = $var;
+                $list[] = $array[$key];
             }
         }
         $numberChecked = self::get_whom($array, $tricount);
@@ -162,7 +166,7 @@ class ControllerOperation extends MyController
         $operation = '';
         $errors = [];
         $list = [];
-        $title = [];
+        $title= [];
         $amount = [];
         $operation_date = [];
         $paid_by = [];
@@ -171,6 +175,7 @@ class ControllerOperation extends MyController
 
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $operation = Operation::get_operation_by_id($_GET['param1']);
+            $title = $operation->title;
             $user = $this->get_user_or_redirect();
             if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
                 $this->redirect();
