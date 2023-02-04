@@ -113,7 +113,7 @@
                                     <td class="weight">
                                         <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php if (array_key_exists($subscriptor->id, $templateUserWeightList)) {
                                                                                                                             echo $templateUserWeightList[$subscriptor->id];
-                                                                                                                        } ?>'>
+                                                                                                                        } else{ echo 1;} ?>'>
                                     </td>
                                 </tr>
                             </table>
