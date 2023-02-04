@@ -632,10 +632,12 @@ tr.currency .right {
     font-size: 90%;
     text-align: center;
     vertical-align: middle;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 table#currency {
-    margin-bottom: 15px;
+    margin-bottom: 0;
 }
 
 .edit2 {
@@ -653,6 +655,7 @@ table#currency {
 
 ul {
     padding-left: 0;
+    margin-bottom: 0;
 }
 
 li {
@@ -775,4 +778,8 @@ select-selected:after {
 .fa-flip-horizontal {
     position: absolute;
     right: 10;
+}
+
+#paid_by {
+    margin-bottom: 0;
 }

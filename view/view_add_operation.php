@@ -27,12 +27,12 @@
                 <p class="errorMessage"><?php echo $errors['length']; ?></p>
             <?php } ?>
             <table class="edit" id="currency">
-                <tr class="currency">
+                <tr class="currency"<?php if (array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) { ?>style = "border-color: rgb(220, 53, 69)" <?php } ?>>
                     <td><input id="Amount" name="amount" type="text" placeholder="Amount" value='<?php if (!is_array($amount)) {
                                                                                                         echo $amount;
                                                                                                     } else {
                                                                                                         echo '';
-                                                                                                    } ?>' <?php if (array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) { ?>class="errorInput" <?php } ?>></td>
+                                                                                                    } ?>' ></td>
                     <td class="right">EUR</td>
                 </tr>
             </table>
@@ -54,7 +54,7 @@
             <?php } ?>
 
             <label for="paid_by">Paid by</label>
-            <select name="paid_by" id="paid_by" class="edit edit2">
+            <select name="paid_by" id="paid_by" class="edit edit2" <?php if (array_key_exists('empty_initiator', $errors)) { ?> style = "border-color: rgb(220, 53, 69)" <?php } ?>>
 
                 <?php if (!is_array($initiator) && !is_string($initiator)) { ?>
                     <option value="<?= $initiator->id ?>"><?= $initiator->full_name ?></option>
@@ -169,7 +169,7 @@
             <?php } ?>
             Add a new repartition template
             <table>
-                <tr>
+                <tr <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                     <td class="check"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
                     <td class="template">Save this template</td>
                     <td><input id="template_title" name="template_title" type="text" placeholder="name"></td>

@@ -128,6 +128,13 @@ class ControllerOperation extends MyController
         }
         $cpt = 0;
         $list = [];
+        $keys = array_keys($array);
+        foreach ($keys as $key) {
+            if ($key != "amount" && is_numeric($array[$key])) {
+                $cpt += 1;
+                $list[] = $array[$key];
+            }
+        }
         foreach ($array as $var) {
             if (is_numeric($var)) {
                 $cpt += 1;
@@ -256,13 +263,12 @@ class ControllerOperation extends MyController
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
             $user = $this->get_user_or_redirect();
             if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
-            $this->redirect();
+                $this->redirect();
             $operation = Operation::get_operation_by_id($_GET['param1']);
             if (!$operation->tricount->has_access($user))
                 $this->redirect();
             (new View('delete_operation'))->show(['operation' => $operation]);
-            }
-        else{
+        } else {
             Tools::abort('Invalid or missing arguments.');
         }
     }    
@@ -271,12 +277,11 @@ class ControllerOperation extends MyController
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
             if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
-            $this->redirect();
+                $this->redirect();
             $operation = Operation::get_operation_by_id($_GET['param1']);
             $operation->delete_operation_cascade();
             $this->redirect('tricount', 'operations', $operation->tricount->id);
-        }
-        else{
+        } else {
             Tools::abort('Invalid or missing argument.');
         }       
 
