@@ -81,10 +81,9 @@ CREATE TABLE `repartition_template_items` (
 
 LOCK TABLES `repartition_template_items` WRITE;
 /*!40000 ALTER TABLE `repartition_template_items` DISABLE KEYS */;
-INSERT INTO `repartition_template_items` VALUES (1,3,1), (1,4,1), (1,5,1), (3,3,1), (3,4,2), (3,5,1),
-                                                (4,3,1), (4,4,1), (4,5,1), (5,3,2), (5,4,1), (5,5,1),
-                                                (5,7,1), (7,6,1), (8,3,1), (8,4,1), (8,5,2), (9,3,1),
-                                                (9,4,1), (9,5,1);
+INSERT INTO `repartition_template_items` VALUES (1,3,1), (5,3,2), (3,1,2), (1,1,1), (4,1,1), (5,1,1), (8,1,1), (9,1,1), 
+                                                (4,3,1), (5,5,1), (3,2,1), (1,2,1), (8,2,2), (4,2,1), (5,2,1), (9,2,1),
+                                                (7,4,1), (8,3,1), (9,3,1), (3,3,1);
 /*!40000 ALTER TABLE `repartition_template_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,7 +145,10 @@ INSERT INTO `repartitions` VALUES (1,1,1), (1,3,1), (1,4,1), (1,5,2), (1,8,1), (
                                   (3,1,1), (3,3,1), (3,4,1), (3,5,1), (3,8,2), (3,9,1),
                                   (4,7,1),
                                   (5,3,1), (5,4,1), (5,5,1), (5,8,1), (5,10,1),
-                                  (6,3,1);
+                                  (6,3,1),
+                                  (7,5,1),
+                                  (8,3,1), (8,10,1), (8,5,1),
+                                  (9,3,1), (9,10,1), (9,5,1);
 /*!40000 ALTER TABLE `repartitions` ENABLE KEYS */;
 UNLOCK TABLES;
 
