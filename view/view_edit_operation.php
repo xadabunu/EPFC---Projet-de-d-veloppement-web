@@ -176,7 +176,6 @@
                 <p class="errorMessage"><?php echo $errors['weight']; ?></p>
             <?php } ?>
 
-
             Add a new repartition template
             <table>
                 <tr>

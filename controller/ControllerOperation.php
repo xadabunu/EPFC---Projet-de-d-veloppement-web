@@ -135,11 +135,18 @@ class ControllerOperation extends MyController
         if(count($numberChecked) == 0 ){
             $errors['whom'] = "You must choose at least one person";
         }
+
+        $id = [];
+        foreach($numberChecked as $user){
+            $id[] = $user->id;
+        }
         
         foreach($array as $key => $item){ 
             if(substr($key, 0, 6) == "weight"){
-                if(!is_numeric($item) || intval($item) < 1){
-                    $errors['weight'] = "Weight must be a strictly positive numeric value";
+                if(in_array(substr($key, 7, 1), $id)){
+                    if(!is_numeric($item) || intval($item) < 1){
+                        $errors['weight'] = "Weight must be a strictly positive numeric value";
+                    }
                 }
             }
         }
