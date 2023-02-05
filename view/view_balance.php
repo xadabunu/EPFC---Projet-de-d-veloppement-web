@@ -23,7 +23,7 @@
                         <td class="balance">
                             <p class="left<?php if ($sub->id === $user->id) {
                                                 echo " bold";
-                                            } ?>"><?= $sub->full_name ?><?php if ($sub->id === $user->id) {
+                                            } ?>"><?= strlen($sub->full_name) > 10 ? substr($sub->full_name, 0, 10)."..." : $sub->full_name ?><?php if ($sub->id === $user->id) {
                                                                                                                             echo " (me)";
                                                                                                                         } ?></p>
                         </td>

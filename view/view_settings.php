@@ -16,8 +16,8 @@
             <p>Settings</p>
             <p></p>
         </header>
-        <p>Hey <b><?= $user->full_name ?></b>!</p>
-        <p>I know your email is <span style="color:rgb(214, 51, 132)"><?= $user->email ?></span>.</p>
+        <p>Hey <b><?= strlen($user->full_name) > 22 ? substr($user->full_name, 0, 22)."..." : $user->full_name ?></b>!</p>
+        <p>I know your email is <span style="color:rgb(214, 51, 132)"><?= strlen($user->email) > 20 ? substr($user->email, 0, 20)."..." : $user->email ?></span>.</p>
         <p>What can I do for you ?</p>
         <a href="settings/edit_profile" class="button bottom bottom2 settings">Edit profile</a>
         <a href="settings/change_password" class="button bottom bottom2 settings">Change password</a>

@@ -13,7 +13,7 @@
     <div class="main">
         <header class="t2">
             <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button" id="back">Back</a>
-            <p><?= $tricount->title ?> &#11208; Templates</p>
+            <p><?= strlen($tricount->title) > 20 ? substr($tricount->title, 0, 20)."..." : $tricount->title ?> &#11208; Templates</p>
             <a href="templates/add_template/<?= $tricount->id ?>" class="button" id="add">Add</a>
         </header>
         <?php if (empty($templates)) { ?>
@@ -35,13 +35,13 @@
                     <tr>
                         <td>
                             <a href="templates/edit_template/<?= $tricount->id ?>/<?= $templates[$cpt]->id ?>">
-                                <h3><?= $templates[$cpt]->title ?></h3>
+                                <h3><?= strlen($templates[$cpt]->title) > 25 ? substr($templates[$cpt]->title, 0, 25)."..." : $templates[$cpt]->title ?></h3>
                             </a>
                             <ul>
                                 <?php
                                 foreach ($all_templates_items_for_view[$cpt] as $nom => $poids) { ?>
                                     <li class="listyle">
-                                        <?= $nom . ' (' . $poids . '/' . $all_weight_total[$cpt] . ')' ?>
+                                    <?= strlen($nom . ' (' . $poids . '/' . $all_weight_total[$cpt] . ')') > 30 ? substr($nom, 0, 25)."... (" . $poids . '/' . $all_weight_total[$cpt] . ')' : $nom . ' (' . $poids . '/' . $all_weight_total[$cpt] . ')' ?>
                                     </li>
                                 <?php } ?>
                             </ul>

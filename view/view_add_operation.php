@@ -54,13 +54,13 @@
             <label for="paid_by">Paid by</label>
             <select name="paid_by" id="paid_by" class="edit edit2" <?php if (array_key_exists('empty_initiator', $errors)) { ?> style = "border-color: rgb(220, 53, 69)" <?php } ?>>
                 <?php if (!is_array($initiator) && !is_string($initiator)) { ?>
-                    <option value="<?= $initiator->id ?>"><?= $initiator->full_name ?></option>
+                    <option value="<?= $initiator->id ?>"><?= strlen($initiator->full_name) > 30 ? substr($initiator->full_name, 0, 30)."..." : $initiator->full_name ?></option>
                 <?php } else { ?>
                     <option value=""> -- Who paid for it ? -- </option>
                 <?php } ?>
                 <?php foreach ($subscriptors as $subscriptor) {
                     if ($subscriptor != $initiator) { ?>
-                        <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
+                        <option value="<?= $subscriptor->id ?>"><?= strlen($subscriptor->full_name) > 30 ? substr($subscriptor->full_name, 0, 30)."..." : $subscriptor->full_name ?></option>
                 <?php }
                 } ?>
             </select>
@@ -71,18 +71,18 @@
                 <tr>
                     <td class="subscriptor">
                         <select name="templates" id="templates" class="edit">
-                            <?php if (!is_array($templateChoosen) && !is_string($templateChoosen)) { ?>
-                                <option value="<?= $templateChoosen->id ?>" selected><i><?= $templateChoosen->title ?></i></option>
+                            <?php if (!is_array($templateChoosen) && !is_string($templateChoosen)) { ?> 
+                                <option value="<?= $templateChoosen->id ?>" selected><i><?= strlen($templateChoosen->title) > 30 ? substr($templateChoosen->title, 0, 30)."..." : $templateChoosen->title ?></i></option>
                                 <option value="No ill use custom repartition">-- No, i'll use custom repartition --</option>
                                 <?php foreach ($templates as $template) {
                                     if ($template != $templateChoosen) { ?>
-                                        <option value="<?= $template->id ?>"><?= $template->title ?></option>
+                                        <option value="<?= $template->id ?>"><?= strlen($template->title) > 30 ? substr($template->title, 0, 30)."..." : $template->title ?></option>
                                 <?php }
                                 } ?>
                             <?php } else { ?>
                                 <option value="No ill use custom repartition" selected>-- No, i'll use custom repartition --</option>
                                 <?php foreach ($templates as $template) { ?>
-                                    <option value="<?= $template->id ?>"><?= $template->title ?></option>
+                                    <option value="<?= $template->id ?>"><?= strlen($template->title) > 30 ? substr($template->title, 0, 30)."..." : $template->title ?></option>
                             <?php }
                             } ?>
                         </select>
@@ -101,7 +101,7 @@
                                         <p><input type='checkbox' <?php if (array_key_exists($subscriptor->id, $templateUserWeightList)) echo "checked" ?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
-                                        <?= $subscriptor->full_name ?></td>
+                                    <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight">
                                         <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php if (array_key_exists($subscriptor->id, $templateUserWeightList)) {
@@ -123,7 +123,7 @@
                                         <p><input type='checkbox' checked name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
-                                        <?= $subscriptor->full_name ?>
+                                    <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight">
                                         <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='1'>
@@ -143,7 +143,7 @@
                                             <p><input type='checkbox' <?php if (array_key_exists($subscriptor->id, $list)) echo "checked" ?> name='<?= $subscriptor->id ?>' value=''></p>
                                         </td>
                                         <td class="user">
-                                            <?= $subscriptor->full_name ?>
+                                        <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
                                         </td>
                                         <td class="weight">
                                             <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php if (array_key_exists($subscriptor->id, $list)) echo $list[$subscriptor->id] ; else{ echo 1;} ?>'>
@@ -162,7 +162,8 @@
                                         <td class="check">
                                             <p><input type="checkbox" checked name="<?= $subscriptor->id ?>" value=''>
                                         </td>
-                                        <td class="user"><?= $subscriptor->full_name ?></td>
+                                        <td class="user"><?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
+                                        </td>
                                         <td class="weight">
                                             <p>Weight</p><input type="text" name="weight_<?= $subscriptor->id ?>" value="1">
                                         </td>

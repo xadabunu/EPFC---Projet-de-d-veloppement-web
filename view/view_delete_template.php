@@ -21,7 +21,7 @@
             </tr>
             <tr>
                 <td class="empty">
-                    <p class="text_confirm">Do you really want to delete Template <b>"<?= $template->title ?>"</b><br> This process can't be undone.</p>
+                    <p class="text_confirm">Do you really want to delete Template <b>"<?= strlen($template->title) > 25 ? substr($template->title, 0, 25)."..." : $template->title ?>"</b><br> This process can't be undone.</p>
                     <a href="templates/edit_template/<?= $tricount->id ?>/<?= $template->id ?>" class="button btn_cancel">Cancel</a>
                     <a href="templates/confirm_delete_template/<?= $template->id ?>" class="button btn_delete">Delete</a>
                 </td>

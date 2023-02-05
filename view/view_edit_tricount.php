@@ -14,7 +14,7 @@
     <div class="main">
         <header class="t2">
             <a href="tricount/operations/<?= $tricount->id ?>" class="button" id="back">Back</a>
-            <p><?= strlen($title) > 30 ? substr($title, 0, 25)."..." : $title ?> &#11208; Edit</p>
+            <p><?= strlen($title) > 20 ? substr($title, 0, 20)."..." : $title ?> &#11208; Edit</p>
             <button form="edittricountform" type="submit" class="button save" id="add">Save</button>
         </header>
         <h3>Settings</h3>
@@ -39,12 +39,12 @@
         <h3>Subscriptions</h3>
         <table class="subs">
             <tr>
-                <td class="subs"><?= $creator->full_name ?> (creator)</td>
+                <td class="subs"><?= strlen($creator->full_name) > 30 ? substr($creator->full_name, 0, 30)."..." : $creator->full_name ?> (creator)</td>
                 <td></td>
             </tr>
             <?php foreach ($subscriptors as $subscriptor) { ?>
                 <tr class="pop">
-                    <td><?= $subscriptor->full_name ?></td>
+                    <td><?= strlen($subscriptor->full_name) > 30 ? substr($subscriptor->full_name, 0, 30)."..." : $subscriptor->full_name ?></td>
                     <td class="link">
                         <?php if (in_array($subscriptor, $deletables)) { ?>
                             <form id="delete_sub" class="link" action='tricount/delete_subscriptor/<?= $tricount->id ?>' method='post'>
@@ -63,7 +63,7 @@
                         <select name="subscriptor" id="subscriptor">
                             <option selected disabled>--Add a new subscriber--</option>
                             <?php foreach ($cbo_users as $cbo_user) { ?>
-                                <option value="<?= $cbo_user->id ?>"><?= $cbo_user->full_name ?></option>
+                                <option value="<?= $cbo_user->id ?>"><?= strlen($cbo_user->full_name) > 20 ? substr($cbo_user->full_name, 0, 20)."..." : $cbo_user->full_name ?></option>
                             <?php } ?>
                         </select>
                     </td>
