@@ -13,7 +13,7 @@
     <div class="main">
         <header class="t2">
             <a href="operation/details/<?= $operation->id ?>" class="button" id="back">Cancel</a>
-            <p><?= $titleValue ?> &#11208; Edit</p>
+            <p><?= strlen($titleValue) > 25 ? substr($titleValue, 0, 20)."..." : $titleValue ?> &#11208; Edit</p>
             <button class="button save" id="add" type="submit" form="edit_operation_form">Save</button>
         </header>
         <form id="edit_operation_form" action="operation/edit_operation/<?= $operation->id ?>" method="post" class="edit">
@@ -65,7 +65,7 @@
 
                 <?php foreach ($subscriptors as $subscriptor) {
                     if ($subscriptor != $operation->initiator) { ?>
-                        <option value="<?= $subscriptor->id ?>"><?= $subscriptor->full_name ?></option>
+                        <option value="<?= $subscriptor->id ?>"><?= strlen($subscriptor->full_name) > 30 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?></option>
                 <?php }
                 } ?>
 
@@ -83,7 +83,7 @@
                                 <option value="No ill use custom repartition" ><i>-- No, i'll use custom repartition --</i></option>
                                 <?php foreach ($templates as $template) {
                                     if ($template != $templateChoosen) { ?>
-                                        <option value="<?= $template->id ?>"><?= $template->title ?></option>
+                                        <option value="<?= $template->id ?>"><?= strlen($template->title) > 30 ? substr($template->title, 0, 25)."..." : $template->title ?></option>
                                 <?php }
                                 }
                             } else { ?>
@@ -108,7 +108,7 @@
                                         <p><input type='checkbox' <?php if (array_key_exists($subscriptor->id, $templateUserWeightList)) echo "checked" ?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
-                                        <?= $subscriptor->full_name ?></td>
+                                        <?= strlen($subscriptor->full_name) > 40 ? substr($subscriptor->full_name, 0, 35)."..." : $subscriptor->full_name ?></td>
                                     </td>
                                     <td class="weight">
                                         <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php if (array_key_exists($subscriptor->id, $templateUserWeightList)) {

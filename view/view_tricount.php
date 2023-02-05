@@ -13,7 +13,7 @@
     <div class="main">
         <header class="t2">
             <a href="main/index/<?= $tricount->id ?>" class="button" id="back">Home</a>
-            <p><?= $tricount->title ?> &#11208; Expenses</p>
+            <p><?= strlen($tricount->title) <= 20 ? $tricount->title : substr($tricount->title, 0, 18)."..." ?> &#11208; Expenses</p>
             <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button" id="add">Edit</a>
         </header>
         <?php if (empty($list)) { ?>
@@ -48,8 +48,8 @@
                 <?php foreach ($list as $operation) { ?>
                     <tr>
                         <td>
-                            <p><b><a href="operation/details/<?= $operation->id ?>"><?= $operation->title ?></a></b></p>
-                            <p>Paid by <?= $operation->initiator->full_name ?></p>
+                            <p><b><a href="operation/details/<?= $operation->id ?>"><?= strlen($operation->title) > 35 ? substr($operation->title, 0, 30)."..." : $operation->title ?></a></b></p>
+                            <p>Paid by <?= strlen($operation->initiator->full_name) > 25 ? substr($operation->initiator->full_name, 0, 23) : $operation->initiator->full_name ?></p>
                         </td>
                         <td class="right">
                             <p><b><?= round($operation->amount, 2) ?> €</b></p>

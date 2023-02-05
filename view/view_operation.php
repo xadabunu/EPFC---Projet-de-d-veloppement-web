@@ -13,13 +13,13 @@
     <div class="main">
         <header class="t2">
             <a href="tricount/operations/<?= $operation->tricount->id ?>" class="button" id="back">Back</a>
-            <p><?php echo $operation->tricount->title ?> &#11208; <?= $operation->title ?></p>
+            <p><?= strlen($operation->tricount->title) > 25 ? substr($operation->tricount->title, 0, 20)."..." : $operation->tricount->title ?> &#11208; <?= strlen($operation->title) > 25 ? substr($operation->title, 0, 20)."..." : $operation->title ?></p>
             <a href="operation/edit_operation/<?= $operation->id ?>" class="button" id="add">Edit</a>
         </header>
         <div>
             <div class="amount"><?php echo number_format($operation->amount, 2) ?> €</div>
             <div class="payement_info">
-                <p>Paid by <?= $operation->initiator->full_name ?></p>
+                <p>Paid by <?= strlen($operation->initiator->full_name) > 50 ? substr($operation->initiator->full_name, 0, 45)."..." : $operation->initiator->full_name ?></p>
                 <p><?= date("d/m/Y", strtotime($operation->operation_date)) ?></p>
             </div>
         </div>
@@ -30,7 +30,7 @@
             <table class="participants">
                 <?php foreach ($list as $participant) : ?>
                     <tr>
-                        <td><?= $participant->full_name ?></td>
+                        <td><?= strlen($participant->full_name) > 40 ? substr($participant->full_name, 0, 35)."..." : $participant->full_name ?></td>
                         <td class="right"><?= round($amounts[$participant->id], 2) ?> €</td>
                     </tr>
                 <?php endforeach ?>

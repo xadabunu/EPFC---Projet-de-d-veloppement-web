@@ -13,7 +13,7 @@
     <div class="main">
         <header class="t2">
             <a href="tricount/operations/<?= $tricount->id ?>" class="button" id="back">Back</a>
-            <p><?= $tricount->title ?> &#11208; balance</p>
+            <p><?= strlen($tricount->title) > 25 ? substr($tricount->title, 0, 22)."..." : $tricount->title ?> &#11208; balance</p>
             <p></p>
         </header>
         <table class="balance">
@@ -37,7 +37,7 @@
                             <p class="inner left<?php if ($sub->id === $user->id) {echo " bold";} ?>"><?= round($amounts[$sub->id], 2) ?> €</p>
                         </td>
                         <td class="balance">
-                            <p class="right<?php if ($sub->id === $user->id) {echo " bold";} ?>"><?= $sub->full_name ?><?php if ($sub->id === $user->id) {echo " (me)";} ?></p>
+                            <p class="right<?php if ($sub->id === $user->id) {echo " bold";} ?>"><?= strlen($sub->full_name) > 25 ? substr($sub->full_name, 0, 22)."..." : $sub->full_name ?><?php if ($sub->id === $user->id) {echo " (me)";} ?></p>
                         </td>
                     <?php } ?>
                 </tr>

@@ -21,7 +21,7 @@
             </tr>
             <tr>
                 <td class="empty">
-                    <p class="text_confirm">Do you really want to delete tricount <b>"<?= $tricount->title ?>"</b> and all of his dependencies ? <br> This process can't be undone.</p>
+                    <p class="text_confirm">Do you really want to delete tricount <b>"<?= strlen($tricount->title) > 35 ? substr($tricount->title, 0, 30)."..." : $tricount->title ?>"</b> and all of his dependencies ? <br> This process can't be undone.</p>
                     <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button btn_cancel">Cancel</a>
                     <a href="tricount/confirm_delete_tricount/<?= $tricount->id ?>" class="button btn_delete">Delete</a>
                 </td>

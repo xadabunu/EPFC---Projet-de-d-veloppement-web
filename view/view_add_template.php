@@ -13,7 +13,7 @@
     <div class="main">
         <header class="t2">
             <a href="templates/manage_templates/<?= $tricount->id ?>" class="button" id="back">Back</a>
-            <p><?= $tricount->title ?> &#11208; New template</p>
+            <p><?php echo strlen($tricount->title) <= 20 ? $tricount->title : substr($tricount->title, 0, 17)."..."?> &#11208; New template</p>
             <button form="addtemplateform" type="submit" class="button save" id="save">Save</button>
         </header>
 

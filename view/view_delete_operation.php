@@ -21,7 +21,7 @@
             </tr>
             <tr>
                 <td class="empty">
-                    <p class="text_confirm">Do you really want to delete operation <b>"<?= $operation->title ?>"</b> and all of his dependencies ? <br> This process can't be undone.</p>
+                    <p class="text_confirm">Do you really want to delete operation <b>"<?= strlen($operation->title) > 35 ? substr($operation->title, 0, 30)."..." : $operation->title ?>"</b> and all of his dependencies ? <br> This process can't be undone.</p>
                     <a href="operation/edit_operation/<?= $operation->id ?>" class="button btn_cancel">Cancel</a>
                     <a href="operation/confirm_delete_operation/<?= $operation->id ?>" class="button btn_delete">Delete</a>
                 </td>

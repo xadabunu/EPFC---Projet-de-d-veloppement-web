@@ -14,12 +14,11 @@
     <div class="main">
         <header class="t2">
             <a href="tricount/operations/<?= $tricount->id ?>" class="button" id="back">Back</a>
-            <p><?= $title ?> &#11208; Edit</p>
+            <p><?= strlen($title) > 30 ? substr($title, 0, 25)."..." : $title ?> &#11208; Edit</p>
             <button form="edittricountform" type="submit" class="button save" id="add">Save</button>
         </header>
         <h3>Settings</h3>
         <form id="edittricountform" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post" class="edit">
-            <!-- <input type="submit" value="Save" formaction="tricount/edit_tricount/<?= $tricount->id ?>" class="button save" id= "add"> -->
             <label>Title :</label>
             <input id="title" name="title" type="text" value="<?= $tricount->title ?>" <?php if (array_key_exists('required', $errors) || array_key_exists('title_length', $errors) || array_key_exists('unique_title', $errors)) { ?>class="errorInput" <?php } ?>>
             <?php if (array_key_exists('required', $errors)) { ?>

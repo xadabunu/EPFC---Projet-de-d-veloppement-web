@@ -34,8 +34,8 @@
                 <?php foreach ($data as $tricount) { ?>
                     <tr>
                         <td>
-                            <p><b><a href="tricount/operations/<?= $tricount->id ?>"><?= $tricount->title ?></a></b></p>
-                            <p><?= $tricount->description ?></p>
+                            <p><b><a href="tricount/operations/<?= $tricount->id ?>"><?= strlen($tricount->title) <= 28 ? $tricount->title : substr($tricount->title, 0, 25)."..."?></a></b></p>
+                            <p><?= strlen($tricount->description) > 70 ? substr($tricount->description, 0, 60)."..." : $tricount->description ?></p>
                         </td>
                         <td class="right">
                             <p><?= $subs_number[$tricount->id] ?></p>
