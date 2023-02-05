@@ -76,7 +76,7 @@ class User extends Model
         $errors = [];
         $user = self::get_user_by_email($email);
         if ($user) {
-            $errors[] = "This user already exists.";
+            $errors['validity'] = "This email is not available";
         }
         return $errors;
     }
