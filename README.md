@@ -17,13 +17,17 @@
 
 ### Liste des bugs connus
 
-  * bug 1
-  * bug 2
-  * ...
+  * Aucun bug connu
 
 ### Liste des fonctionnalités supplémentaires
 
+  * Aucune
+
 ### Divers
+
+  * Application dévelopée sans BootStrap.
+  * Pour la maintenance un refactoring de certaines fonctions (Surtout les add/edit operations et templates) est à prévoir.
+  * Pour une meilleure expérience utilisateur, il faudrait rajouter des messages de validations lors d'un ajout/edition.
 
 ## Notes de version itération 2
 
