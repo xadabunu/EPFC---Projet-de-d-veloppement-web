@@ -13,6 +13,7 @@ class ControllerTemplates extends MyController
 
     public function index(): void
     {
+        $this->redirect();
     }
 
     public function manage_templates(): void

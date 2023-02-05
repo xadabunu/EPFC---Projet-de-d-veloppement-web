@@ -75,7 +75,7 @@ class ControllerSettings extends MyController
     }
 
 
-    public function validate_current_password(String $current_password, String $hashed_password): array
+    private function validate_current_password(String $current_password, String $hashed_password): array
     {
         $errors = [];
 

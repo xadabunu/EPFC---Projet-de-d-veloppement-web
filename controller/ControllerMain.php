@@ -32,7 +32,7 @@ class ControllerMain extends MyController
             $password = Tools::sanitize($_POST['password']);
             $errors = User::validate_login($email, $password);
             if (count($errors) == 0) {
-                $this->log_user(User::get_user_by_email($email), $controller = "user");
+                $this->log_user(User::get_user_by_email($email), $controller = "user", "my_tricounts");
             }
         }
         (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors]);

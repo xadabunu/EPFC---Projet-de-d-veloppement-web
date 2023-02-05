@@ -135,10 +135,10 @@ class Tricount extends Model
         return $array;
     }
 
-    public function get_cbo_users(): array
+    public function get_cbo_users(): array //retourne les user pouvant être ajoutés à un tricount
     {
         $query = self::execute(
-            "SELECT * FROM users WHERE id != :creator_id AND id NOT IN (SELECT user FROM subscriptions WHERE tricount = :tricount_id)",
+            "SELECT * FROM users WHERE id != :creator_id AND id NOT IN (SELECT user FROM subscriptions WHERE tricount = :tricount_id) ORDER BY full_name ASC",
             ["creator_id" => $this->creator->id, "tricount_id" => $this->id]
         );
         $data = $query->fetchAll();
