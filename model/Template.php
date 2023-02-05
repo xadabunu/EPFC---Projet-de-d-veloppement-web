@@ -93,6 +93,12 @@ class Template extends Model
         }
     }
 
+    public function add_template_from_operation(array $list, Template $template): void
+    {
+        $template->persist_template();
+        $template->persist_template_items($template, $list);
+    }
+
 
 // --------------------------- Delete Template ------------------------------------ 
 
@@ -106,4 +112,5 @@ class Template extends Model
     {
         self::execute("DELETE FROM repartition_templates WHERE id= :id", ["id" => $this->id]);
     }
+
 }

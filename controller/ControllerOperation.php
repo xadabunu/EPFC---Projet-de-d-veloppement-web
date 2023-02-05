@@ -95,7 +95,7 @@ class ControllerOperation extends MyController
 
                     if (count($errors) == 0) {
                         if (isset($_POST["save_template_checkbox"])) {
-                            ControllerTemplates::add_template_from_operation($list, $template);
+                            $template->add_template_from_operation($list, $template);
                         }
 
                         $operation->persist_operation();
@@ -200,7 +200,7 @@ class ControllerOperation extends MyController
 
                 if (count($errors) == 0) {
                     if (isset($_POST["save_template_checkbox"])) {
-                        ControllerTemplates::add_template_from_operation($list, $template);
+                        $template->add_template_from_operation($list, $template);
                     }
 
                     $operation->persist_repartition($operation, $list);
