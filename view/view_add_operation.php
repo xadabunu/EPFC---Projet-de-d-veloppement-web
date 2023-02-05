@@ -142,8 +142,31 @@
                     <?php } ?>
                 </ul>
 
+                <?php } } else if (count($errors) != 0){ ?>    
 
-            <?php } } else { ?>
+                <label>For whom ? <i>(select at leat one)</i></label>
+
+                <ul>
+                    <?php foreach ($subscriptors as $subscriptor) { ?>
+                        <li>
+                            <table class="whom">
+                                <tr class="edit">
+                                    <td class="check">
+                                        <p><input type='checkbox' <?php if (array_key_exists($subscriptor->id, $list)) echo "checked" ?> name='<?= $subscriptor->id ?>' value=''></p>
+                                    </td>
+                                    <td class="user">
+                                        <?= $subscriptor->full_name ?>
+                                    </td>
+                                    <td class="weight">
+                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php if (array_key_exists($subscriptor->id, $list)) echo $list[$subscriptor->id] ; else{ echo 1;} ?>'>
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+                    <?php } ?>
+                </ul>
+
+            <?php }  else { ?>
                 <label>For whom ? <i>(select at leat one)</i></label>
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?>

@@ -59,6 +59,7 @@ class ControllerTemplates extends MyController
     public function add_template(): void
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
+            $list = '';
             $errors = [];
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
@@ -82,7 +83,7 @@ class ControllerTemplates extends MyController
                     }
                 }
             }
-            (new View('add_template'))->show(['tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors]);
+            (new View('add_template'))->show(['list'=> $list,'tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors]);
         }
         else{
             Tools::abort('Invalid or missing argument.');
@@ -92,6 +93,7 @@ class ControllerTemplates extends MyController
     public function edit_template(): void
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
+            $list = '';
             $errors = [];
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
@@ -99,7 +101,7 @@ class ControllerTemplates extends MyController
                 $this->redirect();
             $template = Template::get_template_by_template_id($_GET["param2"]);
             $subscriptors = $tricount->get_subscriptors_with_creator();
-            $userAndWeightArray = $template->get_template_user_and_weight();
+            $templateUserAndWeightArray = $template->get_template_user_and_weight();
 
             if (isset($_POST['title'])) {
                 $title = Tools::sanitize($_POST['title']);
@@ -114,7 +116,7 @@ class ControllerTemplates extends MyController
                     $this->redirect('templates', 'manage_templates', $tricount->id);
                 }
             }
-            (new View('edit_template'))->show(['tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors, 'template' => $template, 'list' => $userAndWeightArray]);
+            (new View('edit_template'))->show(['list'=> $list,'tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors, 'template' => $template, 'templateUserAndWeightArray' => $templateUserAndWeightArray]);
         }
         else{
             Tools::abort('Invalid or missing argument');
