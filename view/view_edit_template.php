@@ -27,12 +27,10 @@
             if (array_key_exists('template_length', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['template_length']; ?></p>
             <?php } ?>
-
             <label>Template items :</label>
-
             <?php if (count($errors) != 0) { ?>
                 <ul>
-                    <?php foreach ($subscriptors as $subscriptor) { ?>
+                    <?php foreach ($subscriptors as $subscriptor) { ?> <!-- Cas si il y'a des erreurs et que la page s'est donc réaffichée  --> 
                         <li>
                             <table class="whom">
                                 <tr class="edit">
@@ -50,11 +48,9 @@
                         </li>
                     <?php } ?>
                 </ul>
-
                 <?php }  else { ?>
-
                 <ul>
-                    <?php foreach ($subscriptors as $subscriptor) { ?>
+                    <?php foreach ($subscriptors as $subscriptor) { ?> <!-- Cas par défaut on affiche les participants du template avec leur poids, sinon non checked avec poids à 1-->
                         <li>
                             <table class="whom">
                                 <tr class="edit">
@@ -72,18 +68,14 @@
                         </li>
                     <?php } ?>
                 </ul>
-
             <?php } ?>
-
             <?php if (array_key_exists('whom', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['whom']; ?></p>
             <?php } ?>
             <?php if (array_key_exists('weight', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['weight']; ?></p>
             <?php } ?>
-
         </form>
-
         <a href="templates/delete_template/<?= $template->id ?>/<?= $tricount->id ?>" class="button bottom2 delete">Delete this template</a>
     </div>
 </body>

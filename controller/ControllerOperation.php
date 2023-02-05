@@ -132,14 +132,14 @@ class ControllerOperation extends MyController
             $errors['empty_date'] = "Date of your operation is required";
         }
        
-        $numberChecked = self::get_whom($array, $tricount);
+        $listUser = self::get_whom($array, $tricount);
 
-        if(count($numberChecked) == 0 ){
+        if(count($listUser) == 0 ){
             $errors['whom'] = "You must choose at least one person";
         }
 
         $id = [];
-        foreach($numberChecked as $user){
+        foreach($listUser as $user){
             $id[] = $user->id;
         }
         
