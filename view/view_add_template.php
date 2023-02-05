@@ -29,6 +29,30 @@
             <?php } ?>
 
             <label>Template items :</label>
+
+            <?php if (count($errors) != 0) { ?>
+                <ul>
+                    <?php foreach ($subscriptors as $subscriptor) { ?>
+                        <li>
+                            <table class="whom">
+                                <tr class="edit">
+                                    <td class="check">
+                                        <p><input type='checkbox' <?php if (array_key_exists($subscriptor->id, $list)) echo "checked" ?> name='<?= $subscriptor->id ?>' value=''></p>
+                                    </td>
+                                    <td class="user">
+                                        <?= $subscriptor->full_name ?>
+                                    </td>
+                                    <td class="weight">
+                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php if (array_key_exists($subscriptor->id, $list)) echo $list[$subscriptor->id]; else{ echo 1;} ?>'>
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+                    <?php } ?>
+                </ul>
+
+                <?php }  else { ?>
+
             <ul>
                 <?php foreach ($subscriptors as $subscriptor) { ?>
                     <li>
@@ -48,6 +72,8 @@
                     </li>
                 <?php } ?>
             </ul>
+
+            <?php } ?>
 
             <?php if (array_key_exists('whom', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['whom']; ?></p>

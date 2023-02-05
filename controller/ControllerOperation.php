@@ -17,6 +17,8 @@ class ControllerOperation extends MyController
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $user = $this->get_user_or_redirect();
+            if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
+                $this->redirect();
             $op = Operation::get_operation_by_id($_GET['param1']);
             if (!$op->tricount->has_access($user))
                 $this->redirect();
@@ -135,11 +137,18 @@ class ControllerOperation extends MyController
         if(count($numberChecked) == 0 ){
             $errors['whom'] = "You must choose at least one person";
         }
+
+        $id = [];
+        foreach($numberChecked as $user){
+            $id[] = $user->id;
+        }
         
         foreach($array as $key => $item){ 
             if(substr($key, 0, 6) == "weight"){
-                if(!is_numeric($item) || intval($item) < 1){
-                    $errors['weight'] = "Weight must be a strictly positive numeric value";
+                if(in_array(substr($key, 7, 1), $id)){
+                    if(!is_numeric($item) || intval($item) < 1){
+                        $errors['weight'] = "Weight must be a strictly positive numeric value";
+                    }
                 }
             }
         }
@@ -166,11 +175,11 @@ class ControllerOperation extends MyController
         $templateUserWeightList = '';
 
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
+            if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
+                $this->redirect();
             $operation = Operation::get_operation_by_id($_GET['param1']);
             $title = $operation->title;
             $user = $this->get_user_or_redirect();
-            if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
-                $this->redirect();
             $operation = Operation::get_operation_by_id($_GET['param1']);
             if (!$operation->tricount->has_access($user))
                 $this->redirect();
