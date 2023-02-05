@@ -17,7 +17,7 @@
 
 ### Liste des bugs connus
 
-  * Aucun bug connu
+  * Dans le cas hypothétique où un user créerait un tricount qui ne contient que des dépenses qui ne concernent que leur initiator, la page de la balance n'affiche que le premier subscriptor.
 
 ### Liste des fonctionnalités supplémentaires
 
