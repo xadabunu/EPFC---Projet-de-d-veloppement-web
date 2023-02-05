@@ -120,11 +120,6 @@ class ControllerTemplates extends MyController
         }
     }    
 
-    public static function add_template_from_operation(array $list, Template $template): void
-    {
-        $template->persist_template();
-        $template->persist_template_items($template, $list);
-    }
 
     private function is_valid_fields(array $array, Tricount $tricount): array
     {
