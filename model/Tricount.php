@@ -203,7 +203,7 @@ class Tricount extends Model
         if (strlen($this->title) < 3 || strlen($this->title) > 256) {
             $errors['title_length'] = "Title length must be between 3 and 256.";
         }
-        if (strlen($this->description) > 0 && (!(strlen($this->description) >= 3 || strlen($this->description) > 1024))) {
+        if (strlen($this->description) > 0 && (!(strlen($this->description) >= 3) || strlen($this->description) > 1024)) {
             $errors['description_length'] = "Description length must be between 3 and 1024.";
         }
         $array = self::get_tricounts_list($this->creator->id);

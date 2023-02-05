@@ -78,7 +78,7 @@ class ControllerTricount extends MyController
         $description = '';
         $errors = [];
 
-        if (isset($_POST['title'])) {
+        if (isset($_POST['title']) && isset($_POST['description'])) {
             $title = Tools::sanitize($_POST['title']);
             $description = Tools::sanitize($_POST['description']);
             $creator = MyController::get_user_or_redirect();
@@ -90,7 +90,7 @@ class ControllerTricount extends MyController
                 $this->redirect('tricount', 'operations', $tricount->id);
             }
         }
-        (new View('add_tricount'))->show(["title" => $title, "desciption" => $description, "errors" => $errors]);
+        (new View('add_tricount'))->show(["title" => $title, "description" => $description, "errors" => $errors]);
     }
 
     public function edit_tricount(): void
