@@ -276,6 +276,8 @@ th.empty {
     padding: 10px 0;
     border-bottom: 2px solid rgb(227, 227, 227);
     background-color: rgb(247, 247, 247);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 td.empty {

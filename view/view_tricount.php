@@ -48,7 +48,7 @@
                 <?php foreach ($list as $operation) { ?>
                     <tr>
                         <td>
-                            <p><b><a href="operation/details/<?= $operation->id ?>"><?= strlen($operation->title) > 35 ? substr($operation->title, 0, 30)."..." : $operation->title ?></a></b></p>
+                            <p><b><a href="operation/details/<?= $operation->id ?>"><?= strlen($operation->title) > 30 ? substr($operation->title, 0, 25)."..." : $operation->title ?></a></b></p>
                             <p>Paid by <?= strlen($operation->initiator->full_name) > 25 ? substr($operation->initiator->full_name, 0, 23) : $operation->initiator->full_name ?></p>
                         </td>
                         <td class="right">

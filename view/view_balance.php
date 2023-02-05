@@ -16,6 +16,19 @@
             <p><?= strlen($tricount->title) > 25 ? substr($tricount->title, 0, 22)."..." : $tricount->title ?> &#11208; balance</p>
             <p></p>
         </header>
+        <?php if (count($subs) == 1) { ?>
+            <table>
+                    <tr>
+                        <th class="empty">You are alone!</th>
+                    </tr>
+                    <tr>
+                        <td class="empty">
+                            <p>Click below to add your friends!</p>
+                            <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button">Add Friends</a>
+                        </td>
+                    </tr>
+                </table>
+            <?php } else {?>
         <table class="balance">
             <?php foreach ($subs as $sub) { ?>
                 <tr class="balance">
@@ -43,6 +56,7 @@
                 </tr>
             <?php } ?>
         </table>
+        <?php } ?>
     </div>
 
 </body>
