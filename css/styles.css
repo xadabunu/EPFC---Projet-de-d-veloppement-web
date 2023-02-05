@@ -783,3 +783,7 @@ select-selected:after {
 #paid_by {
     margin-bottom: 0;
 }
+
+textarea {
+    resize: vertical;
+}
