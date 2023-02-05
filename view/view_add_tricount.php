@@ -32,7 +32,7 @@
                 <p class="errorMessage"><?php echo $errors['unique_title']; ?></p>
             <?php } ?>
             <h3>Description (Optional) :</h3>
-            <textarea id="description" name="description" rows="6" placeholder="Description" <?php if (array_key_exists('description_length', $errors)) { ?>class="errorInput" <?php } ?>></textarea>
+            <textarea id="description" name="description" rows="6" placeholder="Description" <?php if (array_key_exists('description_length', $errors)) { ?>class="errorInput" <?php } ?>><?= $description ?></textarea>
             <?php if (array_key_exists('description_length', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['description_length']; ?></p>
             <?php } ?>
