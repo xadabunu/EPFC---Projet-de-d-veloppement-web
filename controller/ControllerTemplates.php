@@ -91,13 +91,22 @@ class ControllerTemplates extends MyController
 
     public function edit_template(): void
     {
-        if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
+        if (isset($_GET['param1']) && is_numeric($_GET['param1']) && isset($_GET['param2']) && is_numeric($_GET['param2'])){
             $errors = [];
+            if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id())) {
+                $this->redirect();
+            }
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))
                 $this->redirect();
+            if (!in_array($_GET['param2'], Template::get_all_template_ids())) {
+                $this->redirect();
+            }
             $template = Template::get_template_by_template_id($_GET["param2"]);
+            if ($template->tricount->id != $_GET['param1']) {
+                $this->redirect();
+            }
             $subscriptors = $tricount->get_subscriptors_with_creator();
             $userAndWeightArray = $template->get_template_user_and_weight();
 
@@ -178,10 +187,19 @@ class ControllerTemplates extends MyController
 
     public function delete_template(): void
     {
-        if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
+        if (isset($_GET['param1']) && is_numeric($_GET['param1']) && isset($_GET['param2']) && is_numeric($_GET['param2'])) {
+            if (!in_array($_GET['param1'], Template::get_all_template_ids())) {
+                $this->redirect();
+            }
+            if (!in_array($_GET['param2'], Tricount::get_all_tricounts_id())) {
+                $this->redirect();  
+            }      
             $template = Template::get_template_by_template_id($_GET["param1"]);
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param2"]);
+            if($template->tricount->id != $tricount->id) {
+                $this->redirect();
+            }
             if (!$tricount->has_access($user))
                 $this->redirect();
             (new View('delete_template'))->show(['template' => $template, 'tricount' => $tricount]);

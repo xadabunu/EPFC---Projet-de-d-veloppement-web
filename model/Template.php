@@ -13,6 +13,16 @@ class Template extends Model
 
 // --------------------------- Get sur les Template ------------------------------------ 
 
+    public static function get_all_template_ids() : array 
+    {
+        $list = (self::execute("SELECT id FROM repartition_templates", []))->fetchAll();
+        $res = [];
+        foreach ($list as $var)
+            $res[] = $var['id'];
+
+        return $res;
+    }     
+
     public static function get_templates(int $id): array
     {
         $query = self::execute("SELECT * FROM repartition_templates WHERE tricount = :id", ["id" => $id]);
