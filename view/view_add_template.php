@@ -27,12 +27,10 @@
             if (array_key_exists('template_length', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['template_length']; ?></p>
             <?php } ?>
-
             <label>Template items :</label>
-
             <?php if (count($errors) != 0) { ?>
                 <ul>
-                    <?php foreach ($subscriptors as $subscriptor) { ?>
+                    <?php foreach ($subscriptors as $subscriptor) { ?> <!-- Cas si il y'a des erreurs et que la page s'est donc réaffichée  --> 
                         <li>
                             <table class="whom">
                                 <tr class="edit">
@@ -50,31 +48,27 @@
                         </li>
                     <?php } ?>
                 </ul>
-
-                <?php }  else { ?>
-
-            <ul>
-                <?php foreach ($subscriptors as $subscriptor) { ?>
-                    <li>
-                        <table class="whom">
-                            <tr class="edit">
-                                <td class="check">
-                                    <p><input type='checkbox' name='<?= $subscriptor->id ?>' value='' checked></p>
-                                </td>
-                                <td class="user">
-                                    <?= $subscriptor->full_name ?>
-                                </td>
-                                <td class="weight">
-                                    <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='1'>
-                                </td>
-                            </tr>
-                        </table>
-                    </li>
-                <?php } ?>
-            </ul>
-
+            <?php }  else { ?>
+                <ul>
+                    <?php foreach ($subscriptors as $subscriptor) { ?> <!-- Cas par défaut on affiche tout le monde checked avec un poids à 1 -->
+                        <li>
+                            <table class="whom">
+                                <tr class="edit">
+                                    <td class="check">
+                                        <p><input type='checkbox' name='<?= $subscriptor->id ?>' value='' checked></p>
+                                    </td>
+                                    <td class="user">
+                                        <?= $subscriptor->full_name ?>
+                                    </td>
+                                    <td class="weight">
+                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='1'>
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+                    <?php } ?>
+                </ul>
             <?php } ?>
-
             <?php if (array_key_exists('whom', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['whom']; ?></p>
             <?php } ?>

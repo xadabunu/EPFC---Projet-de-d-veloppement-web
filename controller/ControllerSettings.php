@@ -32,7 +32,7 @@ class ControllerSettings extends MyController
         if (isset($_POST['email']) && isset($_POST['full_name']) && isset($_POST['iban'])) {
             $tmpUser = new User(Tools::sanitize($_POST['email']), $user->hashed_password, Tools::sanitize($_POST['full_name']), $user->role, Tools::sanitize($_POST['iban']));
             $errors = array_merge($errors, $tmpUser->validate());
-            //$errors = User::validate_unicity($tmpUser->email); // y'aura toujours cette erreur ?
+            $errors = array_merge($errors, User::validate_unicity($tmpUser->email));
 
             if (count($errors) == 0) {
                 $user->email = Tools::sanitize($_POST['email']);
