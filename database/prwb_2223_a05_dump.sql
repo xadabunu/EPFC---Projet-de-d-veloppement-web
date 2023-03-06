@@ -1,6 +1,6 @@
 -- MariaDB dump 10.19  Distrib 10.4.24-MariaDB, for Win64 (AMD64)
 --
--- Host: 127.0.0.1    Database: prwb_2223_a05
+-- Host: 127.0.0.1    Database: prwb_2223_xyy
 -- ------------------------------------------------------
 -- Server version	10.4.24-MariaDB
 
@@ -44,7 +44,16 @@ CREATE TABLE `operations` (
 
 LOCK TABLES `operations` WRITE;
 /*!40000 ALTER TABLE `operations` DISABLE KEYS */;
-INSERT INTO `operations` VALUES (1,'Colruyt',4,100,'2022-10-13',2,'2022-10-13 19:09:18'),(2,'Plein essence',4,75,'2022-10-13',1,'2022-10-13 20:10:41'),(3,'Grosses courses LIDL',4,212.47,'2022-10-13',3,'2022-10-13 21:23:49'),(4,'Apéros',4,31.897456217,'2022-10-13',1,'2022-10-13 23:51:20'),(5,'Boucherie',4,25.5,'2022-10-26',2,'2022-10-26 09:59:56'),(6,'Loterie',4,35,'2022-10-26',1,'2022-10-26 10:02:24');
+INSERT INTO `operations` VALUES   (1, 'Achat Narya (Anneau de feu)', 1, 100, '2023-02-01', 5, '2023-02-03 15:01:00'),
+                                  (2, 'Achat Vilya (Anneau de l&#039;air)', 1, 85, '2023-02-01', 3, '2023-02-03 15:05:00'),
+                                  (3, 'Achat Nenya (Anneau de l&#039;eau)', 1, 75, '2023-02-01', 8, '2023-02-03 15:09:00'),
+                                  (4, 'Achat Anneau Unique', 1, 150, '2023-02-01', 6, '2023-02-03 15:10:00'),
+                                  (5, 'Achat Dard', 2, 50, '2023-02-01', 3, '2023-02-03 15:18:00'),
+                                  (6, 'Achat Armure Mithril', 2, 50, '2023-02-01', 10, '2023-02-03 15:15:00'),
+                                  (7, 'Feu d&#039;artifice', 2, 25, '2023-02-01', 5, '2023-02-03 15:12:00'),
+                                  (8, 'Achat Anduril', 3, 100, '2023-02-01', 3, '2023-02-03 15:06:00'),
+                                  (9, 'Achat Hadhafang', 3, 100, '2023-02-01', 3, '2023-02-03 15:11:00');
+
 /*!40000 ALTER TABLE `operations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -72,7 +81,9 @@ CREATE TABLE `repartition_template_items` (
 
 LOCK TABLES `repartition_template_items` WRITE;
 /*!40000 ALTER TABLE `repartition_template_items` DISABLE KEYS */;
-INSERT INTO `repartition_template_items` VALUES (1,1,2),(1,2,1),(2,1,1),(3,1,1),(3,2,1);
+INSERT INTO `repartition_template_items` VALUES (1,3,1), (5,3,2), (3,1,2), (1,1,1), (4,1,1), (5,1,1), (8,1,1), (9,1,1), 
+                                                (4,3,1), (5,5,1), (3,2,1), (1,2,1), (8,2,2), (4,2,1), (5,2,1), (9,2,1),
+                                                (7,4,1), (8,3,1), (9,3,1), (3,3,1);
 /*!40000 ALTER TABLE `repartition_template_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,7 +111,8 @@ CREATE TABLE `repartition_templates` (
 
 LOCK TABLES `repartition_templates` WRITE;
 /*!40000 ALTER TABLE `repartition_templates` DISABLE KEYS */;
-INSERT INTO `repartition_templates` VALUES (2,'Benoit ne paye rien',4),(1,'Boris paye double',4);
+INSERT INTO `repartition_templates` VALUES  (1, 'Elrond paie double', 1), (2, 'Galadriel paie double', 1), (3, 'Olorin paie double', 1),
+                                            (4, 'Gollum paie seul', 1), (5, 'Olorin paie seul', 2);
 /*!40000 ALTER TABLE `repartition_templates` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -128,7 +140,15 @@ CREATE TABLE `repartitions` (
 
 LOCK TABLES `repartitions` WRITE;
 /*!40000 ALTER TABLE `repartitions` DISABLE KEYS */;
-INSERT INTO `repartitions` VALUES (1,1,1),(1,2,1),(2,1,1),(2,2,1),(3,1,2),(3,2,1),(3,3,1),(4,1,1),(4,2,2),(4,3,3),(5,1,2),(5,2,1),(5,3,1),(6,1,1),(6,3,1);
+INSERT INTO `repartitions` VALUES (1,1,1), (1,3,1), (1,4,1), (1,5,2), (1,8,1), (1,9,1),
+                                  (2,1,1), (2,3,2), (2,4,1), (2,5,1), (2,8,1), (2,9,1),
+                                  (3,1,1), (3,3,1), (3,4,1), (3,5,1), (3,8,2), (3,9,1),
+                                  (4,7,1),
+                                  (5,3,1), (5,4,1), (5,5,1), (5,8,1), (5,10,1),
+                                  (6,3,1),
+                                  (7,5,1),
+                                  (8,3,1), (8,10,1), (8,5,1),
+                                  (9,3,1), (9,10,1), (9,5,1);
 /*!40000 ALTER TABLE `repartitions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -155,7 +175,10 @@ CREATE TABLE `subscriptions` (
 
 LOCK TABLES `subscriptions` WRITE;
 /*!40000 ALTER TABLE `subscriptions` DISABLE KEYS */;
-INSERT INTO `subscriptions` VALUES (2,2),(4,2),(4,3);
+INSERT INTO `subscriptions` VALUES  (1,1), (1,3), (1,4), (1,5), (1,6), (1,7), (1,8), (1,9),
+                                    (2,3), (2,4), (2,5), (2,8), (2,10),
+                                    (3,1), (3,3), (3,4), (3,5), (3,8), (3,10),
+                                    (4,3), (4,4), (4,5), (4,8), (4,10);
 /*!40000 ALTER TABLE `subscriptions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -185,7 +208,10 @@ CREATE TABLE `tricounts` (
 
 LOCK TABLES `tricounts` WRITE;
 /*!40000 ALTER TABLE `tricounts` DISABLE KEYS */;
-INSERT INTO `tricounts` VALUES (1,'Gers 2022',NULL,'2022-10-10 18:42:24',1),(2,'Resto badminton','NULL','2022-10-10 19:25:10',1),(4,'Vacances','A la mer du nord','2022-10-10 19:31:09',1);
+INSERT INTO `tricounts` VALUES  (1, 'Voyage Mordor 2023', 'Détruire anneau unique', '2023-02-02 16:15:34', 5),
+                                (2, 'Anniversaire 100 ans Bilbo', NULL, '2023-02-02 17:11:00 ', 5),
+                                (3, 'Mariage Elessar', NULL, '2023-02-03 14:12:00', 3),
+                                (4, 'Naissance Eldarion', NULL, '2023-02-03 14:15:00', 3 );
 /*!40000 ALTER TABLE `tricounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -214,7 +240,17 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'boverhaegen@epfc.eu','56ce92d1de4f05017cf03d6cd514d6d1','Boris','user',NULL),(2,'bepenelle@epfc.eu','56ce92d1de4f05017cf03d6cd514d6d1','Benoît','user',NULL),(3,'xapigeolet@epfc.eu','56ce92d1de4f05017cf03d6cd514d6d1','Xavier','user',NULL),(4,'mamichel@epfc.eu','56ce92d1de4f05017cf03d6cd514d6d1','Marc','user','1234');
+INSERT INTO `users` VALUES  (1, 'manwe@test.com', '56ce92d1de4f05017cf03d6cd514d6d1', 'Manwe', 'user', 'BE78 8956 4512 4578'),
+                            (2, 'morgoth@test.com', '56ce92d1de4f05017cf03d6cd514d6d1', 'Morgoth', 'user', 'BE89 5623 4512 7845'),
+                            (3, 'elrond@test.com', '56ce92d1de4f05017cf03d6cd514d6d1', 'Elrond', 'user', 'BE23 8945 7856 1245'),
+                            (4, 'aragorn@test.com', '56ce92d1de4f05017cf03d6cd514d6d1', 'Elessar', 'user', 'BE78 2356 4578 1245'),
+                            (5, 'gandalf@test.com', '56ce92d1de4f05017cf03d6cd514d6d1', 'Olorin', 'user', 'BE23 5645 7889 5645'),
+                            (6, 'sauron@test.com', '56ce92d1de4f05017cf03d6cd514d6d1', 'Mairon', 'user', 'BE56 4512 4578 4512'),
+                            (7, 'smeagol@test.com', '56ce92d1de4f05017cf03d6cd514d6d1', 'Gollum', 'user', 'BE56 2356 4578 4512'),
+                            (8, 'galadriel@test.com', '56ce92d1de4f05017cf03d6cd514d6d1', 'Galadriel', 'user', 'BE89 7856 4868 2645'),
+                            (9, 'frodon@test.com', '56ce92d1de4f05017cf03d6cd514d6d1', 'Frodon', 'user', 'BE98 9515 7565 3595'), 
+                            (10, 'durin@test.com', '56ce92d1de4f05017cf03d6cd514d6d1', 'Durin', 'user', 'BE56 9562 8491 6275');
+                            
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
