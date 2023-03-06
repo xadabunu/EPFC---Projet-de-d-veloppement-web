@@ -90,89 +90,28 @@
                     <td class="subscriptor input"><input type="submit" value="&#8635;" formaction="operation/apply_template_add_operation/<?= $tricount->id ?>"></td>
                 </tr>
             </table>
+
             <label>For whom ? <i>(select at leat one)</i></label>
-            <?php if (!is_array($templateChoosen) && !is_string($templateChoosen)) { ?> <!-- Cas ou un template est choisi, on l'affiche donc. --> 
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?>
                         <li>
                             <table class="whom">
                                 <tr class="edit">
                                     <td class="check">
-                                        <p><input type='checkbox' <?php if (array_key_exists($subscriptor->id, $templateUserWeightList)) echo "checked" ?> name='<?= $subscriptor->id ?>' value=''></p>
+                                        <p><input type='checkbox' <?= $userChecked[$subscriptor->id] ?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight">
-                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php if (array_key_exists($subscriptor->id, $templateUserWeightList)) {
-                                                                                                                            echo $templateUserWeightList[$subscriptor->id];
-                                                                                                                        } ?>'>
+                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?= $userWeight[$subscriptor->id] ?>'>
                                     </td>
                                 </tr>
                             </table>
                         </li>
                     <?php } ?>
                 </ul>
-            <?php } else if (is_string($templateChoosen)) { if(strcmp($templateChoosen, "No ill use custom repartition") == 0){ ?>    <!-- Cas ou on choisi d'utiliser une répartition custom -->
-                <ul>
-                    <?php foreach ($subscriptors as $subscriptor) { ?>
-                        <li>
-                            <table class="whom">
-                                <tr class="edit">
-                                    <td class="check">
-                                        <p><input type='checkbox' checked name='<?= $subscriptor->id ?>' value=''></p>
-                                    </td>
-                                    <td class="user">
-                                    <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
-                                    </td>
-                                    <td class="weight">
-                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='1'>
-                                    </td>
-                                </tr>
-                            </table>
-                        </li>
-                    <?php } ?>
-                </ul>
-                <?php } } else if (count($errors) != 0){ ?>   <!-- Cas si il y'a des erreurs et que la page s'est donc réaffichée  --> 
-                    <ul>
-                        <?php foreach ($subscriptors as $subscriptor) { ?>
-                            <li>
-                                <table class="whom">
-                                    <tr class="edit">
-                                        <td class="check">
-                                            <p><input type='checkbox' <?php if (array_key_exists($subscriptor->id, $list)) echo "checked" ?> name='<?= $subscriptor->id ?>' value=''></p>
-                                        </td>
-                                        <td class="user">
-                                        <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
-                                        </td>
-                                        <td class="weight">
-                                            <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php if (array_key_exists($subscriptor->id, $list)) echo $list[$subscriptor->id] ; else{ echo 1;} ?>'>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </li>
-                        <?php } ?>
-                    </ul>
-                <?php }  else { ?> <!-- Cas par défaut on affiche tout le monde checked avec un poids à 1 -->   
-                    <ul>
-                        <?php foreach ($subscriptors as $subscriptor) { ?>
-                            <li>
-                                <table class="whom">
-                                    <tr class="edit">
-                                        <td class="check">
-                                            <p><input type="checkbox" checked name="<?= $subscriptor->id ?>" value=''>
-                                        </td>
-                                        <td class="user"><?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
-                                        </td>
-                                        <td class="weight">
-                                            <p>Weight</p><input type="text" name="weight_<?= $subscriptor->id ?>" value="1">
-                                        </td>
-                                    </tr>
-                                </table>
-                            </li>
-                        <?php } ?>
-                    </ul>
-            <?php } ?>
+
             <?php if (array_key_exists("whom", $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors["whom"]; ?></p>
             <?php } ?>

@@ -64,8 +64,15 @@ class ControllerOperation extends MyController
             $operation_date = [];
             $initiator = [];
             $templateChoosen = [];
+            $userChecked = [];
+            $userWeight = [];
             $templateUserWeightList = '';
             $list = '';
+
+            foreach($subscriptors as $subscriptor){
+                $userChecked[$subscriptor->id] = 'unchecked';
+                $userWeight[$subscriptor->id] = '1';
+            }
 
             if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
                 $title = Tools::sanitize($_POST['title']);
@@ -84,6 +91,13 @@ class ControllerOperation extends MyController
                 if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
                     $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
                     $templateUserWeightList = $templateChoosen->get_repartition_items();
+                    $userChecked = [];
+                    $userWeight = [];
+
+                    foreach($subscriptors as $subscriptor){
+                        array_key_exists($subscriptor->id, $templateUserWeightList) ? $userChecked[$subscriptor->id] = 'checked' : $userChecked[$subscriptor->id] = 'unchecked';
+                        array_key_exists($subscriptor->id, $templateUserWeightList) ? $userWeight[$subscriptor->id] = $templateUserWeightList[$subscriptor->id] : $userWeight[$subscriptor->id] = '1';
+                    }
                 }
 
                 if (count($errors) == 0) {
@@ -110,7 +124,8 @@ class ControllerOperation extends MyController
                 'tricount' => $tricount, 'operation' => $operation, 'subscriptors' => $subscriptors,
                 'templates' => $templates, 'errors' => $errors, 'title' => $title, 'amount' => $amount,
                 'operation_date' => $operation_date, 'initiator' => $initiator, 'list'=>$list,
-                'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList
+                'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList, 
+                'userChecked' => $userChecked, 'userWeight' => $userWeight
             ]);
         } else
             Tools::abort("Invalid or missing argument.");
@@ -145,7 +160,7 @@ class ControllerOperation extends MyController
         
         foreach($array as $key => $item){ 
             if(substr($key, 0, 6) == "weight"){
-                if(in_array(substr($key, 7, 1), $id)){
+                if(in_array(substr($key, 7), $id)){
                     if(!is_numeric($item) || intval($item) < 1){
                         $errors['weight'] = "Weight must be a strictly positive numeric value";
                     }
@@ -163,6 +178,8 @@ class ControllerOperation extends MyController
     public function edit_operation(): void
     {
         $subscriptors = [];
+        $userChecked = [];
+        $userWeight = [];
         $templates = '';
         $operation = '';
         $errors = [];
@@ -188,6 +205,15 @@ class ControllerOperation extends MyController
             $templates = Template::get_templates($tricount->id);
             $list = $operation->get_repartitions();
 
+
+            foreach($subscriptors as $subscriptor){
+                $userChecked[$subscriptor->id] = 'checked';
+
+                array_key_exists($subscriptor->id, $list) ? $userChecked[$subscriptor->id] = 'checked' : $userChecked[$subscriptor->id] = 'unchecked';
+                array_key_exists($subscriptor->id, $list) ? $userWeight[$subscriptor->id] = $list[$subscriptor->id] : $userWeight[$subscriptor->id] = '1';
+            }
+
+
             if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date'])) {
                 $operation->title = Tools::sanitize($_POST['title']);
                 $operation->amount = floatval(Tools::sanitize($_POST['amount']));
@@ -198,8 +224,16 @@ class ControllerOperation extends MyController
                 $errors = array_merge($errors, $operation->validate_operations());
 
                 if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
+                    $userChecked = [];
+                    $userWeight = [];
                     $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
                     $templateUserWeightList = $templateChoosen->get_repartition_items();
+                    $templateUsers = $templateChoosen->get_template_users();
+
+                    foreach($subscriptors as $subscriptor){
+                        array_key_exists($subscriptor->id, $templateUsers) ? $userChecked[$subscriptor->id] = 'checked' : $userChecked[$subscriptor->id] = 'unchecked';
+                        array_key_exists($subscriptor->id, $templateUserWeightList) ? $userWeight[$subscriptor->id] = $templateUserWeightList[$subscriptor->id] : $userWeight[$subscriptor->id] = '1';
+                    }
                 }
 
                 if (isset($_POST["save_template_checkbox"])) {
@@ -221,7 +255,8 @@ class ControllerOperation extends MyController
             'operation' => $operation, 'errors' => $errors,
             'subscriptors' => $subscriptors, 'templates' => $templates, 'list' => $list,
             'titleValue' => $title, 'amountValue' => $amount, 'operation_dateValue' => $operation_date, 'paid_byValue' => $paid_by,
-            'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList
+            'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList, 'userChecked' => $userChecked,
+            'userWeight' => $userWeight
         ]);
         }else{
             Tools::abort("Invalid or missing argument");
@@ -300,6 +335,8 @@ class ControllerOperation extends MyController
         $operation_date = [];
         $paid_by = [];
         $templateChoosen = [];
+        $userChecked = [];
+        $userWeight = [];
         $templateUserWeightList = '';
 
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
@@ -314,6 +351,11 @@ class ControllerOperation extends MyController
             $templates = Template::get_templates($tricount->id);
             $list = $operation->get_repartitions();
 
+            foreach($subscriptors as $subscriptor){
+                $userChecked[$subscriptor->id] = 'unchecked';
+                $userWeight[$subscriptor->id] = '1';
+            }
+
             if (isset($_POST['title'])) {
                 $title = Tools::sanitize($_POST['title']);
             }
@@ -326,20 +368,25 @@ class ControllerOperation extends MyController
             if (isset($_POST['paid_by'])) {
                 $paid_by = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
             }
-            if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
+            if (isset($_POST['templates']) && is_numeric($_POST['templates']) ) {
                 $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
                 $templateUserWeightList = $templateChoosen->get_repartition_items();
-            } else if (isset($_POST['templates']) && is_string($_POST['templates'])) {
-                if (strcmp($_POST['templates'], "No ill use custom repartition") == 0) {
-                    $templateChoosen = $_POST['templates'];
+                $userChecked = [];
+                $userWeight = [];
+
+                foreach($subscriptors as $subscriptor){
+                    array_key_exists($subscriptor->id, $templateUserWeightList) ? $userChecked[$subscriptor->id] = 'checked' : $userChecked[$subscriptor->id] = 'unchecked';
+                    array_key_exists($subscriptor->id, $templateUserWeightList) ? $userWeight[$subscriptor->id] = $templateUserWeightList[$subscriptor->id] : $userWeight[$subscriptor->id] = '1';
                 }
-            }
+
+            } 
 
             (new View('edit_operation'))->show([
                 'operation' => $operation, 'errors' => $errors,
                 'subscriptors' => $subscriptors, 'templates' => $templates, 'list' => $list,
                 'titleValue' => $title, 'amountValue' => $amount, 'operation_dateValue' => $operation_date, 'paid_byValue' => $paid_by,
-                'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList
+                'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList, 'userChecked' => $userChecked,
+                'userWeight' => $userWeight
             ]);
         } else
             Tools::abort("Invalid or missing arument.");
@@ -363,9 +410,15 @@ class ControllerOperation extends MyController
             $operation_date = [];
             $initiator = [];
             $templateChoosen = [];
+            $userChecked = [];
+            $userWeight = [];
             $templateUserWeightList = '';
             $list = '';
 
+            foreach($subscriptors as $subscriptor){
+                $userChecked[$subscriptor->id] = 'unchecked';
+                $userWeight[$subscriptor->id] = '1';
+            }
 
             if (isset($_POST['title'])) {
                 $title = Tools::sanitize($_POST['title']);
@@ -382,16 +435,21 @@ class ControllerOperation extends MyController
             if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
                 $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
                 $templateUserWeightList = $templateChoosen->get_repartition_items();
-            } else if (isset($_POST['templates']) && is_string($_POST['templates'])) {
-                if (strcmp($_POST['templates'], "No ill use custom repartition") == 0) {
-                    $templateChoosen = $_POST['templates'];
+
+                $userChecked = [];
+                $userWeight = [];
+
+                foreach($subscriptors as $subscriptor){
+                    array_key_exists($subscriptor->id, $templateUserWeightList) ? $userChecked[$subscriptor->id] = 'checked' : $userChecked[$subscriptor->id] = 'unchecked';
+                    array_key_exists($subscriptor->id, $templateUserWeightList) ? $userWeight[$subscriptor->id] = $templateUserWeightList[$subscriptor->id] : $userWeight[$subscriptor->id] = '1';
                 }
             }
             (new View("add_operation"))->show([
                 'tricount' => $tricount, 'operation' => $operation, 'subscriptors' => $subscriptors,
                 'templates' => $templates, 'errors' => $errors, 'title' => $title, 'amount' => $amount,
                 'operation_date' => $operation_date, 'initiator' => $initiator, 'list'=>$list,
-                'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList
+                'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList,
+                'userChecked' => $userChecked, 'userWeight' => $userWeight
             ]);
         } else
             Tools::abort("Invalid or missing arument.");
