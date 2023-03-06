@@ -102,7 +102,7 @@
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?>
                         <li>
-                            <table class="whom">
+                            <table class="whom" <?php  if( (array_key_exists("whom", $errors)) || (array_key_exists("weight", $errors) && ($subscriptor->id == (int)substr($errors['weight'], 48) ))) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                                 <tr class="edit">
                                     <td class="check">
                                         <p><input type='checkbox' <?= $userChecked[$subscriptor->id] ?> name='<?= $subscriptor->id ?>' value=''></p>
@@ -123,11 +123,11 @@
                 <p class="errorMessage"><?php echo $errors['whom']; ?></p>
             <?php } ?>
             <?php if (array_key_exists('weight', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['weight']; ?></p>
+                <p class="errorMessage"><?php echo substr($errors['weight'], 0, 48); ?></p>
             <?php } ?>
 
             Add a new repartition template
-            <table>
+            <table <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>>
                 <tr>
                     <td class="check"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
                     <td class="template">Save this template</td>

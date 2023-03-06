@@ -95,7 +95,7 @@ class ControllerOperation extends MyController
                     $userWeight = [];
 
                     foreach($subscriptors as $subscriptor){
-                        array_key_exists($subscriptor->id, $templateUserWeightList) ? $userChecked[$subscriptor->id] = 'checked' : $userChecked[$subscriptor->id] = 'unchecked';
+                        $userChecked[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ?  'checked' : '';
                         array_key_exists($subscriptor->id, $templateUserWeightList) ? $userWeight[$subscriptor->id] = $templateUserWeightList[$subscriptor->id] : $userWeight[$subscriptor->id] = '1';
                     }
                 }
@@ -162,7 +162,7 @@ class ControllerOperation extends MyController
             if(substr($key, 0, 6) == "weight"){
                 if(in_array(substr($key, 7), $id)){
                     if(!is_numeric($item) || intval($item) < 1){
-                        $errors['weight'] = "Weight must be a strictly positive numeric value";
+                        $errors['weight'] = "Weight must be a strictly positive numeric value" . substr($key, 7);
                     }
                 }
             }

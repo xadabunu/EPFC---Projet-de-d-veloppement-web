@@ -36,7 +36,7 @@
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?> <!-- Cas si il y'a des erreurs et que la page s'est donc réaffichée  --> 
                         <li>
-                            <table class="whom">
+                            <table class="whom" <?php if (array_key_exists('weight', $errors) || array_key_exists('whom', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>>
                                 <tr class="edit">
                                     <td class="check">
                                         <p><input type='checkbox' <?php if (array_key_exists($subscriptor->id, $list)) echo "checked" ?> name='<?= $subscriptor->id ?>' value=''></p>
@@ -56,7 +56,7 @@
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?> <!-- Cas par défaut on affiche tout le monde checked avec un poids à 1 -->
                         <li>
-                            <table class="whom">
+                            <table class="whom" <?php  if( (array_key_exists("whom", $errors)) || (array_key_exists("weight", $errors) && ($subscriptor->id == (int)substr($errors['weight'], 48) ))) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                                 <tr class="edit">
                                     <td class="check">
                                         <p><input type='checkbox' name='<?= $subscriptor->id ?>' value='' checked></p>
@@ -77,7 +77,7 @@
                 <p class="errorMessage"><?php echo $errors['whom']; ?></p>
             <?php } ?>
             <?php if (array_key_exists('weight', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['weight']; ?></p>
+                <p class="errorMessage"><?php echo substr($errors['weight'], 0, 48); ?></p>
             <?php } ?>
         
 
