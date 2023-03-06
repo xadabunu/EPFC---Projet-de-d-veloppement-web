@@ -21,9 +21,13 @@
             <label for="title">Title :</label>
             <input id="title" name="title" type="text" size="16" <?php if (array_key_exists('empty_title', $errors) || array_key_exists('length', $errors)) { ?>class="errorInput" <?php } ?>>
 
+            <?php if (array_key_exists('duplicate_title', $errors)) { ?>
+                    <p class="errorMessage"><?php echo $errors['duplicate_title']; ?></p>
+            <?php } ?>
             <?php if (array_key_exists('empty_title', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['empty_title']; ?></p>
             <?php }
+            
             if (array_key_exists('template_length', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['template_length']; ?></p>
             <?php } ?>
@@ -75,6 +79,7 @@
             <?php if (array_key_exists('weight', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['weight']; ?></p>
             <?php } ?>
+        
 
         </form>
 

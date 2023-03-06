@@ -90,7 +90,6 @@
                     <td class="subscriptor input"><input type="submit" value="&#8635;" formaction="operation/apply_template_add_operation/<?= $tricount->id ?>"></td>
                 </tr>
             </table>
-
             <label>For whom ? <i>(select at leat one)</i></label>
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?>
@@ -111,7 +110,6 @@
                         </li>
                     <?php } ?>
                 </ul>
-
             <?php if (array_key_exists("whom", $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors["whom"]; ?></p>
             <?php } ?>
@@ -120,7 +118,7 @@
             <?php } ?>
             Add a new repartition template
             <table>
-                <tr <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
+                <tr>
                     <td class="check"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
                     <td class="template">Save this template</td>
                     <td><input id="template_title" name="template_title" type="text" placeholder="name"></td>
@@ -130,6 +128,9 @@
                     <?php } ?>
                     <?php if (array_key_exists('template_length', $errors)) { ?>
                         <p class="errorMessage"><?php echo $errors['template_length']; ?></p>
+                    <?php } ?>
+                    <?php if (array_key_exists('duplicate_title', $errors)) { ?>
+                        <p class="errorMessage"><?php echo $errors['duplicate_title']; ?></p>
                     <?php } ?>
                 </tr>
             </table>

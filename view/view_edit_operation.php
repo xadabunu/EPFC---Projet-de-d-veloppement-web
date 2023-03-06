@@ -136,9 +136,11 @@
                     <?php if (array_key_exists('empty_template_title', $errors)) { ?>
                         <p class="errorMessage"><?php echo $errors['empty_template_title']; ?></p>
                     <?php } ?>
-
                     <?php if (array_key_exists('template_length', $errors)) { ?>
                         <p class="errorMessage"><?php echo $errors['template_length']; ?></p>
+                    <?php } ?>
+                    <?php if (array_key_exists('duplicate_title', $errors)) { ?>
+                        <p class="errorMessage"><?php echo $errors['duplicate_title']; ?></p>
                     <?php } ?>
                 </tr>
             </table>
