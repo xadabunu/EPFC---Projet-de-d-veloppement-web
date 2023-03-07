@@ -64,6 +64,16 @@ class Template extends Model
         return $list;
     }
 
+    public function get_template_users(): array
+    {
+        $query = self::execute("SELECT user FROM repartition_template_items WHERE repartition_template = :id", ["id" => $this->id]);
+        $data = $query->fetchAll();
+        $list = [];
+        foreach ($data as $var) {
+            $list[] = $var['user'];
+        }
+        return $list;
+    }
 
 // --------------------------- Validate && Persist ------------------------------------ 
 
