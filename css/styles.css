@@ -1,6 +1,7 @@
 * {
     font-family: Arial, Helvetica, sans-serif;
     outline: none;
+    /* text-overflow: ellipsis; */
 }
 
 button:hover,
@@ -682,6 +683,8 @@ td.check {
     border-right: 2px solid rgb(223, 223, 223);
     background-color: rgb(233, 236, 239);
     width: 8%;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 td.user {

@@ -7,6 +7,26 @@
     <base href="<?= $web_root ?>">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
     <title>Add Operation</title>
+    <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
+    <script>
+        let op_amount, err_amount, lbl_amount, tr_currency;
+
+        function checkAmount() {
+            err_amount.html("");
+            tr_currency.attr("style", "");
+            if (lbl_amount.val() <= 0) {
+                err_amount.append("Amount must be stricly positive");
+                tr_currency.attr("style", "border-color: rgb(220, 53, 69)");
+            }
+        }
+
+        $(function() {
+            op_amount = 0;
+            lbl_amount = $("#amount");
+            err_amount = $("#errAmount");
+            tr_currency = $("#tr_currency");
+        })
+    </script>
 </head>
 
 <body>
@@ -27,8 +47,8 @@
                 <p class="errorMessage"><?php echo $errors['length']; ?></p>
             <?php } ?>
             <table class="edit" id="currency">
-                <tr class="currency"<?php if (array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) { ?>style = "border-color: rgb(220, 53, 69)" <?php } ?>>
-                    <td><input id="Amount" name="amount" type="text" placeholder="Amount" value='<?php if (!is_array($amount)) {
+                <tr class="currency" id="tr_currency"<?php if (array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) { ?>style = "border-color: rgb(220, 53, 69)" <?php } ?>>
+                    <td><input id="amount" name="amount" type="text" placeholder="Amount" onchange="checkAmount();" value='<?php if (!is_array($amount)) {
                                                                                                         echo $amount;
                                                                                                     } else {
                                                                                                         echo '';
@@ -36,9 +56,11 @@
                     <td class="right">EUR</td>
                 </tr>
             </table>
-            <?php if (array_key_exists("amount", $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['amount']; ?></p>
-            <?php }
+            <p class="errorMessage" id="errAmount">
+            <?php if (array_key_exists("amount", $errors)) {
+                echo $errors['amount']; } ?>
+            </p>
+            <?php
             if (array_key_exists("empty_amount", $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['empty_amount']; ?></p>
             <?php } ?>

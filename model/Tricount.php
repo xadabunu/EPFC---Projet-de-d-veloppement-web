@@ -167,7 +167,7 @@ class Tricount extends Model
 
     public function get_operations(): array
     {
-        $query = self::execute("SELECT * FROM operations WHERE tricount = :id ORDER BY created_at DESC", ["id" => $this->id]);
+        $query = self::execute("SELECT * FROM operations WHERE tricount = :id ORDER BY operation_date DESC", ["id" => $this->id]);
         $data = $query->fetchAll();
         $array = [];
         foreach ($data as $op) {
