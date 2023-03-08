@@ -45,6 +45,17 @@ class User extends Model
         }
         return $array;
     }
+    private static function get_user_by_password(string $clear_password): User |false
+    {
+        $hashed_password = Tools::my_hash($clear_password);
+        $query = self::execute("SELECT * FROM users WHERE hashed_password =:hashed_password", ["hashed_password" => $hashed_password]);
+        $data = $query->fetch();
+        if ($query->rowcount() == 0) {
+            return false;
+        } else {
+            return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["iban"], $data["id"]);
+        }
+    }
 
 
 // --------------------------- Validate && Persist // Delete User ------------------------------------ 
@@ -71,12 +82,22 @@ class User extends Model
         return $hash === Tools::my_hash($clear_password);
     }
 
-    public static function validate_unicity(string $email): array
+    public static function validate_email_unicity(string $email): array
     {
         $errors = [];
         $user = self::get_user_by_email($email);
         if ($user) {
             $errors['validity'] = "This email is not available";
+        }
+        return $errors;
+    }
+
+    public static function validate_password_unicity(string $clear_password): array
+    {
+        $errors = [];
+        $user = self::get_user_by_password($clear_password);
+        if ($user){
+            $errors['password_validity'] = "The new password must be different from the old.";
         }
         return $errors;
     }
@@ -120,8 +141,12 @@ class User extends Model
     public static function validate_passwords(string $password, string $password_confirm): array
     {
         $errors = self::validate_password($password);
+        $errors = array_merge(self::validate_password_unicity($password));
         if ($password != $password_confirm) {
             $errors['password_confirm'] = "You have to enter twice the same password.";
+        }
+        else{
+            $errors = array_merge(self::validate_password_unicity($password));
         }
         return $errors;
     }
