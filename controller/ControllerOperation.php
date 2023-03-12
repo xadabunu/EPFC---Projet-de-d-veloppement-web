@@ -6,6 +6,7 @@ require_once "model/Template.php";
 require_once "controller/ControllerTemplates.php";
 require_once "model/RepartitionTemplateItems.php";
 require_once "model/RepartitionTemplates.php";
+require_once "model/Repartitions.php";
 
 class ControllerOperation extends MyController
 {
@@ -206,7 +207,7 @@ class ControllerOperation extends MyController
             $tricount = $operation->tricount;
             $subscriptors = $tricount->get_subscriptors_with_creator();
             $repartition_templates = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id);
-            $list = $operation->get_repartitions();
+            $list = Repartitions::get_repartitions_by_operation_id($operation->id);
 
             foreach($subscriptors as $subscriptor){
                 $userChecked[$subscriptor->id] = array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked';
@@ -349,7 +350,7 @@ class ControllerOperation extends MyController
             $tricount = $operation->tricount;
             $subscriptors = $tricount->get_subscriptors_with_creator();
             $repartition_templates = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id);
-            $list = $operation->get_repartitions();
+            $list = Repartitions::get_repartitions_by_operation_id($operation->id);
 
             foreach($subscriptors as $subscriptor){
                 $userChecked[$subscriptor->id] = 'unchecked';
