@@ -65,6 +65,9 @@ class ControllerTemplates extends MyController
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
             $list = '';
             $errors = [];
+            $userChecked = [];
+            $userWeight = [];
+
             $user = $this->get_user_or_redirect();
             if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
                 $this->redirect();
@@ -73,23 +76,31 @@ class ControllerTemplates extends MyController
                 $this->redirect();
             $subscriptors = $tricount->get_subscriptors_with_creator();
 
+            foreach($subscriptors as $subscriptor){
+                $userChecked[$subscriptor->id] = 'unchecked';
+                $userWeight[$subscriptor->id] = '1';
+            }
+
             if (isset($_POST['title'])) {
                 $title = Tools::sanitize($_POST['title']);
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
 
                 if (count($errors) == 0) {
-                    $template = new Template($title, $tricount);
-                    $errors = $template->validate_template();
+                    $repartition_template = new RepartitionTemplates($title, $tricount);
+                    $errors = $repartition_template->validate_repartition_template();
                     
                     if (count($errors) == 0) {
-                        $template->persist_template();
-                        $template->persist_template_items($template, $list);
+                        $repartition_template->persist_template();
+                        $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template->id);
+                        $repartition_template_items->persist_repartition_template_items($repartition_template, $list);
                         $this->redirect('templates', 'manage_templates', $tricount->id);
                     }
                 }
             }
-            (new View('add_template'))->show(['list'=> $list,'tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors]);
+            (new View('add_template'))->show(['list'=> $list,'tricount' => $tricount, 'subscriptors' => $subscriptors,
+             'errors' => $errors, 'userChecked' => $userChecked, 'userWeight' => $userWeight
+        ]);
         }
         else{
             Tools::abort('Invalid or missing argument.');
@@ -102,6 +113,9 @@ class ControllerTemplates extends MyController
         if (isset($_GET['param1']) && is_numeric($_GET['param1']) && isset($_GET['param2']) && is_numeric($_GET['param2'])){
             $list = '';
             $errors = [];
+            $userChecked = [];
+            $userWeight = [];
+
             if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id())) {
                 $this->redirect();
             }
@@ -118,7 +132,14 @@ class ControllerTemplates extends MyController
             }
             $subscriptors = $tricount->get_subscriptors_with_creator();
             $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template->id);
-            $templateUserAndWeightArray = $repartition_template_items->get_all_repartition_template_user_and_weight();
+
+            $repartition_template_items_choosen = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template->id);
+            $templateUserWeightList = $repartition_template_items_choosen->get_repartition_items();
+
+            foreach($subscriptors as $subscriptor){
+                $userChecked[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? 'checked' : 'unchecked';
+                $userWeight[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? $templateUserWeightList[$subscriptor->id] : '1';
+            }
 
             if (isset($_POST['title'])) {
                 $title = Tools::sanitize($_POST['title']);
@@ -133,7 +154,9 @@ class ControllerTemplates extends MyController
                     $this->redirect('templates', 'manage_templates', $tricount->id);
                 }
             }
-            (new View('edit_template'))->show(['list'=> $list,'tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors, 'template' => $repartition_template, 'templateUserAndWeightArray' => $templateUserAndWeightArray]);
+            (new View('edit_template'))->show(['list'=> $list,'tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors,
+             'template' => $repartition_template, 'userChecked' => $userChecked, 'userWeight' => $userWeight
+            ]);
         }
         else{
             Tools::abort('Invalid or missing argument');

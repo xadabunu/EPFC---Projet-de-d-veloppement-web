@@ -208,10 +208,7 @@ class ControllerOperation extends MyController
             $repartition_templates = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id);
             $list = $operation->get_repartitions();
 
-
             foreach($subscriptors as $subscriptor){
-                $userChecked[$subscriptor->id] = 'checked';
-
                 $userChecked[$subscriptor->id] = array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked';
                 $userWeight[$subscriptor->id] = array_key_exists($subscriptor->id, $list) ? $list[$subscriptor->id] : '1';
             }
@@ -232,10 +229,9 @@ class ControllerOperation extends MyController
                     $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
                     $repartition_template_items_choosen = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template_choosen->id);
                     $templateUserWeightList = $repartition_template_items_choosen->get_repartition_items();
-                    $templateUsers = $repartition_template_items_choosen->get_repartition_template_users();
 
                     foreach($subscriptors as $subscriptor){
-                        $userChecked[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUsers) ? 'checked' : 'unchecked';
+                        $userChecked[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? 'checked' : 'unchecked';
                         $userWeight[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? $templateUserWeightList[$subscriptor->id] : '1';
                     }
                 }
@@ -259,7 +255,7 @@ class ControllerOperation extends MyController
             'operation' => $operation, 'errors' => $errors,
             'subscriptors' => $subscriptors, 'templates' => $repartition_templates, 'list' => $list,
             'titleValue' => $title, 'amountValue' => $amount, 'operation_dateValue' => $operation_date, 'paid_byValue' => $paid_by,
-            'templateChoosen' => $repartition_template_choosen, 'templateUserWeightList' => $templateUserWeightList, 'userChecked' => $userChecked,
+            'templateChoosen' => $repartition_template_choosen, 'userChecked' => $userChecked,
             'userWeight' => $userWeight
         ]);
         }else{
@@ -390,7 +386,7 @@ class ControllerOperation extends MyController
                 'operation' => $operation, 'errors' => $errors,
                 'subscriptors' => $subscriptors, 'templates' => $repartition_templates, 'list' => $list,
                 'titleValue' => $title, 'amountValue' => $amount, 'operation_dateValue' => $operation_date, 'paid_byValue' => $paid_by,
-                'templateChoosen' => $repartition_template_choosen, 'templateUserWeightList' => $templateUserWeightList, 'userChecked' => $userChecked,
+                'templateChoosen' => $repartition_template_choosen, 'userChecked' => $userChecked,
                 'userWeight' => $userWeight
             ]);
         } else

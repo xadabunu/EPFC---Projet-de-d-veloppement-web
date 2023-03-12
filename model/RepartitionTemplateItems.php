@@ -11,6 +11,17 @@ class RepartitionTemplateItems extends Model
     {
     }
 
+    public function get_repartition_template_items(): array
+    {
+        $array = [];
+        $query = self::execute("SELECT * FROM repartition_template_items WHERE repartition_template = :id", ["id" => $this->id]);
+        $data = $query->fetchAll();
+        foreach ($data as $template_item) {
+            $array[] = new RepartitionTemplateItems($template_item["weight"], User::get_user_by_id($template_item->user));
+        }
+        return $array; 
+    }
+
     public function get_repartition_items(): array
     {
         $array = [];
@@ -27,28 +38,6 @@ class RepartitionTemplateItems extends Model
         $query = self::execute("SELECT * FROM repartition_template_items WHERE repartition_template = :id", ["id" => $id]);
         $data = $query->fetch();
         return new RepartitionTemplateItems($data['weight'],User::get_user_by_id($data['user']), $data['repartition_template']);
-    }
-
-    public function get_all_repartition_template_user_and_weight(): array
-    {
-        $query = self::execute("SELECT user, weight FROM repartition_template_items WHERE repartition_template = :id", ["id" => $this->id]);
-        $data = $query->fetchAll();
-        $list = [];
-        foreach ($data as $var) {
-            $list[$var['user']] = $var['weight'];
-        }
-        return $list;
-    }
-
-    public function get_repartition_template_users(): array
-    {
-        $query = self::execute("SELECT user FROM repartition_template_items WHERE repartition_template = :id", ["id" => $this->id]);
-        $data = $query->fetchAll();
-        $list = [];
-        foreach ($data as $var) {
-            $list[] = $var['user'];
-        }
-        return $list;
     }
 
 // --------------------------- Validate && Persist ------------------------------------ 

@@ -8,7 +8,9 @@ class Repartitions extends Model
 {
 
     public function __construct(public int $weight, public Operation $operation, public User $user)
-    {
-        
+    {  
     }
+
+
+    
 }
