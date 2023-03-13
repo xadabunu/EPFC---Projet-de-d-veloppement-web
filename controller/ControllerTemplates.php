@@ -36,7 +36,13 @@ class ControllerTemplates extends MyController
             $repartition_templates = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id);
             foreach ($repartition_templates as $template) {
                 $template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($template->id);
-                $all_templates_items[] = $template_items->get_repartition_items();
+                
+                $templateUserWeightList = [];
+                $array_repartition_template_items = $template_items->get_repartition_template_items();
+                foreach($array_repartition_template_items as $item){
+                    $templateUserWeightList[$item->user->id] =  $item->weight;
+                }
+                $all_templates_items[] = $templateUserWeightList;
             }
             foreach ($all_templates_items as $template_item) {
                 $poids = 0;
@@ -134,7 +140,12 @@ class ControllerTemplates extends MyController
             $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template->id);
 
             $repartition_template_items_choosen = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template->id);
-            $templateUserWeightList = $repartition_template_items_choosen->get_repartition_items();
+
+            $templateUserWeightList = [];
+            $array_repartition_template_items = $repartition_template_items_choosen->get_repartition_template_items();
+            foreach($array_repartition_template_items as $item){
+                $templateUserWeightList[$item->user->id] =  $item->weight;
+            }
 
             foreach($subscriptors as $subscriptor){
                 $userChecked[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? 'checked' : 'unchecked';

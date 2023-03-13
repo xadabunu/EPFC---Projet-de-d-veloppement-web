@@ -94,7 +94,11 @@ class ControllerOperation extends MyController
                 if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
                     $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
                     $repartition_template_items_choosen = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template_choosen->id);
-                    $templateUserWeightList = $repartition_template_items_choosen->get_repartition_items();
+                    $templateUserWeightList = [];
+                    $array_repartition_template_items = $repartition_template_items_choosen->get_repartition_template_items();
+                    foreach($array_repartition_template_items as $item){
+                        $templateUserWeightList[$item->user->id] =  $item->weight;
+                    }
                     $userChecked = [];
                     $userWeight = [];
 
@@ -229,7 +233,11 @@ class ControllerOperation extends MyController
                     $userWeight = [];
                     $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
                     $repartition_template_items_choosen = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template_choosen->id);
-                    $templateUserWeightList = $repartition_template_items_choosen->get_repartition_items();
+                    $templateUserWeightList = [];
+                    $array_repartition_template_items = $repartition_template_items_choosen->get_repartition_template_items();
+                    foreach($array_repartition_template_items as $item){
+                        $templateUserWeightList[$item->user->id] =  $item->weight;
+                    }
 
                     foreach($subscriptors as $subscriptor){
                         $userChecked[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? 'checked' : 'unchecked';
@@ -372,7 +380,11 @@ class ControllerOperation extends MyController
             if (isset($_POST['templates']) && is_numeric($_POST['templates']) ) {
                 $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
                 $repartition_template_items_choosen = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template_choosen->id);
-                $templateUserWeightList = $repartition_template_items_choosen->get_repartition_items();
+                $templateUserWeightList = [];
+                $array_repartition_template_items = $repartition_template_items_choosen->get_repartition_template_items();
+                foreach($array_repartition_template_items as $item){
+                    $templateUserWeightList[$item->user->id] =  $item->weight;
+                }
                 $userChecked = [];
                 $userWeight = [];
 
@@ -437,7 +449,13 @@ class ControllerOperation extends MyController
             if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
                 $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
                 $repartition_template_items_choosen = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template_choosen->id);
-                $templateUserWeightList = $repartition_template_items_choosen->get_repartition_items();
+                
+                $templateUserWeightList = [];
+                $array_repartition_template_items = $repartition_template_items_choosen->get_repartition_template_items();
+                foreach($array_repartition_template_items as $item){
+                    $templateUserWeightList[$item->user->id] =  $item->weight;
+                }
+
                 $userChecked = [];
                 $userWeight = [];
 

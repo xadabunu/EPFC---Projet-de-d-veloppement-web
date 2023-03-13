@@ -3,6 +3,7 @@
 require_once "framework/Model.php";
 require_once "model/Tricount.php";
 require_once "model/Operation.php";
+require_once "model/User.php";
 
 class RepartitionTemplateItems extends Model
 {
@@ -17,20 +18,9 @@ class RepartitionTemplateItems extends Model
         $query = self::execute("SELECT * FROM repartition_template_items WHERE repartition_template = :id", ["id" => $this->id]);
         $data = $query->fetchAll();
         foreach ($data as $template_item) {
-            $array[] = new RepartitionTemplateItems($template_item["weight"], User::get_user_by_id($template_item->user));
+            $array[] = new RepartitionTemplateItems($template_item["weight"], User::get_user_by_id($template_item["user"]));
         }
         return $array; 
-    }
-
-    public function get_repartition_items(): array
-    {
-        $array = [];
-        $query = self::execute("SELECT * FROM repartition_template_items WHERE repartition_template = :id", ["id" => $this->id]);
-        $data = $query->fetchAll();
-        foreach ($data as $template_item) {
-            $array[$template_item["user"]] =  $template_item["weight"];
-        }
-        return $array;
     }
 
     public static function get_repartition_template_items_by_repartition_template_id(int $id): RepartitionTemplateItems
