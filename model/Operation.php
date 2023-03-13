@@ -3,6 +3,7 @@
 require_once "framework/Model.php";
 require_once "model/Tricount.php";
 require_once "model/User.php";
+require_once "model/Repartitions.php";
 
 class Operation extends Model
 {
@@ -22,7 +23,7 @@ class Operation extends Model
 
     public function get_previous(): int | null
     {
-        $query = self::execute("WITH tmp AS (SELECT * FROM operations WHERE tricount = :tricount_id ORDER BY created_at)
+        $query = self::execute("WITH tmp AS (SELECT * FROM operations WHERE tricount = :tricount_id ORDER BY operation_date)
                         select prev_id
                         from ( select id, 
                             lag(id) over (ORDER BY created_at) as prev_id
@@ -35,7 +36,7 @@ class Operation extends Model
 
     public function get_next(): int | null
     {
-        $query = self::execute("WITH tmp AS (SELECT * FROM operations WHERE tricount = :tricount_id ORDER BY created_at)
+        $query = self::execute("WITH tmp AS (SELECT * FROM operations WHERE tricount = :tricount_id ORDER BY operation_date)
                         select next_id
                         from ( select id, 
                             lead(id) over (ORDER BY created_at) as next_id
@@ -108,7 +109,7 @@ class Operation extends Model
 
     public function delete_operation_cascade(): void
     {
-        $this->delete_repartition();
+        Repartitions::delete_repartitions_by_operation_id($this->id);
         $this->delete_operation();
     }
 
@@ -116,12 +117,6 @@ class Operation extends Model
     {
         self::execute("DELETE FROM operations WHERE id= :id ", ["id" => $this->id]);
     }
-
-    private function delete_repartition(): void
-    {
-        self::execute("DELETE FROM repartitions WHERE operation= :id", ["id" => $this->id]);
-    }
-
 
 // --------------------------- Get sur participants && repartition // Persist repartition ------------------------------------ 
 
@@ -135,17 +130,6 @@ class Operation extends Model
             $array[] = new User($user['mail'], $user['hashed_password'], $user['full_name'], $user['role'], $user['iban'], $user['id']);
         }
         return $array;
-    }
-
-    public function get_repartitions(): array
-    {
-        $query = self::execute("SELECT * FROM repartitions WHERE operation = :id", ["id" => $this->id]);
-        $data = $query->fetchAll();
-        $list = [];
-        foreach ($data as $var) {
-            $list[$var['user']] = $var['weight'];
-        }
-        return $list;
     }
 
     public function get_user_amount(int $user_id): float
@@ -167,7 +151,7 @@ class Operation extends Model
 
     public function persist_repartition(Operation $operation, array $list): void
     {
-        $this->delete_repartition();
+        Repartitions::delete_repartitions_by_operation_id($this->id);
         $array = array_keys($list);
         foreach ($array as $id) {
             self::execute("INSERT INTO repartitions(operation, user, weight) VALUES(:operation, :user, :weight)", ['operation' => $operation->id, 'user' => $id, 'weight' => $list[$id]]);

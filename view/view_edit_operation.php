@@ -7,6 +7,26 @@
     <base href="<?= $web_root ?>">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
     <title><?= $titleValue ?> &#11208; Edit</title>
+    <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
+    <script>
+        let op_amount, err_amount, lbl_amount, tr_currency;
+
+        function checkAmount() {
+            err_amount.html("");
+            tr_currency.attr("style", "");
+            if (lbl_amount.val() <= 0) {
+                err_amount.append("Amount must be stricly positive");
+                tr_currency.attr("style", "border-color: rgb(220, 53, 69)");
+            }
+        }
+
+        $(function() {
+            op_amount = <?= $operation->amount ?>;
+            lbl_amount = $("#amount");
+            err_amount = $("#errAmount");
+            tr_currency = $("#tr_currency");
+        })
+    </script>
 </head>
 
 <body>
@@ -29,8 +49,8 @@
                 <p class="errorMessage"><?php echo $errors['length']; ?></p>
             <?php } ?>
             <table class="edit" id="currency">
-                <tr class="currency">
-                    <td><input id="amount" name="amount" type="text" size="16" placeholder="Amount" value="<?php if (!is_array($amountValue)) {
+                <tr class="currency" id="tr_currency">
+                    <td><input id="amount" name="amount" type="text" size="16" placeholder="Amount" onchange="checkAmount();" value="<?php if (!is_array($amountValue)) {
                                                                                                                 echo $amountValue;
                                                                                                             } else {
                                                                                                                 echo $operation->amount;
@@ -38,10 +58,11 @@
                     <td class="right">EUR</td>
                 </tr>
             </table>
-            <?php if (array_key_exists('amount', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['amount']; ?></p>
-            <?php }
-            if (array_key_exists('empty_amount', $errors)) { ?>
+            <p class="errorMessage" id="errAmount">
+                <?php if (array_key_exists('amount', $errors)) {
+                    echo $errors['amount']; } ?>
+            </p>
+            <?php if (array_key_exists('empty_amount', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['empty_amount']; ?></p>
             <?php } ?>
             <label for="operation_date">Date</label>
@@ -102,7 +123,7 @@
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?>
                         <li>
-                            <table class="whom" <?php  if( (array_key_exists("whom", $errors)) || (array_key_exists("weight", $errors) && ($subscriptor->id == (int)substr($errors['weight'], 48) ))) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
+                            <table class="whom" <?php  if((array_key_exists("whom", $errors))) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                                 <tr class="edit">
                                     <td class="check">
                                         <p><input type='checkbox' <?= $userChecked[$subscriptor->id] ?> name='<?= $subscriptor->id ?>' value=''></p>
