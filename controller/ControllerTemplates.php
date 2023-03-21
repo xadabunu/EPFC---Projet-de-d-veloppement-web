@@ -1,9 +1,10 @@
 <?php
 
 require_once "controller/MyController.php";
-require_once "model/Template.php";
 require_once "model/User.php";
 require_once "model/Tricount.php";
+require_once "model/RepartitionTemplateItems.php";
+require_once "model/RepartitionTemplates.php";
 
 class ControllerTemplates extends MyController
 {
@@ -18,7 +19,7 @@ class ControllerTemplates extends MyController
 
     public function manage_templates(): void
     {
-        $templates = [];
+        $repartition_templates = [];
         $tricount = "";
         $all_templates_items = [];
         $all_templates_items_for_view = [];
@@ -32,9 +33,16 @@ class ControllerTemplates extends MyController
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))
                 $this->redirect();
-            $templates = Template::get_templates($tricount->id);
-            foreach ($templates as $template) {
-                $all_templates_items[] = $template->get_repartition_items();
+            $repartition_templates = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id);
+            foreach ($repartition_templates as $template) {
+                $template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($template->id);
+                
+                $templateUserWeightList = [];
+                $array_repartition_template_items = $template_items->get_repartition_template_items();
+                foreach($array_repartition_template_items as $item){
+                    $templateUserWeightList[$item->user->id] =  $item->weight;
+                }
+                $all_templates_items[] = $templateUserWeightList;
             }
             foreach ($all_templates_items as $template_item) {
                 $poids = 0;
@@ -48,7 +56,7 @@ class ControllerTemplates extends MyController
                 $UsernameWeight = [];
                 $all_weight_total[] = $poids;
             }
-            (new View('templates'))->show(['templates' => $templates, 'tricount' => $tricount, 'all_templates_items_for_view' => $all_templates_items_for_view, 'all_weight_total' => $all_weight_total]);
+            (new View('templates'))->show(['templates' => $repartition_templates, 'tricount' => $tricount, 'all_templates_items_for_view' => $all_templates_items_for_view, 'all_weight_total' => $all_weight_total]);
         } else {
             Tools::abort("Invalid or missing argument.");
         }
@@ -63,6 +71,9 @@ class ControllerTemplates extends MyController
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
             $list = '';
             $errors = [];
+            $userChecked = [];
+            $userWeight = [];
+
             $user = $this->get_user_or_redirect();
             if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
                 $this->redirect();
@@ -71,23 +82,31 @@ class ControllerTemplates extends MyController
                 $this->redirect();
             $subscriptors = $tricount->get_subscriptors_with_creator();
 
+            foreach($subscriptors as $subscriptor){
+                $userChecked[$subscriptor->id] = 'unchecked';
+                $userWeight[$subscriptor->id] = '1';
+            }
+
             if (isset($_POST['title'])) {
                 $title = Tools::sanitize($_POST['title']);
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
 
                 if (count($errors) == 0) {
-                    $template = new Template($title, $tricount);
-                    $errors = $template->validate_template();
+                    $repartition_template = new RepartitionTemplates($title, $tricount);
+                    $errors = $repartition_template->validate_repartition_template();
                     
                     if (count($errors) == 0) {
-                        $template->persist_template();
-                        $template->persist_template_items($template, $list);
+                        $repartition_template->persist_template();
+                        $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template->id);
+                        $repartition_template_items->persist_repartition_template_items($repartition_template, $list);
                         $this->redirect('templates', 'manage_templates', $tricount->id);
                     }
                 }
             }
-            (new View('add_template'))->show(['list'=> $list,'tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors]);
+            (new View('add_template'))->show(['list'=> $list,'tricount' => $tricount, 'subscriptors' => $subscriptors,
+             'errors' => $errors, 'userChecked' => $userChecked, 'userWeight' => $userWeight
+        ]);
         }
         else{
             Tools::abort('Invalid or missing argument.');
@@ -100,6 +119,9 @@ class ControllerTemplates extends MyController
         if (isset($_GET['param1']) && is_numeric($_GET['param1']) && isset($_GET['param2']) && is_numeric($_GET['param2'])){
             $list = '';
             $errors = [];
+            $userChecked = [];
+            $userWeight = [];
+
             if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id())) {
                 $this->redirect();
             }
@@ -107,36 +129,50 @@ class ControllerTemplates extends MyController
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))
                 $this->redirect();
-            if (!in_array($_GET['param2'], Template::get_all_template_ids())) {
+            if (!in_array($_GET['param2'], RepartitionTemplates::get_all_template_ids())) {
                 $this->redirect();
             }
-            $template = Template::get_template_by_template_id($_GET["param2"]);
-            if ($template->tricount->id != $_GET['param1']) {
+            $repartition_template = RepartitionTemplates::get_repartition_template_by_id($_GET["param2"]);
+            if ($repartition_template->tricount->id != $_GET['param1']) {
                 $this->redirect();
             }
             $subscriptors = $tricount->get_subscriptors_with_creator();
-            $templateUserAndWeightArray = $template->get_template_user_and_weight();
+            $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template->id);
+
+            $repartition_template_items_choosen = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template->id);
+
+            $templateUserWeightList = [];
+            $array_repartition_template_items = $repartition_template_items_choosen->get_repartition_template_items();
+            foreach($array_repartition_template_items as $item){
+                $templateUserWeightList[$item->user->id] =  $item->weight;
+            }
+
+            foreach($subscriptors as $subscriptor){
+                $userChecked[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? 'checked' : 'unchecked';
+                $userWeight[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? $templateUserWeightList[$subscriptor->id] : '1';
+            }
 
             if (isset($_POST['title'])) {
                 $title = Tools::sanitize($_POST['title']);
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
-                $template->title = $title;
-                $errors = array_merge($errors, $template->validate_template());
+                $repartition_template->title = $title;
+                $errors = array_merge($errors, $repartition_template->validate_repartition_template());
 
                 if (count($errors) == 0) {
-                    $template->persist_template_items($template, $list);
-                    $template->persist_template();
+                    $repartition_template_items->persist_repartition_template_items($repartition_template, $list);
+                    $repartition_template->persist_template();
                     $this->redirect('templates', 'manage_templates', $tricount->id);
                 }
             }
-            (new View('edit_template'))->show(['list'=> $list,'tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors, 'template' => $template, 'templateUserAndWeightArray' => $templateUserAndWeightArray]);
+            (new View('edit_template'))->show(['list'=> $list,'tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors,
+             'template' => $repartition_template, 'userChecked' => $userChecked, 'userWeight' => $userWeight
+            ]);
         }
         else{
             Tools::abort('Invalid or missing argument');
         }
     }    
-
 
     private function is_valid_fields(array $array, Tricount $tricount): array
     {
@@ -202,21 +238,21 @@ class ControllerTemplates extends MyController
     public function delete_template(): void
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1']) && isset($_GET['param2']) && is_numeric($_GET['param2'])) {
-            if (!in_array($_GET['param1'], Template::get_all_template_ids())) {
+            if (!in_array($_GET['param1'], RepartitionTemplates::get_all_template_ids())) {
                 $this->redirect();
             }
             if (!in_array($_GET['param2'], Tricount::get_all_tricounts_id())) {
                 $this->redirect();  
-            }      
-            $template = Template::get_template_by_template_id($_GET["param1"]);
+            }
+            $repartition_template = RepartitionTemplates::get_repartition_template_by_id($_GET["param1"]);      
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param2"]);
-            if($template->tricount->id != $tricount->id) {
+            if($repartition_template->tricount->id != $tricount->id) {
                 $this->redirect();
             }
             if (!$tricount->has_access($user))
                 $this->redirect();
-            (new View('delete_template'))->show(['template' => $template, 'tricount' => $tricount]);
+            (new View('delete_template'))->show(['template' => $repartition_template, 'tricount' => $tricount]);
         } else {
             Tools::abort("Invalid or missing argument");
         }
@@ -225,14 +261,15 @@ class ControllerTemplates extends MyController
     public function confirm_delete_template(): void
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
-            $template = Template::get_template_by_template_id($_GET["param1"]);
+            $repartition_template = RepartitionTemplates::get_repartition_template_by_id($_GET["param1"]);      
             $user = $this->get_user_or_redirect();
-            $tricount = $template->tricount;
+            $tricount = $repartition_template->tricount;
             if (!$tricount->has_access($user))
                 $this->redirect();
-            $template->delete_template_items();
-            $template->delete_template();
-            $this->redirect('templates', 'manage_templates', $template->tricount->id);
+            $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template->id);
+            $repartition_template_items->delete_repartition_template_items();
+            $repartition_template->delete_repartition_template();
+            $this->redirect('templates', 'manage_templates', $repartition_template->tricount->id);
         } else {
             Tools::abort("Invalid or missing argument");
         }

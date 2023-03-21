@@ -4,6 +4,9 @@ require_once "controller/MyController.php";
 require_once "model/User.php";
 require_once "model/Template.php";
 require_once "controller/ControllerTemplates.php";
+require_once "model/RepartitionTemplateItems.php";
+require_once "model/RepartitionTemplates.php";
+require_once "model/Repartitions.php";
 
 class ControllerOperation extends MyController
 {
@@ -57,13 +60,13 @@ class ControllerOperation extends MyController
                 $this->redirect();
             $operation = '';
             $subscriptors = $tricount->get_subscriptors_with_creator();
-            $templates = Template::get_templates($tricount->id);
+            $repartition_template = RepartitionTemplates::get_repartition_template_by_id($tricount->id);
             $errors = [];
             $title = [];
             $amount = [];
             $operation_date = [];
             $initiator = [];
-            $templateChoosen = [];
+            $repartition_template_choosen = [];
             $userChecked = [];
             $userWeight = [];
             $templateUserWeightList = '';
@@ -89,14 +92,19 @@ class ControllerOperation extends MyController
                 $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
 
                 if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
-                    $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
-                    $templateUserWeightList = $templateChoosen->get_repartition_items();
+                    $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
+                    $repartition_template_items_choosen = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template_choosen->id);
+                    $templateUserWeightList = [];
+                    $array_repartition_template_items = $repartition_template_items_choosen->get_repartition_template_items();
+                    foreach($array_repartition_template_items as $item){
+                        $templateUserWeightList[$item->user->id] =  $item->weight;
+                    }
                     $userChecked = [];
                     $userWeight = [];
 
                     foreach($subscriptors as $subscriptor){
-                        array_key_exists($subscriptor->id, $templateUserWeightList) ? $userChecked[$subscriptor->id] = 'checked' : $userChecked[$subscriptor->id] = 'unchecked';
-                        array_key_exists($subscriptor->id, $templateUserWeightList) ? $userWeight[$subscriptor->id] = $templateUserWeightList[$subscriptor->id] : $userWeight[$subscriptor->id] = '1';
+                        $userChecked[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? 'checked' : 'unchecked';
+                        $userWeight[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? $templateUserWeightList[$subscriptor->id] : '1';
                     }
                 }
 
@@ -105,13 +113,13 @@ class ControllerOperation extends MyController
                     $errors = $operation->validate_operations();
 
                     if (isset($_POST["save_template_checkbox"])) {
-                        $template = new Template(Tools::sanitize($_POST["template_title"]), $tricount);
-                        $errors = array_merge($errors, $template->validate_template());
+                        $repartition_template = new RepartitionTemplates(Tools::sanitize($_POST["template_title"]), $tricount);
+                        $errors = array_merge($errors, $repartition_template->validate_repartition_template());
                     }
 
                     if (count($errors) == 0) {
                         if (isset($_POST["save_template_checkbox"])) {
-                            $template->add_template_from_operation($list, $template);
+                            $repartition_template->add_repartition_template_from_operation($list, $repartition_template);
                         }
 
                         $operation->persist_operation();
@@ -122,9 +130,9 @@ class ControllerOperation extends MyController
             }
             (new View("add_operation"))->show([
                 'tricount' => $tricount, 'operation' => $operation, 'subscriptors' => $subscriptors,
-                'templates' => $templates, 'errors' => $errors, 'title' => $title, 'amount' => $amount,
+                'templates' => $repartition_template, 'errors' => $errors, 'title' => $title, 'amount' => $amount,
                 'operation_date' => $operation_date, 'initiator' => $initiator, 'list'=>$list,
-                'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList, 
+                'templateChoosen' => $repartition_template_choosen, 'templateUserWeightList' => $templateUserWeightList, 
                 'userChecked' => $userChecked, 'userWeight' => $userWeight
             ]);
         } else
@@ -162,7 +170,7 @@ class ControllerOperation extends MyController
             if(substr($key, 0, 6) == "weight"){
                 if(in_array(substr($key, 7), $id)){
                     if(!is_numeric($item) || intval($item) < 1){
-                        $errors['weight'] = "Weight must be a strictly positive numeric value";
+                        $errors['weight'] = "Weight must be a strictly positive numeric value" . substr($key, 7);
                     }
                 }
             }
@@ -180,7 +188,7 @@ class ControllerOperation extends MyController
         $subscriptors = [];
         $userChecked = [];
         $userWeight = [];
-        $templates = '';
+        $repartition_templates = '';
         $operation = '';
         $errors = [];
         $list = [];
@@ -188,7 +196,7 @@ class ControllerOperation extends MyController
         $amount = [];
         $operation_date = [];
         $paid_by = [];
-        $templateChoosen = [];
+        $repartition_template_choosen = [];
         $templateUserWeightList = '';
 
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
@@ -202,15 +210,12 @@ class ControllerOperation extends MyController
                 $this->redirect();
             $tricount = $operation->tricount;
             $subscriptors = $tricount->get_subscriptors_with_creator();
-            $templates = Template::get_templates($tricount->id);
-            $list = $operation->get_repartitions();
-
+            $repartition_templates = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id);
+            $list = Repartitions::get_repartitions_by_operation_id($operation->id);
 
             foreach($subscriptors as $subscriptor){
-                $userChecked[$subscriptor->id] = 'checked';
-
-                array_key_exists($subscriptor->id, $list) ? $userChecked[$subscriptor->id] = 'checked' : $userChecked[$subscriptor->id] = 'unchecked';
-                array_key_exists($subscriptor->id, $list) ? $userWeight[$subscriptor->id] = $list[$subscriptor->id] : $userWeight[$subscriptor->id] = '1';
+                $userChecked[$subscriptor->id] = array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked';
+                $userWeight[$subscriptor->id] = array_key_exists($subscriptor->id, $list) ? $list[$subscriptor->id] : '1';
             }
 
 
@@ -226,24 +231,28 @@ class ControllerOperation extends MyController
                 if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
                     $userChecked = [];
                     $userWeight = [];
-                    $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
-                    $templateUserWeightList = $templateChoosen->get_repartition_items();
-                    $templateUsers = $templateChoosen->get_template_users();
+                    $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
+                    $repartition_template_items_choosen = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template_choosen->id);
+                    $templateUserWeightList = [];
+                    $array_repartition_template_items = $repartition_template_items_choosen->get_repartition_template_items();
+                    foreach($array_repartition_template_items as $item){
+                        $templateUserWeightList[$item->user->id] =  $item->weight;
+                    }
 
                     foreach($subscriptors as $subscriptor){
-                        array_key_exists($subscriptor->id, $templateUsers) ? $userChecked[$subscriptor->id] = 'checked' : $userChecked[$subscriptor->id] = 'unchecked';
-                        array_key_exists($subscriptor->id, $templateUserWeightList) ? $userWeight[$subscriptor->id] = $templateUserWeightList[$subscriptor->id] : $userWeight[$subscriptor->id] = '1';
+                        $userChecked[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? 'checked' : 'unchecked';
+                        $userWeight[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? $templateUserWeightList[$subscriptor->id] : '1';
                     }
                 }
 
                 if (isset($_POST["save_template_checkbox"])) {
-                    $template = new Template(Tools::sanitize($_POST["template_title"]), $tricount);
-                    $errors = array_merge($errors, $template->validate_template());
+                    $repartition_template = new RepartitionTemplates(Tools::sanitize($_POST["template_title"]), $tricount);
+                    $errors = array_merge($errors, $repartition_template->validate_repartition_template());
                 }
 
                 if (count($errors) == 0) {
                     if (isset($_POST["save_template_checkbox"])) {
-                        $template->add_template_from_operation($list, $template);
+                        $repartition_template->add_repartition_template_from_operation($list, $repartition_template);
                     }
 
                     $operation->persist_repartition($operation, $list);
@@ -253,9 +262,9 @@ class ControllerOperation extends MyController
             }
         (new View('edit_operation'))->show([
             'operation' => $operation, 'errors' => $errors,
-            'subscriptors' => $subscriptors, 'templates' => $templates, 'list' => $list,
+            'subscriptors' => $subscriptors, 'templates' => $repartition_templates, 'list' => $list,
             'titleValue' => $title, 'amountValue' => $amount, 'operation_dateValue' => $operation_date, 'paid_byValue' => $paid_by,
-            'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList, 'userChecked' => $userChecked,
+            'templateChoosen' => $repartition_template_choosen, 'userChecked' => $userChecked,
             'userWeight' => $userWeight
         ]);
         }else{
@@ -326,7 +335,7 @@ class ControllerOperation extends MyController
     public function apply_template_edit_operation(): void
     {
         $subscriptors = [];
-        $templates = '';
+        $repartition_templates = '';
         $operation = '';
         $errors = [];
         $list = [];
@@ -334,7 +343,7 @@ class ControllerOperation extends MyController
         $amount = [];
         $operation_date = [];
         $paid_by = [];
-        $templateChoosen = [];
+        $repartition_template_choosen = [];
         $userChecked = [];
         $userWeight = [];
         $templateUserWeightList = '';
@@ -348,8 +357,8 @@ class ControllerOperation extends MyController
                 $this->redirect();
             $tricount = $operation->tricount;
             $subscriptors = $tricount->get_subscriptors_with_creator();
-            $templates = Template::get_templates($tricount->id);
-            $list = $operation->get_repartitions();
+            $repartition_templates = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id);
+            $list = Repartitions::get_repartitions_by_operation_id($operation->id);
 
             foreach($subscriptors as $subscriptor){
                 $userChecked[$subscriptor->id] = 'unchecked';
@@ -369,23 +378,28 @@ class ControllerOperation extends MyController
                 $paid_by = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
             }
             if (isset($_POST['templates']) && is_numeric($_POST['templates']) ) {
-                $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
-                $templateUserWeightList = $templateChoosen->get_repartition_items();
+                $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
+                $repartition_template_items_choosen = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template_choosen->id);
+                $templateUserWeightList = [];
+                $array_repartition_template_items = $repartition_template_items_choosen->get_repartition_template_items();
+                foreach($array_repartition_template_items as $item){
+                    $templateUserWeightList[$item->user->id] =  $item->weight;
+                }
                 $userChecked = [];
                 $userWeight = [];
 
                 foreach($subscriptors as $subscriptor){
-                    array_key_exists($subscriptor->id, $templateUserWeightList) ? $userChecked[$subscriptor->id] = 'checked' : $userChecked[$subscriptor->id] = 'unchecked';
-                    array_key_exists($subscriptor->id, $templateUserWeightList) ? $userWeight[$subscriptor->id] = $templateUserWeightList[$subscriptor->id] : $userWeight[$subscriptor->id] = '1';
+                    $userChecked[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? 'checked' : 'unchecked';
+                    $userWeight[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? $templateUserWeightList[$subscriptor->id] : '1';
                 }
 
             } 
 
             (new View('edit_operation'))->show([
                 'operation' => $operation, 'errors' => $errors,
-                'subscriptors' => $subscriptors, 'templates' => $templates, 'list' => $list,
+                'subscriptors' => $subscriptors, 'templates' => $repartition_templates, 'list' => $list,
                 'titleValue' => $title, 'amountValue' => $amount, 'operation_dateValue' => $operation_date, 'paid_byValue' => $paid_by,
-                'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList, 'userChecked' => $userChecked,
+                'templateChoosen' => $repartition_template_choosen, 'userChecked' => $userChecked,
                 'userWeight' => $userWeight
             ]);
         } else
@@ -403,13 +417,13 @@ class ControllerOperation extends MyController
                 $this->redirect();
             $operation = '';
             $subscriptors = $tricount->get_subscriptors_with_creator();
-            $templates = Template::get_templates($tricount->id);
+            $repartition_templates = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id);
             $errors = [];
             $title = [];
             $amount = [];
             $operation_date = [];
             $initiator = [];
-            $templateChoosen = [];
+            $repartition_template_choosen = [];
             $userChecked = [];
             $userWeight = [];
             $templateUserWeightList = '';
@@ -433,22 +447,28 @@ class ControllerOperation extends MyController
                 $initiator = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
             }
             if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
-                $templateChoosen = Template::get_template_by_template_id(Tools::sanitize($_POST['templates']));
-                $templateUserWeightList = $templateChoosen->get_repartition_items();
+                $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
+                $repartition_template_items_choosen = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template_choosen->id);
+                
+                $templateUserWeightList = [];
+                $array_repartition_template_items = $repartition_template_items_choosen->get_repartition_template_items();
+                foreach($array_repartition_template_items as $item){
+                    $templateUserWeightList[$item->user->id] =  $item->weight;
+                }
 
                 $userChecked = [];
                 $userWeight = [];
 
                 foreach($subscriptors as $subscriptor){
-                    array_key_exists($subscriptor->id, $templateUserWeightList) ? $userChecked[$subscriptor->id] = 'checked' : $userChecked[$subscriptor->id] = 'unchecked';
-                    array_key_exists($subscriptor->id, $templateUserWeightList) ? $userWeight[$subscriptor->id] = $templateUserWeightList[$subscriptor->id] : $userWeight[$subscriptor->id] = '1';
+                    $userChecked[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? 'checked' : 'unchecked';
+                    $userWeight[$subscriptor->id] = array_key_exists($subscriptor->id, $templateUserWeightList) ? $templateUserWeightList[$subscriptor->id] : '1';
                 }
             }
             (new View("add_operation"))->show([
                 'tricount' => $tricount, 'operation' => $operation, 'subscriptors' => $subscriptors,
-                'templates' => $templates, 'errors' => $errors, 'title' => $title, 'amount' => $amount,
+                'templates' => $repartition_templates, 'errors' => $errors, 'title' => $title, 'amount' => $amount,
                 'operation_date' => $operation_date, 'initiator' => $initiator, 'list'=>$list,
-                'templateChoosen' => $templateChoosen, 'templateUserWeightList' => $templateUserWeightList,
+                'templateChoosen' => $repartition_template_choosen, 'templateUserWeightList' => $templateUserWeightList,
                 'userChecked' => $userChecked, 'userWeight' => $userWeight
             ]);
         } else

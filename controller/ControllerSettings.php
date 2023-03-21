@@ -33,7 +33,7 @@ class ControllerSettings extends MyController
             $tmpUser = new User(Tools::sanitize($_POST['email']), $user->hashed_password, Tools::sanitize($_POST['full_name']), $user->role, Tools::sanitize($_POST['iban']));
             $errors = array_merge($errors, $tmpUser->validate());
             if($tmpUser->email != $user->email){
-                $errors = array_merge($errors, User::validate_unicity($tmpUser->email));
+                $errors = array_merge($errors, User::validate_email_unicity($tmpUser->email));
             }
             if (count($errors) == 0) {
                 $user->email = Tools::sanitize($_POST['email']);

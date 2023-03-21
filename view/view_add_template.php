@@ -21,60 +21,43 @@
             <label for="title">Title :</label>
             <input id="title" name="title" type="text" size="16" <?php if (array_key_exists('empty_title', $errors) || array_key_exists('length', $errors)) { ?>class="errorInput" <?php } ?>>
 
+            <?php if (array_key_exists('duplicate_title', $errors)) { ?>
+                    <p class="errorMessage"><?php echo $errors['duplicate_title']; ?></p>
+            <?php } ?>
             <?php if (array_key_exists('empty_title', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['empty_title']; ?></p>
             <?php }
+            
             if (array_key_exists('template_length', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['template_length']; ?></p>
             <?php } ?>
             <label>Template items :</label>
-            <?php if (count($errors) != 0) { ?>
                 <ul>
-                    <?php foreach ($subscriptors as $subscriptor) { ?> <!-- Cas si il y'a des erreurs et que la page s'est donc réaffichée  --> 
+                    <?php foreach ($subscriptors as $subscriptor) { ?>
                         <li>
-                            <table class="whom">
+                            <table class="whom" <?php if (array_key_exists('whom', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                                 <tr class="edit">
                                     <td class="check">
-                                        <p><input type='checkbox' <?php if (array_key_exists($subscriptor->id, $list)) echo "checked" ?> name='<?= $subscriptor->id ?>' value=''></p>
+                                        <p><input type='checkbox' <?= $userChecked[$subscriptor->id] ?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight">
-                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php if (array_key_exists($subscriptor->id, $list)) echo $list[$subscriptor->id]; else{ echo 1;} ?>'>
+                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?= $userWeight[$subscriptor->id] ?>'>
                                     </td>
                                 </tr>
                             </table>
                         </li>
                     <?php } ?>
                 </ul>
-            <?php }  else { ?>
-                <ul>
-                    <?php foreach ($subscriptors as $subscriptor) { ?> <!-- Cas par défaut on affiche tout le monde checked avec un poids à 1 -->
-                        <li>
-                            <table class="whom">
-                                <tr class="edit">
-                                    <td class="check">
-                                        <p><input type='checkbox' name='<?= $subscriptor->id ?>' value='' checked></p>
-                                    </td>
-                                    <td class="user">
-                                    <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
-                                    </td>
-                                    <td class="weight">
-                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='1'>
-                                    </td>
-                                </tr>
-                            </table>
-                        </li>
-                    <?php } ?>
-                </ul>
-            <?php } ?>
             <?php if (array_key_exists('whom', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['whom']; ?></p>
             <?php } ?>
             <?php if (array_key_exists('weight', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['weight']; ?></p>
+                <p class="errorMessage"><?php echo substr($errors['weight'], 0, 48); ?></p>
             <?php } ?>
+        
 
         </form>
 

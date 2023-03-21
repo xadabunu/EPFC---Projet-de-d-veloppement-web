@@ -75,6 +75,13 @@ class Template extends Model
         return $list;
     }
 
+    public static function get_template_by_title(string $title): Template | false
+    {
+        $query = self::execute("SELECT * FROM repartition_templates WHERE title = :title", ["title" => $title]);
+        $data = $query->fetch();
+        return new Template($data['title'], Tricount::get_tricount_by_id($data['tricount']), $data['id']);
+    }
+
 // --------------------------- Validate && Persist ------------------------------------ 
 
 
@@ -83,6 +90,10 @@ class Template extends Model
         $errors = [];
         if (strlen($this->title) < 3 || strlen($this->title) > 256) {
             $errors['template_length'] = "Title length must be between 3 and 256.";
+        }
+        $template = self::get_template_by_title($this->title);
+        if($template){
+            $errors['duplicate_title'] = "Title already exists in this tricount.";
         }
         return $errors;
     }

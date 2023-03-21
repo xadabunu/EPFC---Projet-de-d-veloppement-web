@@ -176,6 +176,23 @@ class Tricount extends Model
         return $array;
     }
 
+    public function get_operation_as_json() : string
+    {
+        $operations = $this->get_operations();
+        $table = [];
+        foreach ($operations as $operation) {
+            $row = [];
+            $row ["id"] = $operation->id;
+            $row ["title"] = $operation->title;
+            $row ["amount"] = $operation->amount;
+            $row ["operation_date"] = $operation->operation_date;
+            $row ["created_at"] = $operation->created_at;
+            $row ["initiator"] = $operation->initiator->full_name;
+            $table[] = $row;  
+        }
+        return json_encode($table);
+    }
+
 
 // --------------------------- Persist // Delete Subs ------------------------------------ 
 

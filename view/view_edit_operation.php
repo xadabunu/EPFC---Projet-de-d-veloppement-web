@@ -137,7 +137,7 @@
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?>
                         <li>
-                            <table class="whom" id="for_whom">
+                            <table class="whom" id="for_whom" <?php  if((array_key_exists("whom", $errors))) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                                 <tr class="edit" onchange="checkWeight(this);">
                                     <td class="check">
                                         <p><input type='checkbox' <?= $userChecked[$subscriptor->id] ?> name='<?= $subscriptor->id ?>' value=''></p>
@@ -163,11 +163,11 @@
                 <p class="errorMessage"><?php echo $errors['whom']; ?></p>
             <?php } ?>
             <?php if (array_key_exists('weight', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['weight']; ?></p>
+                <p class="errorMessage"><?php echo substr($errors['weight'], 0, 48); ?></p>
             <?php } ?>
 
             Add a new repartition template
-            <table>
+            <table <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                 <tr>
                     <td class="check"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
                     <td class="template">Save this template</td>
@@ -176,9 +176,11 @@
                     <?php if (array_key_exists('empty_template_title', $errors)) { ?>
                         <p class="errorMessage"><?php echo $errors['empty_template_title']; ?></p>
                     <?php } ?>
-
                     <?php if (array_key_exists('template_length', $errors)) { ?>
                         <p class="errorMessage"><?php echo $errors['template_length']; ?></p>
+                    <?php } ?>
+                    <?php if (array_key_exists('duplicate_title', $errors)) { ?>
+                        <p class="errorMessage"><?php echo $errors['duplicate_title']; ?></p>
                     <?php } ?>
                 </tr>
             </table>
