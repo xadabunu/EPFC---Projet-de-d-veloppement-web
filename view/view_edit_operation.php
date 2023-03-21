@@ -147,7 +147,7 @@
                                     </td>
                                     <td class="weight" id="td_amount">
                                         <p>Amount</p>
-                                        <div>xx €</div>
+                                        <div><?= round($operation->get_user_amount($subscriptor->id), 2) ?> €</div>
                                     </td>
                                     <td class="weight">
                                         <p>Weight</p>
