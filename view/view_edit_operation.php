@@ -131,6 +131,10 @@
                                     <td class="user">
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
                                     </td>
+                                    <td class="weight" id="td_amount">
+                                        <p>Amount</p>
+                                        <div>xx €</div>
+                                    </td>
                                     <td class="weight">
                                         <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?= $userWeight[$subscriptor->id] ?>'>
                                     </td>
