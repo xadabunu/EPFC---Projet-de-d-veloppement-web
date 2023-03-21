@@ -28,7 +28,7 @@
             let html = "";
             for (let op of operations) {
                 html += "<tr>";
-                html += "<td>" + "<p><b>" + op.title + "</b></p>" + "<p>" + "Paid by " + op.initiator + "</p>" + "</td>";
+                html += "<td><p><b><a href = 'operation/details/"+ op.id + "'> " + op.title + "</b></p>" + "<p>" + "Paid by " + op.initiator + "</p>" + "</td>";
                 html += "<td class = right>" + "<p><b>" + op.amount + "€" + "</b></p>" + "<p>" + op.operation_date + "</td>";
                 html += "</tr>"
             }
