@@ -148,7 +148,7 @@
             <?php } ?>
 
             Add a new repartition template
-            <table <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>>
+            <table <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                 <tr>
                     <td class="check"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
                     <td class="template">Save this template</td>
