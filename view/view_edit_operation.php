@@ -9,15 +9,28 @@
     <title><?= $titleValue ?> &#11208; Edit</title>
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
     <script>
-        let op_amount, err_amount, lbl_amount, tr_currency;
+        let op_amount, err_amount, lbl_amount, tr_currency, for_whom_table;
 
         function checkAmount() {
             err_amount.html("");
             tr_currency.attr("style", "");
+            console.log(lbl_amount.val());
             if (lbl_amount.val() <= 0) {
                 err_amount.append("Amount must be stricly positive");
-                tr_currency.attr("style", "border-color: rgb(220, 53, 69)");
+                // tr_currency.attr("style", "border-color: rgb(220, 53, 69)");
+                tr_currency.css("border-color", "rgb(220, 53, 69)");
             }
+        }
+
+        function checkWeight(e) {
+            var f = $(e).children("#whom_weight");
+            var g = $(e).children("#check");
+            console.log(e);
+            console.log($(f).parent);
+            console.log(g);
+            $(e).children("check").prop("checked", false);
+            console.log(f.val());
+            console.log("done");
         }
 
         $(function() {
@@ -25,6 +38,7 @@
             lbl_amount = $("#amount");
             err_amount = $("#errAmount");
             tr_currency = $("#tr_currency");
+            for_whom_table = $("#for_whom");
         })
     </script>
 </head>
@@ -123,8 +137,8 @@
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?>
                         <li>
-                            <table class="whom">
-                                <tr class="edit">
+                            <table class="whom" id="for_whom">
+                                <tr class="edit" onchange="checkWeight(this);">
                                     <td class="check">
                                         <p><input type='checkbox' <?= $userChecked[$subscriptor->id] ?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
@@ -136,7 +150,8 @@
                                         <div>xx €</div>
                                     </td>
                                     <td class="weight">
-                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?= $userWeight[$subscriptor->id] ?>'>
+                                        <p>Weight</p>
+                                        <input type='text' id="whom_weight" name='weight_<?= $subscriptor->id ?>' value='<?= $userWeight[$subscriptor->id] ?>'>
                                     </td>
                                 </tr>
                             </table>
