@@ -2,7 +2,6 @@
 
 require_once "controller/MyController.php";
 require_once "model/User.php";
-require_once "model/Template.php";
 require_once "controller/ControllerTemplates.php";
 require_once "model/RepartitionTemplateItems.php";
 require_once "model/RepartitionTemplates.php";
@@ -170,7 +169,7 @@ class ControllerOperation extends MyController
             if(substr($key, 0, 6) == "weight"){
                 if(in_array(substr($key, 7), $id)){
                     if(!is_numeric($item) || intval($item) < 1){
-                        $errors['weight'] = "Weight must be a strictly positive numeric value" . substr($key, 7);
+                        $errors['weight'] = "Weight must be a strictly positive numeric value";
                     }
                 }
             }

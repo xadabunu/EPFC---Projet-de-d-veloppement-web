@@ -2,7 +2,6 @@
 require_once 'framework/View.php';
 require_once 'framework/Controller.php';
 require_once 'model/User.php';
-require_once "model/User.php";
 require_once "controller/MyController.php";
 require_once "framework/Tools.php";
 
@@ -59,7 +58,7 @@ class ControllerMain extends MyController
             $password = Tools::sanitize($_POST['password']);
             $password_confirm = Tools::sanitize($_POST['password_confirm']);
             $user = new User($email, Tools::my_hash($password), $full_name, $role, $iban);
-            $errors = User::validate_unicity($email);
+            $errors = User::validate_email_unicity($email);
             $errors = array_merge($errors, $user->validate());
             $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
             if (count($errors) == 0) {

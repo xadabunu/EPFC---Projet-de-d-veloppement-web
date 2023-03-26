@@ -3,6 +3,7 @@
 require_once "framework/Model.php";
 require_once "model/Tricount.php";
 
+
 class User extends Model
 {
 

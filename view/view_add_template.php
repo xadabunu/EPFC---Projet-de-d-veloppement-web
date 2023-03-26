@@ -51,11 +51,18 @@
                         </li>
                     <?php } ?>
                 </ul>
+
+
+
+
+
+
+                
             <?php if (array_key_exists('whom', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['whom']; ?></p>
             <?php } ?>
             <?php if (array_key_exists('weight', $errors)) { ?>
-                <p class="errorMessage"><?php echo substr($errors['weight'], 0, 48); ?></p>
+                <p class="errorMessage"><?php echo $errors['weight']; ?></p>
             <?php } ?>
         
 
