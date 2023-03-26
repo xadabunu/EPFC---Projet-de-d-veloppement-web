@@ -31,33 +31,27 @@
             if (array_key_exists('template_length', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['template_length']; ?></p>
             <?php } ?>
-            <label>Template items :</label>
+                <label>Template items :</label>
                 <ul>
-                    <?php foreach ($subscriptors as $subscriptor) { ?>
+                    <?php foreach ($subscriptors as $subscriptor){ 
+                     ?>
                         <li>
-                            <table class="whom" <?php if (array_key_exists('whom', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
+                            <table class="whom" <?php  if( (array_key_exists("whom", $errors))  ||  (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]) )  ) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                                 <tr class="edit">
                                     <td class="check">
-                                        <p><input type='checkbox' <?= $userChecked[$subscriptor->id] ?> name='<?= $subscriptor->id ?>' value=''></p>
+                                        <p><input type='checkbox' <?php echo empty($list) ? 'checked' : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked'); ?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight">
-                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?= $userWeight[$subscriptor->id] ?>'>
-                                    </td>
+                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($list) ? ('1') : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
+                                    </td> 
                                 </tr>
                             </table>
                         </li>
                     <?php } ?>
                 </ul>
-
-
-
-
-
-
-                
             <?php if (array_key_exists('whom', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['whom']; ?></p>
             <?php } ?>

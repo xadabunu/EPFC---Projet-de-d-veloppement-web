@@ -53,7 +53,7 @@
                                     </td>
                                     <td class="weight">
                                         <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php echo array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ?  $list[$subscriptor->id] : "1")  : ($template->is_participant_template($subscriptor) ? $repartition_template_items->weight : "1"); ?>'>
-                                    </td> <!-- La list garde la mauvaise valeur du weight, donc on peut faire une condition sur la valeur de la liste check si c'est numerique. Si pas, alors on garde pas la valeur et la bordure devient rouge. -->
+                                    </td> 
                                 </tr>
                             </table>
                         </li>
