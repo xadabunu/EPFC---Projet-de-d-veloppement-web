@@ -3,6 +3,7 @@
 require_once "framework/Model.php";
 require_once "model/Tricount.php";
 require_once "model/Operation.php";
+require_once "model/RepartitionTemplateItems.php";
 
 class RepartitionTemplates extends Model
 {
@@ -76,7 +77,10 @@ class RepartitionTemplates extends Model
     {
         $repartition_template->persist_template();
         $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($this->id);
-        $repartition_template_items->persist_repartition_template_items($repartition_template, $list);
+        foreach($repartition_template_items as $items){
+            $items->persist_repartition_template_items_with_template_0($list);
+        }
+        //$repartition_template_items->persist_repartition_template_items($repartition_template, $list);
         //$repartition_template->persist_repartition_template_items($repartition_template, $list);
     }
 
@@ -86,5 +90,19 @@ class RepartitionTemplates extends Model
     {
         self::execute("DELETE FROM repartition_templates WHERE id= :id", ["id" => $this->id]);
     }
+
+// --------------------------- Fonctions Template ------------------------------------ 
+
+    public function is_participant_template(User $user): bool 
+    {
+        $repartition_template_items =  RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($this->id);
+        foreach( $repartition_template_items as $items){
+            if($items->user->id == $user->id){
+                return true;
+            }
+        }
+        return false;
+    }
+    
 
 }

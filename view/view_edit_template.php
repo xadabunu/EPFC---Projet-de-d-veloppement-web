@@ -1,3 +1,7 @@
+<?php 
+    require_once "model/RepartitionTemplates.php";
+    require_once "model/RepartitionTemplateItems.php"; 
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,22 +33,27 @@
             <?php }
             if (array_key_exists('template_length', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['template_length']; ?></p>
-            <?php } ?>
-            <label>Template items :</label>
+        <?php } ?>
+
+                <label>Template items :</label>
                 <ul>
-                    <?php foreach ($subscriptors as $subscriptor) { ?>
+                    <?php foreach ($tricount->get_subscriptors_with_creator() as $subscriptor){
+                    if($template->is_participant_template($subscriptor)){
+                        $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_and_user($template, $subscriptor);
+                    }
+                     ?>
                         <li>
-                            <table class="whom" <?php  if( (array_key_exists("whom", $errors))) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
+                            <table class="whom" <?php  if( (array_key_exists("whom", $errors))  ||  (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]) )  ) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                                 <tr class="edit">
                                     <td class="check">
-                                        <p><input type='checkbox' <?= $userChecked[$subscriptor->id] ?> name='<?= $subscriptor->id ?>' value=''></p>
+                                        <p><input type='checkbox' <?php echo array_key_exists($subscriptor->id, $list) ? 'checked' : ($template->is_participant_template($subscriptor) ? 'checked' : 'unchecked'); ?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight">
-                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?= $userWeight[$subscriptor->id] ?>'>
-                                    </td>
+                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php echo array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ?  $list[$subscriptor->id] : "1")  : ($template->is_participant_template($subscriptor) ? $repartition_template_items->weight : "1"); ?>'>
+                                    </td> 
                                 </tr>
                             </table>
                         </li>
@@ -54,7 +63,7 @@
                 <p class="errorMessage"><?php echo $errors['whom']; ?></p>
             <?php } ?>
             <?php if (array_key_exists('weight', $errors)) { ?>
-                <p class="errorMessage"><?php echo substr($errors['weight'], 0, 48); ?></p>
+                <p class="errorMessage"><?php echo $errors['weight']; ?></p>
             <?php } ?>
         </form>
         <a href="templates/delete_template/<?= $template->id ?>/<?= $tricount->id ?>" class="button bottom2 delete">Delete this template</a>
