@@ -17,7 +17,7 @@
             <a href="operation/edit_operation/<?= $operation->id ?>" class="button" id="add">Edit</a>
         </header>
         <div>
-            <div class="amount"><?php echo number_format($operation->amount, 2) ?> €</div>
+            <div class="amount"><?= number_format($operation->amount, 2) ?> €</div>
             <div class="payement_info">
                 <p>Paid by <?= strlen($operation->initiator->full_name) > 20 ? substr($operation->initiator->full_name, 0, 20)."..." : $operation->initiator->full_name ?></p>
                 <p><?= date("d/m/Y", strtotime($operation->operation_date)) ?></p>

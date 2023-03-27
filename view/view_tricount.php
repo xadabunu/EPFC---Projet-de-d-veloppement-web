@@ -98,9 +98,8 @@
             <p class="balance"><a href="tricount/balance/<?= $tricount->id ?>" class="button" id="balance"><b>&#8644;</b> View balance</a></p>
             <p>Order expenses by:
                 <select id="sort">
-                    <option value="">Select</option>
                     <option value="operation_date">Date &#9650;</option>
-                    <option value="operation_date">Date &#9660;</option>
+                    <option value="operation_date" selected>Date &#9660;</option>
                     <option value="amount">Amount &#9650;</option>
                     <option value="amount">Amount &#9660;</option>
                     <option value="initiator">Paid by &#9650;</option>
@@ -117,7 +116,7 @@
                             <p>Paid by <?= strlen($operation->initiator->full_name) > 25 ? substr($operation->initiator->full_name, 0, 23) : $operation->initiator->full_name ?></p>
                         </td>
                         <td class="right">
-                            <p><b><?= round($operation->amount, 2) ?> €</b></p>
+                            <p><b><?= number_format($operation->amount, 2) ?> €</b></p>
                             <p><?= date("d/m/Y", strtotime($operation->operation_date)) ?></p>
                         </td>
                     </tr>

@@ -9,36 +9,63 @@
     <title><?= $titleValue ?> &#11208; Edit</title>
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
     <script>
-        let op_amount, err_amount, lbl_amount, tr_currency, for_whom_table;
+        let op_amount, err_amount, lbl_amount, tr_currency, for_whom_table, err_whom;
 
         function checkAmount() {
             err_amount.html("");
             tr_currency.attr("style", "");
-            console.log(lbl_amount.val());
             if (lbl_amount.val() <= 0) {
                 err_amount.append("Amount must be stricly positive");
-                // tr_currency.attr("style", "border-color: rgb(220, 53, 69)");
                 tr_currency.css("border-color", "rgb(220, 53, 69)");
             }
+            else
+                updateAmounts();
+        }
+
+        function updateAmounts() {
+            let amount = lbl_amount.val() > 0 ? lbl_amount.val() : op_amount;
+            let sum_weight = 0;
+
+            $(".whom tr").each(function() {
+                if ($(this).find("input:checkbox").is(":checked"))
+                    sum_weight += parseInt($(this).find(".whom_weight").val());
+            });
+
+            $(".whom tr").each(function() {
+                if ($(this).find("input:checkbox").is(":checked")) {
+                    let w = $(this).find(".whom_weight").val();
+                    $(this).find(".user_amount").html(Math.round(100 * w * amount / sum_weight)/100 + " €");
+                }
+                else
+                    $(this).find(".user_amount").html("0");
+            })
         }
 
         function checkWeight(e) {
-            var f = $(e).children("#whom_weight");
-            var g = $(e).children("#check");
-            console.log(e);
-            console.log($(f).parent);
-            console.log(g);
-            $(e).children("check").prop("checked", false);
-            console.log(f.val());
-            console.log("done");
+            err_whom.html("");
+            $(e).parent().parent().attr("style", "");            
+
+            var x =  $(e).find(".whom_weight");
+            var g = $(e).find("input:checkbox");
+
+            if (x.val() < 0) {
+                g.prop("checked", false);
+                $(e).parent().parent().css("border-color", "rgb(220, 53, 69)");
+                err_whom.html("weights can not be negative");
+            }
+            else {    
+                g.prop("checked", x.val() != 0);
+                updateAmounts();
+            }
         }
 
-        $(function() {
+        $(document).ready(function() {
             op_amount = <?= $operation->amount ?>;
             lbl_amount = $("#amount");
             err_amount = $("#errAmount");
             tr_currency = $("#tr_currency");
             for_whom_table = $("#for_whom");
+            err_whom = $("#errWhom");
         })
     </script>
 </head>
@@ -137,7 +164,7 @@
                 <ul>
                     <?php foreach ($subscriptors as $subscriptor) { ?>
                         <li>
-                            <table class="whom" id="for_whom" <?php  if((array_key_exists("whom", $errors))) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
+                            <table class="whom" <?php  if((array_key_exists("whom", $errors))) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                                 <tr class="edit" onchange="checkWeight(this);">
                                     <td class="check">
                                         <p><input type='checkbox' <?= $userChecked[$subscriptor->id] ?> name='<?= $subscriptor->id ?>' value=''></p>
@@ -147,11 +174,11 @@
                                     </td>
                                     <td class="weight" id="td_amount">
                                         <p>Amount</p>
-                                        <div><?= round($operation->get_user_amount($subscriptor->id), 2) ?> €</div>
+                                        <div class="user_amount"><?= round($operation->get_user_amount($subscriptor->id), 2) ?> €</div>
                                     </td>
                                     <td class="weight">
                                         <p>Weight</p>
-                                        <input type='text' id="whom_weight" name='weight_<?= $subscriptor->id ?>' value='<?= $userWeight[$subscriptor->id] ?>'>
+                                        <input type='text' class="whom_weight" name='weight_<?= $subscriptor->id ?>' value='<?= $userWeight[$subscriptor->id] ?>'>
                                     </td>
                                 </tr>
                             </table>
@@ -159,9 +186,9 @@
                     <?php } ?>
                 </ul>
 
-            <?php if (array_key_exists('whom', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['whom']; ?></p>
-            <?php } ?>
+                <p class="errorMessage" id="errWhom">
+                    <?php if (array_key_exists('whom', $errors)) { echo $errors['whom']; } ?>
+                </p>
             <?php if (array_key_exists('weight', $errors)) { ?>
                 <p class="errorMessage"><?php echo substr($errors['weight'], 0, 48); ?></p>
             <?php } ?>
