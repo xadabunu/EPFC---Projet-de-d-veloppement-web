@@ -33,7 +33,7 @@
             <?php } ?>
                 <label>Template items :</label>
                 <ul>
-                    <?php foreach ($subscriptors as $subscriptor){ 
+                    <?php foreach ($tricount->get_subscriptors_with_creator() as $subscriptor){ 
                      ?>
                         <li>
                             <table class="whom" <?php  if( (array_key_exists("whom", $errors))  ||  (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]) )  ) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>

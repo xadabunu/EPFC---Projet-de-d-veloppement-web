@@ -58,8 +58,6 @@ class ControllerOperation extends MyController
             if (!$tricount->has_access($user))
                 $this->redirect();
             $operation = '';
-            $subscriptors = $tricount->get_subscriptors_with_creator();
-            $repartition_template = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id);
             $errors = [];
             $list = [];
             $title = '';
@@ -106,9 +104,8 @@ class ControllerOperation extends MyController
                 }
             }
             (new View("add_operation"))->show([
-                'tricount' => $tricount, 'operation' => $operation, 'subscriptors' => $subscriptors,
-                'templates' => $repartition_template, 'errors' => $errors, 'title' => $title, 'amount' => $amount,
-                'operation_date' => $operation_date, 'initiator' => $initiator, 'list'=>$list,
+                'tricount' => $tricount, 'operation' => $operation,'errors' => $errors, 'title' => $title,
+                'amount' => $amount, 'operation_date' => $operation_date, 'initiator' => $initiator, 'list'=>$list,
                 'templateChoosen' => $repartition_template_choosen]);
         } else
             Tools::abort("Invalid or missing argument.");
@@ -160,7 +157,6 @@ class ControllerOperation extends MyController
 
     public function edit_operation(): void
     {
-        $repartition_templates = '';
         $operation = '';
         $errors = [];
         $list = [];
@@ -180,7 +176,6 @@ class ControllerOperation extends MyController
             if (!$operation->tricount->has_access($user))
                 $this->redirect();
             $tricount = $operation->tricount;
-            $repartition_templates = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id);
             $list = Repartitions::get_repartitions_by_operation_id($operation->id);
 
             if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date'])) {
@@ -211,7 +206,7 @@ class ControllerOperation extends MyController
                 }
             }
         (new View('edit_operation'))->show([
-            'operation' => $operation, 'errors' => $errors, 'templates' => $repartition_templates, 'list' => $list,
+            'operation' => $operation, 'errors' => $errors, 'list' => $list,
             'titleValue' => $title, 'amountValue' => $amount, 'operation_dateValue' => $operation_date, 'paid_byValue' => $paid_by,
             'templateChoosen' => $repartition_template_choosen]);
         }else{
@@ -281,8 +276,6 @@ class ControllerOperation extends MyController
 
     public function apply_template_edit_operation(): void
     {
-        $subscriptors = [];
-        $repartition_templates = '';
         $operation = '';
         $errors = [];
         $list = [];
@@ -300,7 +293,6 @@ class ControllerOperation extends MyController
             if (!$operation->tricount->has_access($user))
                 $this->redirect();
             $tricount = $operation->tricount;
-            $repartition_templates = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id);
             $list = Repartitions::get_repartitions_by_operation_id($operation->id);
 
             if (isset($_POST['title'])) {
@@ -320,7 +312,7 @@ class ControllerOperation extends MyController
             } 
 
             (new View('edit_operation'))->show([
-                'operation' => $operation, 'errors' => $errors, 'templates' => $repartition_templates, 'list' => $list,
+                'operation' => $operation, 'errors' => $errors, 'list' => $list,
                 'titleValue' => $title, 'amountValue' => $amount, 'operation_dateValue' => $operation_date, 'paid_byValue' => $paid_by,
                 'templateChoosen' => $repartition_template_choosen]);
         } else
@@ -337,8 +329,6 @@ class ControllerOperation extends MyController
             if (!$tricount->has_access($user))
                 $this->redirect();
             $operation = '';
-            $subscriptors = $tricount->get_subscriptors_with_creator();
-            $repartition_templates = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id);
             $errors = [];
             $list = [];
             $title = '';
@@ -363,8 +353,8 @@ class ControllerOperation extends MyController
                 $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
             }
             (new View("add_operation"))->show([
-                'tricount' => $tricount, 'operation' => $operation, 'subscriptors' => $subscriptors,
-                'templates' => $repartition_templates, 'errors' => $errors, 'title' => $title, 'amount' => $amount,
+                'tricount' => $tricount, 'operation' => $operation,
+                'errors' => $errors, 'title' => $title, 'amount' => $amount,
                 'operation_date' => $operation_date, 'initiator' => $initiator, 'list'=>$list,
                 'templateChoosen' => $repartition_template_choosen]);
         } else

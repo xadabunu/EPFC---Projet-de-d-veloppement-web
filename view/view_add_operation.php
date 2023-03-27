@@ -1,7 +1,3 @@
-<?php 
-    require_once "model/RepartitionTemplates.php";
-    require_once "model/RepartitionTemplateItems.php"; 
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -93,6 +89,7 @@
             <?php if (array_key_exists('empty_initiator', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['empty_initiator']; ?></p>
             <?php } ?>
+            <label for="templates">Use repartition template <i>(optional)</i></label>
             <table>
                 <tr>
                     <td class="subscriptor">
@@ -100,14 +97,14 @@
                             <?php if (!empty($templateChoosen)) { ?> 
                                 <option value="<?= $templateChoosen->id ?>" selected><i><?= strlen($templateChoosen->title) > 30 ? substr($templateChoosen->title, 0, 30)."..." : $templateChoosen->title ?></i></option>
                                 <option value="No ill use custom repartition">-- No, i'll use custom repartition --</option>
-                                <?php foreach ($templates as $template) {
+                                <?php foreach (RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id) as $template) {
                                     if ($template != $templateChoosen) { ?>
                                         <option value="<?= $template->id ?>"><?= strlen($template->title) > 30 ? substr($template->title, 0, 30)."..." : $template->title ?></option>
                                 <?php }
                                 } ?>
                             <?php } else { ?>
                                 <option value="No ill use custom repartition" selected>-- No, i'll use custom repartition --</option>
-                                <?php foreach ($templates as $template) { ?>
+                                <?php foreach (RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id) as $template) { ?>
                                     <option value="<?= $template->id ?>"><?= strlen($template->title) > 30 ? substr($template->title, 0, 30)."..." : $template->title ?></option>
                             <?php }
                             } ?>
@@ -118,12 +115,12 @@
             </table>
             <label>For whom ? <i>(select at leat one)</i></label>
                 <ul>
-                    <?php foreach ($subscriptors as $subscriptor){ 
+                    <?php foreach ($tricount->get_subscriptors_with_creator() as $subscriptor){ 
                         if(!empty($templateChoosen) && $templateChoosen->is_participant_template($subscriptor)){$repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_and_user($templateChoosen, $subscriptor);}
                         else{$repartition_template_items = '';}
                      ?>
                         <li>
-                            <table class="whom" <?php  if( (array_key_exists("whom", $errors))  ||  (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]) )  ) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
+                            <table class="whom" <?php  if ((array_key_exists("whom", $errors))  ||  (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]))) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                                 <tr class="edit">
                                     <td class="check">
                                         <p><input type='checkbox' <?php echo empty($list) ? (empty($templateChoosen) ? 'checked' : (empty($repartition_template_items) ? 'unchecked' : 'checked')) : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked');?> name='<?= $subscriptor->id ?>' value=''></p>

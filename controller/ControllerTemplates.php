@@ -97,8 +97,7 @@ class ControllerTemplates extends MyController
                     }
                 }
             }
-            (new View('add_template'))->show(['list'=> $list,'tricount' => $tricount, 'subscriptors' => $subscriptors,
-             'errors' => $errors]);
+            (new View('add_template'))->show(['list'=> $list,'tricount' => $tricount,'errors' => $errors]);
         }
         else{
             Tools::abort('Invalid or missing argument.');
@@ -126,7 +125,6 @@ class ControllerTemplates extends MyController
             if ($repartition_template->tricount->id != $_GET['param1']) {
                 $this->redirect();
             }
-            $subscriptors = $tricount->get_subscriptors_with_creator();
 
             if (isset($_POST['title'])) {
                 $title = Tools::sanitize($_POST['title']);
@@ -148,7 +146,7 @@ class ControllerTemplates extends MyController
                     $this->redirect('templates', 'manage_templates', $tricount->id);
                 }
             }
-            (new View('edit_template'))->show(['list'=> $list,'tricount' => $tricount, 'subscriptors' => $subscriptors, 'errors' => $errors,
+            (new View('edit_template'))->show(['list'=> $list,'tricount' => $tricount, 'errors' => $errors,
              'template' => $repartition_template]);
         }
         else{

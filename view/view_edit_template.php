@@ -37,7 +37,7 @@
 
                 <label>Template items :</label>
                 <ul>
-                    <?php foreach ($subscriptors as $subscriptor){
+                    <?php foreach ($tricount->get_subscriptors_with_creator() as $subscriptor){
                     if($template->is_participant_template($subscriptor)){
                         $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_and_user($template, $subscriptor);
                     }
