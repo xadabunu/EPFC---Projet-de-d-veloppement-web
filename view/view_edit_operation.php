@@ -48,15 +48,19 @@
             var x =  $(e).find(".whom_weight");
             var g = $(e).find("input:checkbox");
 
-            if (x.val() < 0) {
-                g.prop("checked", false);
-                $(e).parent().parent().css("border-color", "rgb(220, 53, 69)");
-                err_whom.html("weights can not be negative");
-            }
-            else {    
-                g.prop("checked", x.val() != 0);
-                updateAmounts();
-            }
+            if ($(e).find("input:checkbox").is(":checked")) {
+
+                if (x.val() < 0) {
+                    g.prop("checked", false);
+                    $(e).parent().parent().css("border-color", "rgb(220, 53, 69)");
+                    err_whom.html("weights can not be negative");
+                }
+                else {    
+                    g.prop("checked", x.val() != 0);
+                }
+        }
+        updateAmounts();
+
         }
 
         $(document).ready(function() {
