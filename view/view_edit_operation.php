@@ -37,7 +37,7 @@
                     $(this).find(".user_amount").html(Math.round(100 * w * amount / sum_weight)/100 + " €");
                 }
                 else
-                    $(this).find(".user_amount").html("0");
+                    $(this).find(".user_amount").html("0 €");
             })
         }
 
@@ -78,7 +78,7 @@
             <button class="button save" id="add" type="submit" form="edit_operation_form">Save</button>
         </header>
         <form id="edit_operation_form" action="operation/edit_operation/<?= $operation->id ?>" method="post" class="edit">
-            <input id="title" name="title" type="text" size="16" placeholder="Title" value="<?php if (!is_array($titleValue)) {
+            <input id="title" name="title" type="text" size="16" placeholder="Title" value="<?php if (!empty($titleValue)) {
                                                                                                 echo $titleValue;
                                                                                             } else {
                                                                                                 echo $operation->title;
@@ -91,7 +91,7 @@
             <?php } ?>
             <table class="edit" id="currency">
                 <tr class="currency" id="tr_currency">
-                    <td><input id="amount" name="amount" type="text" size="16" placeholder="Amount" onchange="checkAmount();" value="<?php if (!is_array($amountValue)) {
+                    <td><input id="amount" name="amount" type="text" size="16" placeholder="Amount" onchange="checkAmount();" value="<?php if (!empty($amountValue)) {
                                                                                                                 echo $amountValue;
                                                                                                             } else {
                                                                                                                 echo $operation->amount;
@@ -107,7 +107,7 @@
                 <p class="errorMessage"><?php echo $errors['empty_amount']; ?></p>
             <?php } ?>
             <label for="operation_date">Date</label>
-            <input id="operation_date" name="operation_date" type="date" value="<?php if (!is_array($operation_dateValue)) {
+            <input id="operation_date" name="operation_date" type="date" value="<?php if (!empty($operation_dateValue)) {
                                                                                     echo $operation_dateValue;
                                                                                 } else {
                                                                                     echo $operation->operation_date;
@@ -118,7 +118,7 @@
             <label for="paid_by">Paid by</label>
             <select name="paid_by" id="paid_by" class="edit edit2">
 
-                <?php if (!is_array($paid_byValue) && !is_string($initiator)) {  ?>    
+                <?php if (!empty($paid_byValue)) {  ?>    
 
                     <option value="<?= $paid_byValue->id ?>"><?= strlen($paid_byValue->full_name) > 30 ? substr($paid_byValue->full_name, 0, 30)."..." : $paid_byValue->full_name ?></option>
                 <?php } else { ?>
@@ -140,17 +140,17 @@
                 <tr>
                     <td class="subscriptor">
                         <select name="templates" id="templates" class="edit"> 
-                            <?php if (!is_array($templateChoosen) && !is_string($templateChoosen)) {  ?>
+                            <?php if (!empty($templateChoosen)) {  ?>
                                 <option value="<?= $templateChoosen->id ?>" selected><i><?= strlen($templateChoosen->title) > 30 ? substr($templateChoosen->title, 0, 30)."..." : $templateChoosen->title ?></i></option>
                                 <option value="No ill use custom repartition" ><i>-- No, i'll use custom repartition --</i></option>
-                                <?php foreach ($templates as $template) {
+                                <?php foreach (RepartitionTemplates::get_all_repartition_templates_by_tricount_id($operation->tricount->id) as $template) {
                                     if ($template != $templateChoosen) { ?>
                                         <option value="<?= $template->id ?>"><?= strlen($template->title) > 30 ? substr($template->title, 0, 30)."..." : $template->title ?></option>
                                 <?php }
                                 }
                             } else { ?>
                                 <option value="No ill use custom repartition" selected>-- No, i'll use custom repartition --</option>
-                                <?php foreach ($templates as $template) { ?>
+                                <?php foreach (RepartitionTemplates::get_all_repartition_templates_by_tricount_id($operation->tricount->id) as $template) { ?>
                                     <option value="<?= $template->id ?>"><?= strlen($template->title) > 30 ? substr($template->title, 0, 30)."..." : $template->title ?></option>
                             <?php }
                             } ?>
@@ -159,15 +159,22 @@
                     <td class="subscriptor input"><input type="submit" value="&#8635;" formaction="operation/apply_template_edit_operation/<?= $operation->id ?>"></td>
                 </tr>
             </table>
-
             <label>For whom ? <i>(select at leat one)</i></label>
                 <ul>
-                    <?php foreach ($subscriptors as $subscriptor) { ?>
+                    <?php foreach ($operation->tricount->get_subscriptors_with_creator() as $subscriptor){ 
+                        if(!empty($templateChoosen) && $templateChoosen->is_participant_template($subscriptor)){
+                            $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_and_user($templateChoosen, $subscriptor);}
+                        else{$repartition_template_items = '';}
+                        if($operation->is_participant_operation($subscriptor)){
+                            $repartition = Repartitions::get_repartition_by_operation_and_user_id($operation->id, $subscriptor);
+                        }
+                        else{$repartition = '';}
+                     ?>
                         <li>
-                            <table class="whom" <?php  if((array_key_exists("whom", $errors))) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
+                            <table class="whom" <?php  if( (array_key_exists("whom", $errors))  ||  (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]) )  ) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                                 <tr class="edit" onchange="checkWeight(this);">
                                     <td class="check">
-                                        <p><input type='checkbox' <?= $userChecked[$subscriptor->id] ?> name='<?= $subscriptor->id ?>' value=''></p>
+                                        <p><input type='checkbox' <?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? 'checked' : 'unchecked') : (empty($repartition_template_items) ? 'unchecked' :  'checked' )) : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked');?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
@@ -178,19 +185,18 @@
                                     </td>
                                     <td class="weight">
                                         <p>Weight</p>
-                                        <input type='text' class="whom_weight" name='weight_<?= $subscriptor->id ?>' value='<?= $userWeight[$subscriptor->id] ?>'>
+                                        <input type='text' class="whom_weight" name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? $repartition->weight : '1') : (empty($repartition_template_items) ? '1' : $repartition_template_items->weight)) : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
                                     </td>
                                 </tr>
                             </table>
                         </li>
                     <?php } ?>
                 </ul>
-
                 <p class="errorMessage" id="errWhom">
                     <?php if (array_key_exists('whom', $errors)) { echo $errors['whom']; } ?>
                 </p>
             <?php if (array_key_exists('weight', $errors)) { ?>
-                <p class="errorMessage"><?php echo substr($errors['weight'], 0, 48); ?></p>
+                <p class="errorMessage"><?php echo $errors['weight']; ?></p>
             <?php } ?>
 
             Add a new repartition template

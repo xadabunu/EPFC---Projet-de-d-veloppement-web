@@ -2,7 +2,8 @@
 
 require_once "framework/Model.php";
 require_once "model/Operation.php";
-require_once "model/Template.php";
+require_once "model/RepartitionTemplates.php";
+require_once "model/RepartitionTemplateItems.php";
 require_once "model/User.php";
 
 class Tricount extends Model
