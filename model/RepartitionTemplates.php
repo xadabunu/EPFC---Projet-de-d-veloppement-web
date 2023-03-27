@@ -80,8 +80,7 @@ class RepartitionTemplates extends Model
         foreach($repartition_template_items as $items){
             $items->persist_repartition_template_items_with_template_0($list);
         }
-        //$repartition_template_items->persist_repartition_template_items($repartition_template, $list);
-        //$repartition_template->persist_repartition_template_items($repartition_template, $list);
+        
     }
 
 // --------------------------- Delete Template ------------------------------------ 

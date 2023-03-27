@@ -58,7 +58,7 @@ class Operation extends Model
     }
 
 
-// --------------------------- Méthode has_access --------------------------------
+// --------------------------- Méthode has_access et is_participant --------------------------------
 
 
     public function has_access(User $user): bool
@@ -66,6 +66,19 @@ class Operation extends Model
         $list = $this->get_participants();
         return in_array($user, $list);
     }
+
+   
+    public function is_participant_operation(User $user): bool 
+    {
+        $repartitions =  Repartitions::get_all_repartitions_by_operation_id($this->id);
+        foreach($repartitions as $item){
+            if($item->user->id == $user->id){
+                return true;
+            }
+        }
+        return false;
+    }
+        
 
 
 // --------------------------- Validate && Persist // Delete && delete Cascade des operations ------------------------------------ 

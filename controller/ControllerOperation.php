@@ -176,7 +176,6 @@ class ControllerOperation extends MyController
             if (!$operation->tricount->has_access($user))
                 $this->redirect();
             $tricount = $operation->tricount;
-            $list = Repartitions::get_repartitions_by_operation_id($operation->id);
 
             if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date'])) {
                 $operation->title = Tools::sanitize($_POST['title']);
@@ -292,8 +291,6 @@ class ControllerOperation extends MyController
             $operation = Operation::get_operation_by_id($_GET['param1']);
             if (!$operation->tricount->has_access($user))
                 $this->redirect();
-            $tricount = $operation->tricount;
-            $list = Repartitions::get_repartitions_by_operation_id($operation->id);
 
             if (isset($_POST['title'])) {
                 $title = Tools::sanitize($_POST['title']);

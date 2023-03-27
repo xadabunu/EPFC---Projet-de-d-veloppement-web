@@ -137,19 +137,23 @@
                     <?php foreach ($operation->tricount->get_subscriptors_with_creator() as $subscriptor){ 
                         if(!empty($templateChoosen) && $templateChoosen->is_participant_template($subscriptor)){
                             $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_and_user($templateChoosen, $subscriptor);}
-                            else{$repartition_template_items = '';}
+                        else{$repartition_template_items = '';}
+                        if($operation->is_participant_operation($subscriptor)){
+                            $repartition = Repartitions::get_repartition_by_operation_and_user_id($operation->id, $subscriptor);
+                        }
+                        else{$repartition = '';}
                      ?>
                         <li>
                             <table class="whom" <?php  if( (array_key_exists("whom", $errors))  ||  (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]) )  ) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                                 <tr class="edit">
                                     <td class="check">
-                                        <p><input type='checkbox' <?php echo empty($errors) ? (empty($templateChoosen) ? (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked') : (empty($repartition_template_items) ? 'unchecked' :  'checked' )) : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked');?> name='<?= $subscriptor->id ?>' value=''></p>
+                                        <p><input type='checkbox' <?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? 'checked' : 'unchecked') : (empty($repartition_template_items) ? 'unchecked' :  'checked' )) : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked');?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight">
-                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($errors) ? (empty($templateChoosen) ? (array_key_exists($subscriptor->id, $list) ? $list[$subscriptor->id] : '1') : (empty($repartition_template_items) ? '1' : $repartition_template_items->weight)) : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
+                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? $repartition->weight : '1') : (empty($repartition_template_items) ? '1' : $repartition_template_items->weight)) : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
                                     </td>  
                                 </tr>
                             </table>
