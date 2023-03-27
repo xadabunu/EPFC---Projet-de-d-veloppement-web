@@ -143,7 +143,7 @@
                 <p class="errorMessage"><?php echo $errors["whom"]; ?></p>
             <?php } ?>
             <?php if (array_key_exists('weight', $errors)) { ?>
-                <p class="errorMessage"><?php echo substr($errors['weight'], 0, 48); ?></p>
+                <p class="errorMessage"><?php echo $errors['weight']; ?></p>
             <?php } ?>
             Add a new repartition template
             <table <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
