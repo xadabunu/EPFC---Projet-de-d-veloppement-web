@@ -33,6 +33,7 @@ class RepartitionTemplates extends Model
             $tricountInstance = Tricount::get_tricount_by_id($repartition_template['tricount']);
             $array[] = new RepartitionTemplates($repartition_template['title'], $tricountInstance, $repartition_template['id']);
         }
+        array_multisort(array_column($array, 'title'), $array);
         return $array;
     }
 

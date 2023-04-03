@@ -19,13 +19,6 @@ class ControllerTemplates extends MyController
 
     public function manage_templates(): void
     {
-        $repartition_templates = [];
-        $tricount = "";
-        $all_templates_items = [];
-        $all_templates_items_for_view = [];
-        $all_weight_total = [];
-        $UsernameWeight = [];
-
         if (isset($_GET["param1"]) && is_numeric($_GET["param1"])) {
             $user = $this->get_user_or_redirect();
             if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
@@ -33,28 +26,7 @@ class ControllerTemplates extends MyController
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))
                 $this->redirect();
-            $repartition_templates = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id);
-            foreach ($repartition_templates as $template) {                
-                $templateUserWeightList = [];
-                $array_repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($template->id);
-                foreach($array_repartition_template_items as $item){
-                    $templateUserWeightList[$item->user->id] =  $item->weight;
-                }
-                $all_templates_items[] = $templateUserWeightList;
-            }
-            foreach ($all_templates_items as $template_item) {
-                $poids = 0;
-                foreach ($template_item as $key => $Value) {
-                    $tmpUser = User::get_user_by_id($key)->full_name;
-                    $UsernameWeight[$tmpUser] = $Value;
-                    $poids += $Value;
-                }
-                ksort($UsernameWeight);
-                $all_templates_items_for_view[] = $UsernameWeight;
-                $UsernameWeight = [];
-                $all_weight_total[] = $poids;
-            }
-            (new View('templates'))->show(['templates' => $repartition_templates, 'tricount' => $tricount, 'all_templates_items_for_view' => $all_templates_items_for_view, 'all_weight_total' => $all_weight_total]);
+            (new View('templates'))->show(['tricount' => $tricount]);
         } else {
             Tools::abort("Invalid or missing argument.");
         }
