@@ -58,9 +58,10 @@
                 else {    
                     g.prop("checked", x.val() != 0);
                 }
-        }
-        updateAmounts();
-        updateTemplate();
+
+            }
+            updateAmounts();
+            updateTemplate();
         }
 
         function updateTemplate() {
@@ -199,16 +200,20 @@
             <label>For whom ? <i>(select at leat one)</i></label>
                 <ul>
                     <?php foreach ($operation->tricount->get_subscriptors_with_creator() as $subscriptor){ 
-                        if(!empty($templateChoosen) && $templateChoosen->is_participant_template($subscriptor)){
+                        if (!empty($templateChoosen) && $templateChoosen->is_participant_template($subscriptor)) {
                             $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_and_user($templateChoosen, $subscriptor);}
-                        else{$repartition_template_items = '';}
-                        if($operation->is_participant_operation($subscriptor)){
+                        else {
+                            $repartition_template_items = '';
+                        }
+                        if ($operation->is_participant_operation($subscriptor)) {
                             $repartition = Repartitions::get_repartition_by_operation_and_user_id($operation->id, $subscriptor);
                         }
-                        else{$repartition = '';}
+                        else {
+                            $repartition = '';
+                        }
                      ?>
                         <li>
-                            <table class="whom" <?php  if( (array_key_exists("whom", $errors))  ||  (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]) )  ) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
+                            <table class="whom" <?php  if((array_key_exists("whom", $errors)) || (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]))) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                                 <tr class="edit" id="template" onchange="checkWeight(this);">
                                     <td class="check">
                                         <p><input class="checkbox_template" type='checkbox' name='checkbox_<?= $subscriptor->id ?>' <?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? 'checked' : 'unchecked') : (empty($repartition_template_items) ? 'unchecked' :  'checked' )) : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked');?> name='<?= $subscriptor->id ?>' value=''></p>

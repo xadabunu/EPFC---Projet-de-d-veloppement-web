@@ -15,6 +15,17 @@ class ControllerTricount extends MyController
         $this->redirect("user", "my_tricounts");
     }
 
+    public function tricount_exists_service() : void {
+        $rez = "false";
+        if(isset($_GET["param1"]) && $_GET["param1"] !== "") {
+            $tricount = Tricount::get_tricount_by_title($_GET["param1"]);
+            if($tricount) {
+                $rez = "true";
+            }
+            echo $rez;
+        }
+    }
+
     public function operations(): void
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
@@ -97,11 +108,7 @@ class ControllerTricount extends MyController
 
     public function edit_tricount(): void
     {
-        $subscriptors = [];
-        $creator = '';
         $errors = [];
-        $title = '';
-        $deletables = [];
 
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $user = $this->get_user_or_redirect();
@@ -110,11 +117,6 @@ class ControllerTricount extends MyController
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             if (!$tricount->has_access($user))
                 $this->redirect();
-            $title = $tricount->title;
-            $creator = $tricount->creator;
-            $subscriptors = $tricount->get_subscriptors();
-            $cbo_users = $tricount->get_cbo_users();
-            $deletables = $tricount->get_deletables();
 
             if (isset($_POST['title']) || isset($_POST['description'])) {
                 $tricount->title = Tools::sanitize($_POST['title']);
@@ -127,8 +129,8 @@ class ControllerTricount extends MyController
                 }
             }
             (new View("edit_tricount"))->show([
-                'tricount' => $tricount, 'subscriptors' => $subscriptors, 'creator' => $creator,
-                'errors' => $errors, 'cbo_users' => $cbo_users, 'title' => $title, 'deletables' => $deletables
+                'tricount' => $tricount,
+                'errors' => $errors,
             ]);
         } else {
             Tools::abort("Invalid or missing argument.");
