@@ -51,7 +51,7 @@ class ControllerTemplates extends MyController
             $subscriptors = $tricount->get_subscriptors_with_creator();
 
             if (isset($_POST['title'])) {
-                $title = Tools::sanitize($_POST['title']);
+                $title = $_POST['title'];
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
 
@@ -99,7 +99,7 @@ class ControllerTemplates extends MyController
             }
 
             if (isset($_POST['title'])) {
-                $title = Tools::sanitize($_POST['title']);
+                $title = $_POST['title'];
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
                 $repartition_template->title = $title;

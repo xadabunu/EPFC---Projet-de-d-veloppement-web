@@ -13,6 +13,11 @@ class ControllerOperation extends MyController
 
     public function index(): void
     {
+        if ($this->user_logged()) {
+            $this->redirect("user", "my_tricounts");
+        } else {
+            $this->redirect("main", "login");
+        }
     }
 
     public function details(): void
@@ -67,21 +72,21 @@ class ControllerOperation extends MyController
             $repartition_template_choosen = '';
 
             if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
-                $title = Tools::sanitize($_POST['title']);
-                $amount = floatval(Tools::sanitize($_POST['amount']));
+                $title = $_POST['title'];
+                $amount = floatval($_POST['amount']);
                 if ($amount <= 0){
                     $errors ['amount'] = 'Amount must be strictly positive' ;
                 }
                 $operation_date = $_POST['operation_date'];
                 $created_at = Date("Y-m-d H:i:s");
                 if(is_numeric($_POST['paid_by'])){
-                    $initiator = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
+                    $initiator = User::get_user_by_id($_POST['paid_by']);
                 }
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
 
                 if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
-                    $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));                    
+                    $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id($_POST['templates']);                    
                 }
 
                 if (count($errors) == 0) {
@@ -89,7 +94,7 @@ class ControllerOperation extends MyController
                     $errors = $operation->validate_operations();
 
                     if (isset($_POST["save_template_checkbox"])) {
-                        $repartition_template = new RepartitionTemplates(Tools::sanitize($_POST["template_title"]), $tricount);
+                        $repartition_template = new RepartitionTemplates($_POST["template_title"], $tricount);
                         $errors = array_merge($errors, $repartition_template->validate_repartition_template());
                     }
 
@@ -178,8 +183,8 @@ class ControllerOperation extends MyController
             $tricount = $operation->tricount;
 
             if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date'])) {
-                $operation->title = Tools::sanitize($_POST['title']);
-                $operation->amount = floatval(Tools::sanitize($_POST['amount']));
+                $operation->title = $_POST['title'];
+                $operation->amount = floatval($_POST['amount']);
                 $operation->initiator = User::get_user_by_id($_POST['paid_by']);
                 $operation->operation_date = $_POST['operation_date'];
                 $list = self::get_weight($_POST, $tricount);
@@ -187,11 +192,11 @@ class ControllerOperation extends MyController
                 $errors = array_merge($errors, $operation->validate_operations());
 
                 if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
-                    $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
+                    $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id($_POST['templates']);
                 }
 
                 if (isset($_POST["save_template_checkbox"])) {
-                    $repartition_template = new RepartitionTemplates(Tools::sanitize($_POST["template_title"]), $tricount);
+                    $repartition_template = new RepartitionTemplates($_POST["template_title"], $tricount);
                     $errors = array_merge($errors, $repartition_template->validate_repartition_template());
                 }
 
@@ -293,19 +298,19 @@ class ControllerOperation extends MyController
                 $this->redirect();
 
             if (isset($_POST['title'])) {
-                $title = Tools::sanitize($_POST['title']);
+                $title = $_POST['title'];
             }
             if (isset($_POST['amount'])) {
-                $amount = Tools::sanitize($_POST['amount']);
+                $amount = $_POST['amount'];
             }
             if (isset($_POST['operation_date'])) {
                 $operation_date = $_POST['operation_date'];
             }
             if (isset($_POST['paid_by'])) {
-                $paid_by = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
+                $paid_by = User::get_user_by_id($_POST['paid_by']);
             }
             if (isset($_POST['templates']) && is_numeric($_POST['templates']) ) {
-                $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
+                $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id($_POST['templates']);
             } 
 
             (new View('edit_operation'))->show([
@@ -335,19 +340,19 @@ class ControllerOperation extends MyController
             $repartition_template_choosen = '';
 
             if (isset($_POST['title'])) {
-                $title = Tools::sanitize($_POST['title']);
+                $title = $_POST['title'];
             }
             if (isset($_POST['amount'])) {
-                $amount = Tools::sanitize($_POST['amount']);
+                $amount = $_POST['amount'];
             }
             if (isset($_POST['operation_date'])) {
                 $operation_date = $_POST['operation_date'];
             }
             if (isset($_POST['paid_by']) && is_numeric($_POST['paid_by'])) {
-                $initiator = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
+                $initiator = User::get_user_by_id($_POST['paid_by']);
             }
             if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
-                $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
+                $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id($_POST['templates']);
             }
             (new View("add_operation"))->show([
                 'tricount' => $tricount, 'operation' => $operation,
