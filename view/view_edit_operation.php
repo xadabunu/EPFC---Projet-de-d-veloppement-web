@@ -163,7 +163,7 @@
                     <option value="<?= $operation->initiator->id ?>"><?= strlen($operation->initiator->full_name) > 30 ? substr($operation->initiator->full_name, 0, 30)."..." : $operation->initiator->full_name ?></option>
                 <?php } ?>
 
-                <?php foreach ($subscriptors as $subscriptor) {
+                <?php foreach ($operation->tricount->get_subscriptors_with_creator() as $subscriptor) {
                     if ($subscriptor != $operation->initiator) { ?>
                         <option value="<?= $subscriptor->id ?>"><?= strlen($subscriptor->full_name) > 30 ? substr($subscriptor->full_name, 0, 30)."..." : $subscriptor->full_name ?></option>
                 <?php }
