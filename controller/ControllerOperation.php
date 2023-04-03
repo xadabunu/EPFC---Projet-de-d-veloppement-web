@@ -60,22 +60,15 @@ class ControllerOperation extends MyController
             $operation = '';
             $errors = [];
             $list = [];
-            $title = '';
-            $amount = '';
-            $operation_date = '';
-            $initiator = '';
             $repartition_template_choosen = '';
-
             if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
-                $title = Tools::sanitize($_POST['title']);
-                $amount = floatval(Tools::sanitize($_POST['amount']));
-                if ($amount <= 0){
-                    $errors ['amount'] = 'Amount must be strictly positive' ;
-                }
-                $operation_date = $_POST['operation_date'];
-                $created_at = Date("Y-m-d H:i:s");
+
                 if(is_numeric($_POST['paid_by'])){
-                    $initiator = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
+                    $operation = new Operation($_POST['title'], Tricount::get_tricount_by_id($_GET['param1']), floatval($_POST['amount']), $_POST['operation_date'], User::get_user_by_id(($_POST['paid_by'])), Date("Y-m-d H:i:s"));
+                }
+
+                if ($_POST['amount'] <= 0){
+                    $errors ['amount'] = 'Amount must be strictly positive' ;
                 }
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
@@ -85,7 +78,6 @@ class ControllerOperation extends MyController
                 }
 
                 if (count($errors) == 0) {
-                    $operation = new Operation($title, $tricount, $amount, $operation_date, $initiator, $created_at);
                     $errors = $operation->validate_operations();
 
                     if (isset($_POST["save_template_checkbox"])) {
@@ -104,9 +96,7 @@ class ControllerOperation extends MyController
                 }
             }
             (new View("add_operation"))->show([
-                'operation' => $operation,'errors' => $errors, 'title' => $title,
-                'amount' => $amount, 'operation_date' => $operation_date, 'initiator' => $initiator, 'list'=>$list,
-                'templateChoosen' => $repartition_template_choosen]);
+                'operation' => $operation,'errors' => $errors,'list'=>$list, 'templateChoosen' => $repartition_template_choosen]);
         } else
             Tools::abort("Invalid or missing argument.");
     }

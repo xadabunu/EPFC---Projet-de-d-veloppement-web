@@ -82,7 +82,7 @@
         </header>
         <form id="add_operation_form" action="operation/add_operation/<?= $_GET['param1'] ?>" method="post" class="edit">
 
-            <input id="title" name="title" type="text" placeholder="Title" value='<?php if (!empty($title)) {echo $title;} else {echo '';} ?>' 
+            <input id="title" name="title" type="text" placeholder="Title" value='<?php if (!empty($operation->title)) {echo $operation->title;} else {echo '';} ?>' 
                                                                                             <?php if (array_key_exists('empty_title', $errors) || array_key_exists('length', $errors)) { ?>class="errorInput" <?php } ?>>
             <?php if (array_key_exists('empty_title', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['empty_title']; ?></p>
@@ -92,8 +92,8 @@
             <?php } ?>
             <table class="edit" id="currency">
                 <tr class="currency" id="tr_currency"<?php if (array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) { ?>style = "border-color: rgb(220, 53, 69)" <?php } ?>>
-                    <td><input id="amount" name="amount" type="text" placeholder="Amount" onchange="checkAmount();" value='<?php if (!empty($amount)) {
-                                                                                                        echo $amount;
+                    <td><input id="amount" name="amount" type="text" placeholder="Amount" onchange="checkAmount();" value='<?php if (!empty($operation->amount)) {
+                                                                                                        echo $operation->amount;
                                                                                                     } else {
                                                                                                         echo '';
                                                                                                     } ?>' ></td>
@@ -109,8 +109,8 @@
                 <p class="errorMessage"><?php echo $errors['empty_amount']; ?></p>
             <?php } ?>
             <label for="operation_date">Date</label>
-            <input id="operation_date" name="operation_date" type="date" value='<?php if (!empty($operation_date)) {
-                                                                                    echo $operation_date;
+            <input id="operation_date" name="operation_date" type="date" value='<?php if (!empty($operation->operation_date)) {
+                                                                                    echo $operation->operation_date;
                                                                                 } else {
                                                                                     echo '';
                                                                                 } ?>' <?php if (array_key_exists('empty_date', $errors)) { ?>class="errorInput" <?php } ?>>
@@ -119,13 +119,13 @@
             <?php } ?>
             <label for="paid_by">Paid by</label>
             <select name="paid_by" id="paid_by" class="edit edit2" <?php if (array_key_exists('empty_initiator', $errors)) { ?> style = "border-color: rgb(220, 53, 69)" <?php } ?>>
-                <?php if (!empty($initiator)) { ?>
-                    <option value="<?= $initiator->id ?>"><?= strlen($initiator->full_name) > 30 ? substr($initiator->full_name, 0, 30)."..." : $initiator->full_name ?></option>
+                <?php if (!empty($operation->initiator)) { ?>
+                    <option value="<?= $operation->initiator->id ?>"><?= strlen($operation->initiator->full_name) > 30 ? substr($operation->initiator->full_name, 0, 30)."..." : $operation->initiator->full_name ?></option>
                 <?php } else { ?>
                     <option value=""> -- Who paid for it ? -- </option>
                 <?php } ?>
-                <?php foreach ($subscriptors as $subscriptor) {
-                    if ($subscriptor != $initiator) { ?>
+                <?php foreach (Tricount::get_tricount_by_id($_GET['param1'])->get_subscriptors_with_creator() as $subscriptor) {
+                    if ($subscriptor != $operation->initiator) { ?>
                         <option value="<?= $subscriptor->id ?>"><?= strlen($subscriptor->full_name) > 30 ? substr($subscriptor->full_name, 0, 30)."..." : $subscriptor->full_name ?></option>
                 <?php }
                 } ?>
