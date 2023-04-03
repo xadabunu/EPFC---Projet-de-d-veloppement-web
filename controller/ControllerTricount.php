@@ -15,6 +15,17 @@ class ControllerTricount extends MyController
         $this->redirect("user", "my_tricounts");
     }
 
+    public function tricount_exists_service() : void {
+        $rez = "false";
+        if(isset($_GET["param1"]) && $_GET["param1"] !== "") {
+            $tricount = Tricount::get_tricount_by_title($_GET["param1"]);
+            if($tricount) {
+                $rez = "true";
+            }
+            echo $rez;
+        }
+    }
+
     public function operations(): void
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
