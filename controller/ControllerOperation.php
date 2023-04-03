@@ -104,7 +104,7 @@ class ControllerOperation extends MyController
                 }
             }
             (new View("add_operation"))->show([
-                'tricount' => $tricount, 'operation' => $operation,'errors' => $errors, 'title' => $title,
+                'operation' => $operation,'errors' => $errors, 'title' => $title,
                 'amount' => $amount, 'operation_date' => $operation_date, 'initiator' => $initiator, 'list'=>$list,
                 'templateChoosen' => $repartition_template_choosen]);
         } else
