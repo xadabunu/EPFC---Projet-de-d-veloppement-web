@@ -87,8 +87,8 @@
             })
 
             for(let item of json) {
-                if($("input[name='checkbox_" + item.user + "']").length > 0) {
-                    $("input[name='checkbox_" + item.user + "']").prop("checked", true);
+                if($("#checkbox_" + item.user).length > 0) {
+                    $("#checkbox_" + item.user).prop("checked", true);
                     $("input[name='weight_" + item.user + "']").val(item.weight);
                 } 
             }
@@ -216,7 +216,7 @@
                             <table class="whom" <?php  if((array_key_exists("whom", $errors)) || (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]))) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                                 <tr class="edit" id="template" onchange="checkWeight(this);">
                                     <td class="check">
-                                        <p><input class="checkbox_template" type='checkbox' name='checkbox_<?= $subscriptor->id ?>' <?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? 'checked' : 'unchecked') : (empty($repartition_template_items) ? 'unchecked' :  'checked' )) : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked');?> name='<?= $subscriptor->id ?>' value=''></p>
+                                        <p><input class="checkbox_template" type='checkbox' id='checkbox_<?= $subscriptor->id ?>' <?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? 'checked' : 'unchecked') : (empty($repartition_template_items) ? 'unchecked' :  'checked' )) : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked');?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
