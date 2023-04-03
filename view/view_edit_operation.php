@@ -94,7 +94,7 @@
             }
         }
 
-        $(document).ready(function() {
+        $(function() {
             op_amount = <?= $operation->amount ?>;
             lbl_amount = $("#amount");
             err_amount = $("#errAmount");
