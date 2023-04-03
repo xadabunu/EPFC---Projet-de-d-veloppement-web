@@ -43,6 +43,18 @@ class RepartitionTemplates extends Model
         return new RepartitionTemplates($data['title'], Tricount::get_tricount_by_id($data['tricount']), $data['id']);
     }
 
+    public static function get_repartition_template_by_id_as_json(int $id): string
+    {
+        $repartition_template = RepartitionTemplates::get_repartition_template_by_id($id);
+
+        $table = [];
+        $table["title"] = $repartition_template->title;
+        $table["tricount"] = $repartition_template->tricount->id;
+        $table["id"] = $repartition_template->id;
+
+        return json_encode($table);
+    }
+
 
 // --------------------------- Validate && Persist ------------------------------------ 
 
