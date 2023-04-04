@@ -801,3 +801,10 @@ select-selected:after {
 textarea {
     resize: vertical;
 }
+
+#sort {
+    border : none;
+    width : 200px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 80%;
+}

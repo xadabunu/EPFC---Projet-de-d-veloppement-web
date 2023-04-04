@@ -96,16 +96,16 @@
             <?php }
         } else { ?>
             <p class="balance"><a href="tricount/balance/<?= $tricount->id ?>" class="button" id="balance"><b>&#8644;</b> View balance</a></p>
-            <p>Order expenses by:
-                <select id="sort">
-                    <option value="operation_date">Date &#9650;</option>
-                    <option value="operation_date" selected>Date &#9660;</option>
-                    <option value="amount">Amount &#9650;</option>
-                    <option value="amount">Amount &#9660;</option>
-                    <option value="initiator">Paid by &#9650;</option>
-                    <option value="initiator">Paid by &#9660;</option>
-                    <option value="title">Title &#9650;</option>
-                    <option value="title">Title &#9660;</option>
+            <p style="font-size : 80%">Order expenses by:
+                <select id="sort" class="selectCSS">
+                    <option value="operation_date">Date &emsp; &emsp; &emsp; &#9650;</option>
+                    <option value="operation_date" selected>Date &emsp; &emsp; &emsp; &#9660;</option>
+                    <option value="amount">Amount &emsp; &emsp; &#9650;</option>
+                    <option value="amount">Amount &emsp; &emsp; &#9660;</option>
+                    <option value="initiator">Paid by &emsp; &emsp; &#9650;</option>
+                    <option value="initiator">Paid by &emsp; &emsp; &#9660;</option>
+                    <option value="title">Title &emsp; &nbsp;&emsp; &emsp; &#9650;</option>
+                    <option value="title">Title &emsp; &nbsp;&emsp; &emsp; &#9660;</option>
                 </select>
             </p>
             <table id="operation_list">
