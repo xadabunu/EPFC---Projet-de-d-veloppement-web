@@ -15,11 +15,11 @@ class ControllerTricount extends MyController
         $this->redirect("user", "my_tricounts");
     }
 
-    public function tricount_exists_service() : void {
+    public function tricount_exists_service(): void {
         $rez = "false";
-        if(isset($_GET["param1"]) && $_GET["param1"] !== "") {
+        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
             $tricount = Tricount::get_tricount_by_title($_GET["param1"]);
-            if($tricount) {
+            if ($tricount) {
                 $rez = "true";
             }
             echo $rez;
@@ -158,6 +158,10 @@ class ControllerTricount extends MyController
             Tools::abort("Invalid or missing argument.");
     }
 
+    public function add_subscriptor_service(int $id): void
+    {
+        
+    }
 
 
 // --------------------------- Delete + ConfirmDelete Tricount && Delete Subs ------------------------------------ 
@@ -204,5 +208,18 @@ class ControllerTricount extends MyController
             $this->redirect();
         $tricount->delete_tricount_cascade();
         $this->redirect('user', 'index');
+    }
+
+    public function delete_subscriptor_service(int $id): void
+    {
+        // $user = $this->get_user_or_redirect();
+        // if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
+        //     $tricount = Tricount::get_tricount_by_id($_GET['param1']);            
+        //     if (!$tricount->has_access($user))
+        //         $this->redirect();
+        //     $tricount->delete_subscriptor($id);
+        // } else
+        //     Tools::abort("Invalid or missing argument");
+        
     }
 }

@@ -157,7 +157,7 @@ class Tricount extends Model
         return $array;
     }
 
-    public function get_deletables(): array  // Renvoie les participants qui ne peuvent pas être supprimé d'un tricount //
+    public function get_deletables(): array
     {
         $subs = $this->get_subscriptors();
         $array = [];
@@ -169,6 +169,33 @@ class Tricount extends Model
         return $array;
     }
 
+    public function get_subs_as_json(): string
+    {
+        $subs = $this->get_subscriptors_with_creator();
+        $table = [];
+        foreach ($subs as $sub) {
+            $row = [];
+            $row["id"] = $sub->id;
+            $row["name"] = $sub->full_name;
+            $row["deletable"] = in_array($sub, $this->get_deletables());
+            $table[$sub->id] = $row;
+        }
+        return json_encode($table);
+    }
+
+    public function get_addables_as_json(): string
+    {
+        $subs = $this->get_cbo_users();
+        $table = [];
+        foreach ($subs as $sub) {
+            $row = [];
+            $row["id"] = $sub->id;
+            $row["name"] = $sub->full_name;
+            $row["deletable"] = in_array($sub, $this->get_deletables());
+            $table[$sub->id] = $row;
+        }
+        return json_encode($table);
+    }
 
 // --------------------------- Get Operation du tricount ------------------------------------ 
 
@@ -184,7 +211,7 @@ class Tricount extends Model
         return $array;
     }
 
-    public function get_operation_as_json() : string
+    public function get_operation_as_json(): string
     {
         $operations = $this->get_operations();
         $table = [];

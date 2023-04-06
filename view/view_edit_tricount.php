@@ -10,27 +10,78 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
     <script>
-        let add_btn, subs;
+        let add_btn, subs, table_subs, addables, added;
 
         $(function() {
             add_btn = $("#add_btn");
-            // subs = <?php $subs_json ?>;
+            table_subs = $("#table_subs");
+            subs = <?= $tricount->get_subs_as_json() ?>;
+            addables = <?= $tricount->get_addables_as_json() ?>
 
-            // console.log(subs);
-
+            $("form.nosubmit").submit(function(e) {
+                e.preventDefault();
+            });
             add_btn.click(addMember);
         })
 
-        async function deleteMember(id) {
-            
-        }
-
-        async function addMember() {
-
-        }
-
-        function displaySubs() {
+        function my_echo(str, len) {
             let html = "";
+            html += str.len > len ? substr(user.name, 0, len - 3) + "..." : str;
+            return html;
+        }
+
+        function deleteMember(btn, id) {
+            //delete given line
+            //console.log($(btn).closest("tr").html());
+            $(btn).closest("tr").hide();
+            //delete backend
+            return false;
+        }
+
+        function addMember() {
+
+            /* -- front -- */
+            
+            added = $("#subscriptor").find(":selected");
+            added = addables[added.val()];
+            
+            if (added) {
+                let current = table_subs.find("tr:first");
+                let td_name = $(current).find("td:first");
+                let next = $(current).next("tr");
+
+                while (added.name > td_name.html() && $(next).find("td:first").html()) {
+                    current = next;
+                    next = $(next).next("tr");
+                    td_name = $(current).find("td:first");
+                }
+
+                if (added.name > td_name.html())
+                    current.after(generateHTML(added));
+                else
+                    current.before(generateHTML(added));
+                    
+            /* -- back -- */
+                $.post("tricount/delete_subscriptor_service/" + added.id);
+        }
+            return false;
+        }
+
+        function generateHTML(user) {
+            let html = "";
+            html += "<tr class='pop'>";
+            html += "<td>" + my_echo(user.name) + "</td>";
+            html += "<td class='link'>"
+            // if (user.deletable) {
+                html += "<form class='link' onsubmit='deleteMember(this, " + user.id + ");'";
+                html += "action='javascript:void(0);'" + "method='post'>";
+                html += "<input type='text' name='subscriptor_name' value='" + user.id + "' hidden>";
+                html += "<button type='submit' class='pop x'><i class='fa-regular fa-trash-can fa-sm' aria-hidden='true'></i></button>";
+                html += "</form>";
+            // }
+            html += "</td>"
+            html += "</tr>";
+            return html;
         }
     </script>
 </head>
@@ -62,26 +113,22 @@
             <?php } ?>
         </form>
         <h3>Subscriptions</h3>
-        <table class="subs">
-            <tr>
-                <td class="subs"><?= strlen($tricount->creator->full_name) > 30 ? substr($tricount->creator->full_name, 0, 30)."..." : $tricount->creator->full_name ?> (creator)</td>
-                <td></td>
-            </tr>
-            <?php foreach ($tricount->get_subscriptors() as $subscriptor) { ?>
+        <table class="subs" id="table_subs">
+            <?php foreach ($tricount->get_subscriptors_with_creator() as $subscriptor) { ?>
                 <tr class="pop">
-                    <td><?= strlen($subscriptor->full_name) > 30 ? substr($subscriptor->full_name, 0, 30)."..." : $subscriptor->full_name ?></td>
+                    <td><?= strlen($subscriptor->full_name) > 30 ? substr($subscriptor->full_name, 0, 30)."..." : $subscriptor->full_name ?> <?= $tricount->creator == $subscriptor ? "<i> (creator)</i>" : "" ?></td>
                     <td class="link">
                         <?php if (in_array($subscriptor, $tricount->get_deletables())) { ?>
-                            <form class="link" action='tricount/delete_subscriptor/<?= $tricount->id ?>' method='post'>
+                            <form class="link nosubmit" onsubmit="deleteMember(this, <?= $subscriptor-> id ?>);" action='tricount/delete_subscriptor/<?= $tricount->id ?>' method='post'>
                                 <input type='text' name='subscriptor_name' value='<?= $subscriptor->id ?>' hidden>
-                                <button type="submit" onclick="deleteMember(<?= $subscriptor-> full_name ?>);" class="pop x"><i class="fa-regular fa-trash-can fa-sm" aria-hidden="true"></i></button>
+                                <button type="submit" class="pop x"><i class="fa-regular fa-trash-can fa-sm" aria-hidden="true"></i></button>
                             </form>
                         <?php } ?>
                     </td>
                 </tr>
             <?php } ?>
         </table>
-        <form name="subscriptor" method="POST" class="edit">
+        <form name="subscriptor" method="POST" class="edit nosubmit" onsubmit="addMember();">
             <table>
                 <tr>
                     <td class="subscriptor">
@@ -92,7 +139,9 @@
                             <?php } ?>
                         </select>
                     </td>
-                    <td class="subscriptor input"><input id="add_btn" onclick="" type="submit" value="Add" formaction="tricount/add_subscriptors/<?= $tricount->id ?>"></td>
+                    <td class="subscriptor input">
+                        <input id="add_btn" type="submit" value="Add" formaction="tricount/add_subscriptors/<?= $tricount->id ?>">
+                    </td>
                 </tr>
             </table>
         </form>
