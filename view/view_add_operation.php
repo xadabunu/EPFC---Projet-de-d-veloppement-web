@@ -119,7 +119,7 @@
             <?php } ?>
             <label for="paid_by">Paid by</label>
             <select name="paid_by" id="paid_by" class="edit edit2" <?php if (array_key_exists('empty_initiator', $errors)) { ?> style = "border-color: rgb(220, 53, 69)" <?php } ?>>
-                <?php if (!empty($operation->initiator)) { ?>
+                <?php if (!is_null($operation->initiator)) { ?>
                     <option value="<?= $operation->initiator->id ?>"><?= strlen($operation->initiator->full_name) > 30 ? substr($operation->initiator->full_name, 0, 30)."..." : $operation->initiator->full_name ?></option>
                 <?php } else { ?>
                     <option value=""> -- Who paid for it ? -- </option>

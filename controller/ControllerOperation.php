@@ -66,6 +66,9 @@ class ControllerOperation extends MyController
                 if(is_numeric($_POST['paid_by'])){
                     $operation = new Operation($_POST['title'], Tricount::get_tricount_by_id($_GET['param1']), floatval($_POST['amount']), $_POST['operation_date'], User::get_user_by_id(($_POST['paid_by'])), Date("Y-m-d H:i:s"));
                 }
+                else {
+                    $operation = new Operation($_POST['title'], Tricount::get_tricount_by_id($_GET['param1']), floatval($_POST['amount']), $_POST['operation_date'], null, Date("Y-m-d H:i:s"));
+                }
 
                 if ($_POST['amount'] <= 0){
                     $errors ['amount'] = 'Amount must be strictly positive' ;
@@ -150,26 +153,20 @@ class ControllerOperation extends MyController
         $operation = '';
         $errors = [];
         $list = [];
-        $title= '';
-        $amount = '';
-        $operation_date = '';
-        $paid_by = '';
         $repartition_template_choosen = [];
 
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
                 $this->redirect();
             $operation = Operation::get_operation_by_id($_GET['param1']);
-            $title = $operation->title;
             $user = $this->get_user_or_redirect();
-            $operation = Operation::get_operation_by_id($_GET['param1']);
             if (!$operation->tricount->has_access($user))
                 $this->redirect();
             $tricount = $operation->tricount;
 
             if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date'])) {
-                $operation->title = Tools::sanitize($_POST['title']);
-                $operation->amount = floatval(Tools::sanitize($_POST['amount']));
+                $operation->title = ($_POST['title']);
+                $operation->amount = floatval($_POST['amount']);
                 $operation->initiator = User::get_user_by_id($_POST['paid_by']);
                 $operation->operation_date = $_POST['operation_date'];
                 $list = self::get_weight($_POST, $tricount);
@@ -195,9 +192,7 @@ class ControllerOperation extends MyController
                 }
             }
         (new View('edit_operation'))->show([
-            'operation' => $operation, 'errors' => $errors, 'list' => $list,
-            'titleValue' => $title, 'amountValue' => $amount, 'operation_dateValue' => $operation_date, 'paid_byValue' => $paid_by,
-            'templateChoosen' => $repartition_template_choosen]);
+            'operation' => $operation, 'errors' => $errors, 'list' => $list, 'templateChoosen' => $repartition_template_choosen]);
         }else{
             Tools::abort("Invalid or missing argument");
         }

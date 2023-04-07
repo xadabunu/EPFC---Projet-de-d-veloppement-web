@@ -98,14 +98,14 @@
             <p class="balance"><a href="tricount/balance/<?= $tricount->id ?>" class="button" id="balance"><b>&#8644;</b> View balance</a></p>
             <p style="font-size : 80%">Order expenses by:
                 <select id="sort" class="selectCSS">
-                    <option value="operation_date">Date &emsp; &emsp; &emsp; &#9650;</option>
-                    <option value="operation_date" selected>Date &emsp; &emsp; &emsp; &#9660;</option>
-                    <option value="amount">Amount &emsp; &emsp; &#9650;</option>
-                    <option value="amount">Amount &emsp; &emsp; &#9660;</option>
-                    <option value="initiator">Paid by &emsp; &emsp; &#9650;</option>
-                    <option value="initiator">Paid by &emsp; &emsp; &#9660;</option>
-                    <option value="title">Title &emsp; &nbsp;&emsp; &emsp; &#9650;</option>
-                    <option value="title">Title &emsp; &nbsp;&emsp; &emsp; &#9660;</option>
+                    <option value="operation_date">Date  &emsp; &#9650;</option>
+                    <option value="operation_date" selected>Date &emsp; &#9660;</option>
+                    <option value="amount">Amount &emsp; &#9650;</option>
+                    <option value="amount">Amount &emsp; &#9660;</option>
+                    <option value="initiator">Paid by &emsp; &#9650;</option>
+                    <option value="initiator">Paid by &emsp; &#9660;</option>
+                    <option value="title">Title &emsp; &#9650;</option>
+                    <option value="title">Title &emsp; &#9660;</option>
                 </select>
             </p>
             <table id="operation_list">

@@ -77,12 +77,12 @@
     <div class="main">
         <header class="t2">
             <a href="operation/details/<?= $operation->id ?>" class="button" id="back">Cancel</a>
-            <p><?= strlen($titleValue) > 25 ? substr($titleValue, 0, 20)."..." : $titleValue ?> &#11208; Edit</p>
+            <p><?= strlen($operation->title) > 25 ? substr($operation->title, 0, 20)."..." : $operation->title ?> &#11208; Edit</p>
             <button class="button save" id="add" type="submit" form="edit_operation_form">Save</button>
         </header>
         <form id="edit_operation_form" action="operation/edit_operation/<?= $operation->id ?>" method="post" class="edit">
-            <input id="title" name="title" type="text" size="16" placeholder="Title" value="<?php if (!empty($titleValue)) {
-                                                                                                echo $titleValue;
+            <input id="title" name="title" type="text" size="16" placeholder="Title" value="<?php if (!empty($operation->title)) {
+                                                                                                echo $operation->title;
                                                                                             } else {
                                                                                                 echo $operation->title;
                                                                                             } ?>" <?php if (array_key_exists('empty_title', $errors) || array_key_exists('length', $errors)) { ?>class="errorInput" <?php } ?>>
@@ -94,8 +94,8 @@
             <?php } ?>
             <table class="edit" id="currency">
                 <tr class="currency" id="tr_currency">
-                    <td><input id="amount" name="amount" type="text" size="16" placeholder="Amount" onchange="checkAmount();" value="<?php if (!empty($amountValue)) {
-                                                                                                                echo $amountValue;
+                    <td><input id="amount" name="amount" type="text" size="16" placeholder="Amount" onchange="checkAmount();" value="<?php if (!empty($operation->amount)) {
+                                                                                                                echo $operation->amount;
                                                                                                             } else {
                                                                                                                 echo $operation->amount;
                                                                                                             } ?>" <?php if (array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) { ?>class="errorInput" <?php } ?>></td>
@@ -110,8 +110,8 @@
                 <p class="errorMessage"><?php echo $errors['empty_amount']; ?></p>
             <?php } ?>
             <label for="operation_date">Date</label>
-            <input id="operation_date" name="operation_date" type="date" value="<?php if (!empty($operation_dateValue)) {
-                                                                                    echo $operation_dateValue;
+            <input id="operation_date" name="operation_date" type="date" value="<?php if (!empty($operation->operation_date)) {
+                                                                                    echo $operation->operation_date;
                                                                                 } else {
                                                                                     echo $operation->operation_date;
                                                                                 } ?>" <?php if (array_key_exists('empty_date', $errors)) { ?>class="errorInput" <?php } ?>>
@@ -121,14 +121,14 @@
             <label for="paid_by">Paid by</label>
             <select name="paid_by" id="paid_by" class="edit edit2">
 
-                <?php if (!empty($paid_byValue)) {  ?>    
+                <?php if (!empty($operation->initiator)) {  ?>    
 
-                    <option value="<?= $paid_byValue->id ?>"><?= strlen($paid_byValue->full_name) > 30 ? substr($paid_byValue->full_name, 0, 30)."..." : $paid_byValue->full_name ?></option>
+                    <option value="<?= $operation->initiator->id ?>"><?= strlen($operation->initiator->full_name) > 30 ? substr($operation->initiator->full_name, 0, 30)."..." : $operation->initiator->full_name ?></option>
                 <?php } else { ?>
                     <option value="<?= $operation->initiator->id ?>"><?= strlen($operation->initiator->full_name) > 30 ? substr($operation->initiator->full_name, 0, 30)."..." : $operation->initiator->full_name ?></option>
                 <?php } ?>
 
-                <?php foreach ($subscriptors as $subscriptor) {
+                <?php foreach ($operation->tricount->get_subscriptors_with_creator() as $subscriptor) {
                     if ($subscriptor != $operation->initiator) { ?>
                         <option value="<?= $subscriptor->id ?>"><?= strlen($subscriptor->full_name) > 30 ? substr($subscriptor->full_name, 0, 30)."..." : $subscriptor->full_name ?></option>
                 <?php }
