@@ -58,17 +58,52 @@
                 else {    
                     g.prop("checked", x.val() != 0);
                 }
+
             }
             updateAmounts();
+            updateTemplate();
         }
 
-        $(document).ready(function() {
+        function updateTemplate() {
+            choosing_template.prop("value", "No ill use custom repartition");
+        }
+
+        async function checkTemplate() {
+            let elem_val = choosing_template.val();
+            if (jQuery.isNumeric(elem_val)) {
+                let obj = await $.getJSON("Operation/get_repartition_template_by_id_as_json/" + elem_val);
+                applyTemplate(obj.id);
+            }
+        }
+
+        async function applyTemplate(template_id) {
+            let json = await $.getJSON("Operation/get_repartition_template_items_by_repartition_template_id_as_json/" + template_id);
+
+            $(".checkbox_template").each(function() {
+                $(this).prop("checked", false);
+            })
+            $(".whom_weight").each(function() {
+                $(this).prop("value", "1");
+            })
+
+            for(let item of json) {
+                if($("#checkbox_" + item.user).length > 0) {
+                    $("#checkbox_" + item.user).prop("checked", true);
+                    $("input[name='weight_" + item.user + "']").val(item.weight);
+                } 
+            }
+        }
+
+        $(function() {
             op_amount = <?= $operation->amount ?>;
             lbl_amount = $("#amount");
             err_amount = $("#errAmount");
             tr_currency = $("#tr_currency");
             for_whom_table = $("#for_whom");
             err_whom = $("#errWhom");
+            template_dom = $("#template");
+            choosing_template = $("#templates");
+            $("#button_apply_template").hide();
         })
     </script>
 </head>
@@ -140,7 +175,7 @@
             <?php } ?>
             <label for="templates">Use repartition template <i>(optional)</i></label>
             <table>
-                <tr>
+                <tr onchange="checkTemplate();">
                     <td class="subscriptor">
                         <select name="templates" id="templates" class="edit"> 
                             <?php if (!empty($templateChoosen)) {  ?>
@@ -159,7 +194,7 @@
                             } ?>
                         </select>
                     </td>
-                    <td class="subscriptor input"><input type="submit" value="&#8635;" formaction="operation/apply_template_edit_operation/<?= $operation->id ?>"></td>
+                    <td class="subscriptor input" id="button_apply_template"><input type="submit"  value="&#8635;" formaction="operation/apply_template_edit_operation/<?= $operation->id ?>"></td>
                 </tr>
             </table>
             <label>For whom ? <i>(select at leat one)</i></label>
@@ -178,10 +213,10 @@
                         }
                      ?>
                         <li>
-                            <table class="whom" <?php  if((array_key_exists("whom", $errors))  || (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]) )  ) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
-                                <tr class="edit" onchange="checkWeight(this);">
+                            <table class="whom" <?php  if((array_key_exists("whom", $errors)) || (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]))) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
+                                <tr class="edit" id="template" onchange="checkWeight(this);">
                                     <td class="check">
-                                        <p><input type='checkbox' <?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? 'checked' : 'unchecked') : (empty($repartition_template_items) ? 'unchecked' :  'checked' )) : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked');?> name='<?= $subscriptor->id ?>' value=''></p>
+                                        <p><input class="checkbox_template" type='checkbox' id='checkbox_<?= $subscriptor->id ?>' <?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? 'checked' : 'unchecked') : (empty($repartition_template_items) ? 'unchecked' :  'checked' )) : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked');?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>

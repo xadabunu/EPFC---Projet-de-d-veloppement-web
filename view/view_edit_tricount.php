@@ -8,13 +8,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
+    <script>
+        let add_btn, subs, table_subs, addables, added;
+
+        $(function() {
+            add_btn = $("#add_btn");
+            table_subs = $("#table_subs");
+            subs = <?= $tricount->get_subs_as_json() ?>;
+            addables = <?= $tricount->get_addables_as_json() ?>
+
+            $("form.nosubmit").submit(function(e) {
+                e.preventDefault();
+            });
+            add_btn.click(addMember);
+        })
+
+        function my_echo(str, len) {
+            let html = "";
+            html += str.len > len ? substr(user.name, 0, len - 3) + "..." : str;
+            return html;
+        }
+
+        function deleteMember(btn, id) {
+            //delete given line
+            //console.log($(btn).closest("tr").html());
+            $(btn).closest("tr").hide();
+            //delete backend
+            return false;
+        }
+
+        function addMember() {
+
+            /* -- front -- */
+            
+            added = $("#subscriptor").find(":selected");
+            added = addables[added.val()];
+            
+            if (added) {
+                let current = table_subs.find("tr:first");
+                let td_name = $(current).find("td:first");
+                let next = $(current).next("tr");
+
+                while (added.name > td_name.html() && $(next).find("td:first").html()) {
+                    current = next;
+                    next = $(next).next("tr");
+                    td_name = $(current).find("td:first");
+                }
+
+                if (added.name > td_name.html())
+                    current.after(generateHTML(added));
+                else
+                    current.before(generateHTML(added));
+                    
+            /* -- back -- */
+                $.post("tricount/delete_subscriptor_service/" + added.id);
+        }
+            return false;
+        }
+
+        function generateHTML(user) {
+            let html = "";
+            html += "<tr class='pop'>";
+            html += "<td>" + my_echo(user.name) + "</td>";
+            html += "<td class='link'>"
+            // if (user.deletable) {
+                html += "<form class='link' onsubmit='deleteMember(this, " + user.id + ");'";
+                html += "action='javascript:void(0);'" + "method='post'>";
+                html += "<input type='text' name='subscriptor_name' value='" + user.id + "' hidden>";
+                html += "<button type='submit' class='pop x'><i class='fa-regular fa-trash-can fa-sm' aria-hidden='true'></i></button>";
+                html += "</form>";
+            // }
+            html += "</td>"
+            html += "</tr>";
+            return html;
+        }
+    </script>
 </head>
 
 <body>
     <div class="main">
         <header class="t2">
             <a href="tricount/operations/<?= $tricount->id ?>" class="button" id="back">Back</a>
-            <p><?= strlen($title) > 20 ? substr($title, 0, 20)."..." : $title ?> &#11208; Edit</p>
+            <p><?= strlen($tricount->title) > 20 ? substr($tricount->title, 0, 20)."..." : $tricount->title ?> &#11208; Edit</p>
             <button form="edittricountform" type="submit" class="button save" id="add">Save</button>
         </header>
         <h3>Settings</h3>
@@ -37,17 +113,13 @@
             <?php } ?>
         </form>
         <h3>Subscriptions</h3>
-        <table class="subs">
-            <tr>
-                <td class="subs"><?= strlen($creator->full_name) > 30 ? substr($creator->full_name, 0, 30)."..." : $creator->full_name ?> (creator)</td>
-                <td></td>
-            </tr>
-            <?php foreach ($subscriptors as $subscriptor) { ?>
+        <table class="subs" id="table_subs">
+            <?php foreach ($tricount->get_subscriptors_with_creator() as $subscriptor) { ?>
                 <tr class="pop">
-                    <td><?= strlen($subscriptor->full_name) > 30 ? substr($subscriptor->full_name, 0, 30)."..." : $subscriptor->full_name ?></td>
+                    <td><?= strlen($subscriptor->full_name) > 30 ? substr($subscriptor->full_name, 0, 30)."..." : $subscriptor->full_name ?> <?= $tricount->creator == $subscriptor ? "<i> (creator)</i>" : "" ?></td>
                     <td class="link">
-                        <?php if (in_array($subscriptor, $deletables)) { ?>
-                            <form id="delete_sub" class="link" action='tricount/delete_subscriptor/<?= $tricount->id ?>' method='post'>
+                        <?php if (in_array($subscriptor, $tricount->get_deletables())) { ?>
+                            <form class="link nosubmit" onsubmit="deleteMember(this, <?= $subscriptor-> id ?>);" action='tricount/delete_subscriptor/<?= $tricount->id ?>' method='post'>
                                 <input type='text' name='subscriptor_name' value='<?= $subscriptor->id ?>' hidden>
                                 <button type="submit" class="pop x"><i class="fa-regular fa-trash-can fa-sm" aria-hidden="true"></i></button>
                             </form>
@@ -56,18 +128,20 @@
                 </tr>
             <?php } ?>
         </table>
-        <form name="subscriptor" method="POST" class="edit">
+        <form name="subscriptor" method="POST" class="edit nosubmit" onsubmit="addMember();">
             <table>
                 <tr>
                     <td class="subscriptor">
                         <select name="subscriptor" id="subscriptor">
                             <option selected disabled>--Add a new subscriber--</option>
-                            <?php foreach ($cbo_users as $cbo_user) { ?>
+                            <?php foreach ($tricount->get_cbo_users() as $cbo_user) { ?>
                                 <option value="<?= $cbo_user->id ?>"><?= strlen($cbo_user->full_name) > 20 ? substr($cbo_user->full_name, 0, 20)."..." : $cbo_user->full_name ?></option>
                             <?php } ?>
                         </select>
                     </td>
-                    <td class="subscriptor input"><input type="submit" value="Add" formaction="tricount/add_subscriptors/<?= $tricount->id ?>"></td>
+                    <td class="subscriptor input">
+                        <input id="add_btn" type="submit" value="Add" formaction="tricount/add_subscriptors/<?= $tricount->id ?>">
+                    </td>
                 </tr>
             </table>
         </form>

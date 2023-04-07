@@ -13,6 +13,11 @@ class ControllerOperation extends MyController
 
     public function index(): void
     {
+        if ($this->user_logged()) {
+            $this->redirect("user", "my_tricounts");
+        } else {
+            $this->redirect("main", "login");
+        }
     }
 
     public function details(): void
@@ -72,19 +77,20 @@ class ControllerOperation extends MyController
 
                 if ($_POST['amount'] <= 0){
                     $errors ['amount'] = 'Amount must be strictly positive' ;
+
                 }
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
 
                 if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
-                    $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));                    
+                    $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id($_POST['templates']);                    
                 }
 
                 if (count($errors) == 0) {
                     $errors = $operation->validate_operations();
 
                     if (isset($_POST["save_template_checkbox"])) {
-                        $repartition_template = new RepartitionTemplates(Tools::sanitize($_POST["template_title"]), $tricount);
+                        $repartition_template = new RepartitionTemplates($_POST["template_title"], $tricount);
                         $errors = array_merge($errors, $repartition_template->validate_repartition_template());
                     }
 
@@ -174,11 +180,11 @@ class ControllerOperation extends MyController
                 $errors = array_merge($errors, $operation->validate_operations());
 
                 if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
-                    $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
+                    $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id($_POST['templates']);
                 }
 
                 if (isset($_POST["save_template_checkbox"])) {
-                    $repartition_template = new RepartitionTemplates(Tools::sanitize($_POST["template_title"]), $tricount);
+                    $repartition_template = new RepartitionTemplates($_POST["template_title"], $tricount);
                     $errors = array_merge($errors, $repartition_template->validate_repartition_template());
                 }
 
@@ -278,19 +284,19 @@ class ControllerOperation extends MyController
                 $this->redirect();
 
             if (isset($_POST['title'])) {
-                $title = Tools::sanitize($_POST['title']);
+                $title = $_POST['title'];
             }
             if (isset($_POST['amount'])) {
-                $amount = Tools::sanitize($_POST['amount']);
+                $amount = $_POST['amount'];
             }
             if (isset($_POST['operation_date'])) {
                 $operation_date = $_POST['operation_date'];
             }
             if (isset($_POST['paid_by'])) {
-                $paid_by = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
+                $paid_by = User::get_user_by_id($_POST['paid_by']);
             }
             if (isset($_POST['templates']) && is_numeric($_POST['templates']) ) {
-                $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
+                $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id($_POST['templates']);
             } 
 
             (new View('edit_operation'))->show([
@@ -320,19 +326,19 @@ class ControllerOperation extends MyController
             $repartition_template_choosen = '';
 
             if (isset($_POST['title'])) {
-                $title = Tools::sanitize($_POST['title']);
+                $title = $_POST['title'];
             }
             if (isset($_POST['amount'])) {
-                $amount = Tools::sanitize($_POST['amount']);
+                $amount = $_POST['amount'];
             }
             if (isset($_POST['operation_date'])) {
                 $operation_date = $_POST['operation_date'];
             }
             if (isset($_POST['paid_by']) && is_numeric($_POST['paid_by'])) {
-                $initiator = User::get_user_by_id(Tools::sanitize($_POST['paid_by']));
+                $initiator = User::get_user_by_id($_POST['paid_by']);
             }
             if (isset($_POST['templates']) && is_numeric($_POST['templates'])) {
-                $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id(Tools::sanitize($_POST['templates']));
+                $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id($_POST['templates']);
             }
             (new View("add_operation"))->show([
                 'tricount' => $tricount, 'operation' => $operation,
@@ -341,5 +347,21 @@ class ControllerOperation extends MyController
                 'templateChoosen' => $repartition_template_choosen]);
         } else
             Tools::abort("Invalid or missing arument.");
+    }
+
+// --------------------------- Javascipt Apply template for add/edit operation ------------------------------------ 
+
+    public function get_repartition_template_by_id_as_json():void
+    {
+        if(isset($_GET["param1"]) && is_numeric($_GET["param1"])){
+            echo RepartitionTemplates::get_repartition_template_by_id_as_json(intval($_GET["param1"]));
+        }
+    }
+
+    public function get_repartition_template_items_by_repartition_template_id_as_json() : void
+    {
+        if(isset($_GET["param1"]) && is_numeric($_GET["param1"])){
+            echo RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id_as_json(intval($_GET["param1"]));
+        }
     }
 }

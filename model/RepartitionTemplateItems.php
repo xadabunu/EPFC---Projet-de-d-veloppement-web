@@ -23,6 +23,7 @@ class RepartitionTemplateItems extends Model
         foreach ($data as $template_item) {
             $array[] = new RepartitionTemplateItems($template_item["weight"], User::get_user_by_id($template_item["user"]), RepartitionTemplates::get_repartition_template_by_id($template_item['repartition_template']));
         }
+        array_multisort(array_column($array, 'user'), $array);
         return $array; 
     }
 
@@ -34,6 +35,7 @@ class RepartitionTemplateItems extends Model
         foreach ($data as $template_item) {
             $array[] = new RepartitionTemplateItems($template_item["weight"], User::get_user_by_id($template_item["user"]), RepartitionTemplates::get_repartition_template_by_id($template_item['repartition_template']));
         }
+        array_multisort(array_column($array, 'user'), $array);
         return $array;
     }
 
@@ -43,6 +45,23 @@ class RepartitionTemplateItems extends Model
         $data = $query->fetch();
         return new RepartitionTemplateItems($data['weight'], User::get_user_by_id($data['user']), RepartitionTemplates::get_repartition_template_by_id($data['repartition_template']));
     }
+
+    public static function get_repartition_template_items_by_repartition_template_id_as_json(int $id): string
+    {
+        $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($id);
+
+        $table = [];
+        foreach($repartition_template_items as $items){
+            $row = [];
+            $row["user"] = $items->user->id;
+            $row["repartition_template"] = $items->repartition_template->id;
+            $row["weight"] = $items->weight;
+            $table[] = $row;
+        }
+
+        return json_encode($table);
+    }
+
 
 // --------------------------- Validate && Persist ------------------------------------ 
 

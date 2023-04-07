@@ -30,15 +30,15 @@ class ControllerSettings extends MyController
         $errors = [];
 
         if (isset($_POST['email']) && isset($_POST['full_name']) && isset($_POST['iban'])) {
-            $tmpUser = new User(Tools::sanitize($_POST['email']), $user->hashed_password, Tools::sanitize($_POST['full_name']), $user->role, Tools::sanitize($_POST['iban']));
+            $tmpUser = new User($_POST['email'], $user->hashed_password, $_POST['full_name'], $user->role, $_POST['iban']);
             $errors = array_merge($errors, $tmpUser->validate());
             if($tmpUser->email != $user->email){
                 $errors = array_merge($errors, User::validate_email_unicity($tmpUser->email));
             }
             if (count($errors) == 0) {
-                $user->email = Tools::sanitize($_POST['email']);
-                $user->full_name = Tools::sanitize($_POST['full_name']);
-                $user->iban = Tools::sanitize($_POST['iban']);
+                $user->email = $_POST['email'];
+                $user->full_name = $_POST['full_name'];
+                $user->iban = $_POST['iban'];
                 $user->persist_update();
                 $this->redirect('settings', 'my_settings');
             }
@@ -57,9 +57,9 @@ class ControllerSettings extends MyController
         $password_confirm = '';
 
         if (isset($_POST['password']) && isset($_POST['password_confirm']) && isset($_POST['current_password'])) {
-            $password = Tools::sanitize($_POST['password']);
-            $password_confirm = Tools::sanitize($_POST['password_confirm']);
-            $current_password = Tools::sanitize($_POST['current_password']);
+            $password = $_POST['password'];
+            $password_confirm = $_POST['password_confirm'];
+            $current_password = $_POST['current_password'];
 
 
             $errors = self::validate_current_password($current_password, $user->hashed_password);

@@ -33,6 +33,7 @@ class RepartitionTemplates extends Model
             $tricountInstance = Tricount::get_tricount_by_id($repartition_template['tricount']);
             $array[] = new RepartitionTemplates($repartition_template['title'], $tricountInstance, $repartition_template['id']);
         }
+        array_multisort(array_column($array, 'title'), $array);
         return $array;
     }
 
@@ -41,6 +42,18 @@ class RepartitionTemplates extends Model
         $query = self::execute("SELECT * FROM repartition_templates WHERE id = :id", ["id" => $id]);
         $data = $query->fetch();
         return new RepartitionTemplates($data['title'], Tricount::get_tricount_by_id($data['tricount']), $data['id']);
+    }
+
+    public static function get_repartition_template_by_id_as_json(int $id): string
+    {
+        $repartition_template = RepartitionTemplates::get_repartition_template_by_id($id);
+
+        $table = [];
+        $table["title"] = $repartition_template->title;
+        $table["tricount"] = $repartition_template->tricount->id;
+        $table["id"] = $repartition_template->id;
+
+        return json_encode($table);
     }
 
 
