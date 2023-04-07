@@ -76,13 +76,13 @@
 <body>
     <div class="main">
         <header class="t2">
-            <a href="tricount/operations/<?= $tricount->id ?>" class="button" id="back">Cancel</a>
+            <a href="tricount/operations/<?=$_GET['param1'] ?>" class="button" id="back">Cancel</a>
             <p>Add Operation</p>
             <button class="button save" id="add" type="submit" form="add_operation_form">Save</button>
         </header>
-        <form id="add_operation_form" action="operation/add_operation/<?= $tricount->id ?>" method="post" class="edit">
+        <form id="add_operation_form" action="operation/add_operation/<?= $_GET['param1'] ?>" method="post" class="edit">
 
-            <input id="title" name="title" type="text" placeholder="Title" value='<?php if (!empty($title)) {echo $title;} else {echo '';} ?>' 
+            <input id="title" name="title" type="text" placeholder="Title" value='<?php if (!empty($operation->title)) {echo $operation->title;} else {echo '';} ?>' 
                                                                                             <?php if (array_key_exists('empty_title', $errors) || array_key_exists('length', $errors)) { ?>class="errorInput" <?php } ?>>
             <?php if (array_key_exists('empty_title', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['empty_title']; ?></p>
@@ -92,8 +92,8 @@
             <?php } ?>
             <table class="edit" id="currency">
                 <tr class="currency" id="tr_currency"<?php if (array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) { ?>style = "border-color: rgb(220, 53, 69)" <?php } ?>>
-                    <td><input id="amount" name="amount" type="text" placeholder="Amount" onchange="checkAmount();" value='<?php if (!empty($amount)) {
-                                                                                                        echo $amount;
+                    <td><input id="amount" name="amount" type="text" placeholder="Amount" onchange="checkAmount();" value='<?php if (!empty($operation->amount)) {
+                                                                                                        echo $operation->amount;
                                                                                                     } else {
                                                                                                         echo '';
                                                                                                     } ?>' ></td>
@@ -109,8 +109,8 @@
                 <p class="errorMessage"><?php echo $errors['empty_amount']; ?></p>
             <?php } ?>
             <label for="operation_date">Date</label>
-            <input id="operation_date" name="operation_date" type="date" value='<?php if (!empty($operation_date)) {
-                                                                                    echo $operation_date;
+            <input id="operation_date" name="operation_date" type="date" value='<?php if (!empty($operation->operation_date)) {
+                                                                                    echo $operation->operation_date;
                                                                                 } else {
                                                                                     echo '';
                                                                                 } ?>' <?php if (array_key_exists('empty_date', $errors)) { ?>class="errorInput" <?php } ?>>
@@ -119,13 +119,13 @@
             <?php } ?>
             <label for="paid_by">Paid by</label>
             <select name="paid_by" id="paid_by" class="edit edit2" <?php if (array_key_exists('empty_initiator', $errors)) { ?> style = "border-color: rgb(220, 53, 69)" <?php } ?>>
-                <?php if (!empty($initiator)) { ?>
-                    <option value="<?= $initiator->id ?>"><?= strlen($initiator->full_name) > 30 ? substr($initiator->full_name, 0, 30)."..." : $initiator->full_name ?></option>
+                <?php if (!is_null($operation->initiator)) { ?>
+                    <option value="<?= $operation->initiator->id ?>"><?= strlen($operation->initiator->full_name) > 30 ? substr($operation->initiator->full_name, 0, 30)."..." : $operation->initiator->full_name ?></option>
                 <?php } else { ?>
                     <option value=""> -- Who paid for it ? -- </option>
                 <?php } ?>
-                <?php foreach ($subscriptors as $subscriptor) {
-                    if ($subscriptor != $initiator) { ?>
+                <?php foreach (Tricount::get_tricount_by_id($_GET['param1'])->get_subscriptors_with_creator() as $subscriptor) {
+                    if ($subscriptor != $operation->initiator) { ?>
                         <option value="<?= $subscriptor->id ?>"><?= strlen($subscriptor->full_name) > 30 ? substr($subscriptor->full_name, 0, 30)."..." : $subscriptor->full_name ?></option>
                 <?php }
                 } ?>
@@ -141,25 +141,25 @@
                             <?php if (!empty($templateChoosen)) { ?> 
                                 <option value="<?= $templateChoosen->id ?>" selected><i><?= strlen($templateChoosen->title) > 30 ? substr($templateChoosen->title, 0, 30)."..." : $templateChoosen->title ?></i></option>
                                 <option value="No ill use custom repartition">-- No, i'll use custom repartition --</option>
-                                <?php foreach (RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id) as $template) {
+                                <?php foreach (RepartitionTemplates::get_all_repartition_templates_by_tricount_id($_GET['param1']) as $template) {
                                     if ($template != $templateChoosen) { ?>
                                         <option value="<?= $template->id ?>"><?= strlen($template->title) > 30 ? substr($template->title, 0, 30)."..." : $template->title ?></option>
                                 <?php }
                                 } ?>
                             <?php } else { ?>
                                 <option value="No ill use custom repartition" selected>-- No, i'll use custom repartition --</option>
-                                <?php foreach (RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount->id) as $template) { ?>
+                                <?php foreach (RepartitionTemplates::get_all_repartition_templates_by_tricount_id($_GET['param1']) as $template) { ?>
                                     <option value="<?= $template->id ?>"><?= strlen($template->title) > 30 ? substr($template->title, 0, 30)."..." : $template->title ?></option>
                             <?php }
                             } ?>
                         </select>
                     </td>
-                    <td class="subscriptor input"><input type="submit" value="&#8635;" formaction="operation/apply_template_add_operation/<?= $tricount->id ?>"></td>
+                    <td class="subscriptor input"><input type="submit" value="&#8635;" formaction="operation/apply_template_add_operation/<?= $_GET['param1'] ?>"></td>
                 </tr>
             </table>
             <label>For whom ? <i>(select at leat one)</i></label>
                 <ul>
-                    <?php foreach ($tricount->get_subscriptors_with_creator() as $subscriptor){ 
+                    <?php foreach (Tricount::get_tricount_by_id($_GET['param1'])->get_subscriptors_with_creator() as $subscriptor){ 
                         if(!empty($templateChoosen) && $templateChoosen->is_participant_template($subscriptor)){$repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_and_user($templateChoosen, $subscriptor);}
                         else{$repartition_template_items = '';}
                      ?>
