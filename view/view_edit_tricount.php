@@ -10,19 +10,61 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
     <script>
-        let add_btn, subs, table_subs, addables, added;
+        let tricount_id, add_btn, subs, table_subs, addables, added, desc_error;
+        let title, errTitle, description;
 
         $(function() {
             add_btn = $("#add_btn");
             table_subs = $("#table_subs");
             subs = <?= $tricount->get_subs_as_json() ?>;
-            addables = <?= $tricount->get_addables_as_json() ?>
+            addables = <?= $tricount->get_addables_as_json() ?>;
+            tricount_id = <?= $_GET['param1']?>;
+            description = $("#description");
+            desc_error = $("#desc_error");
+            title = $("#title");
+            errTitle = $("#errTitle");
 
             $("form.nosubmit").submit(function(e) {
                 e.preventDefault();
             });
             add_btn.click(addMember);
+            description.bind("input", checkDescription);
+            title.bind("input", checkTitle);
         })
+
+        function checkTitle() {
+            let ok = true;
+            title.attr("style", "");
+            errTitle.html("");
+            if (!(/^.{3,}$/).test(title.val())) {
+                errTitle.append("Title lenght must be longer than 3 character");
+                ok = false;
+                title.attr("style", "border-color: rgb(220, 53, 69)");
+            }
+            if (ok) {
+                checkTitleExists(ok);
+            }
+            return ok;
+        }
+
+        async function checkTitleExists(ok) {
+            const data = await $.getJSON("tricount/tricount_exists_service/" + title.val());
+            if (data) {
+                ok = false;
+                errTitle.append("Title already exists");
+                title.attr("style", "border-color: rgb(220, 53, 69)");
+            }
+        }
+
+        function checkDescription() {
+            $(description).next(".errorMessage").remove();
+            description.attr("style", "");
+
+            if (description.val() !== "" && !(/^.{3,}$/).test(description.val())) {
+                description.css("border-color", "rgb(220, 53, 69)");
+                description.after("<p class='errorMessage'>Description lenght must be >= 3</p>");
+            }
+        }
 
         function my_echo(str, len) {
             let html = "";
@@ -30,17 +72,30 @@
             return html;
         }
 
-        function deleteMember(btn, id) {
-            //delete given line
-            //console.log($(btn).closest("tr").html());
+        async function deleteMember(btn, id) {
+
+            /* -- front -- */
+            
             $(btn).closest("tr").hide();
-            //delete backend
+            // doit encore ajouter l'élément supprimé aux addables, à la liste + ordonner
+            
+            /* -- backend -- */
+
+            try {
+                const id = $(btn).closest("input").val();
+                await $.post("message/delete_subscriptor_service/" + tricount_id, {"id": id});
+            } catch(e) {
+                table_subs.html("<tr><td>An error occured</td></tr>");
+            }
+
             return false;
         }
 
-        function addMember() {
+        async function addMember() {
 
             /* -- front -- */
+
+            //doit encore retirer l'élément des addables et de la liste
             
             added = $("#subscriptor").find(":selected");
             added = addables[added.val()];
@@ -62,7 +117,7 @@
                     current.before(generateHTML(added));
                     
             /* -- back -- */
-                $.post("tricount/delete_subscriptor_service/" + added.id);
+                await $.post("tricount/add_subscriptor_service/" + tricount_id, {"id": added.id});
         }
             return false;
         }
@@ -72,13 +127,11 @@
             html += "<tr class='pop'>";
             html += "<td>" + my_echo(user.name) + "</td>";
             html += "<td class='link'>"
-            // if (user.deletable) {
-                html += "<form class='link' onsubmit='deleteMember(this, " + user.id + ");'";
-                html += "action='javascript:void(0);'" + "method='post'>";
-                html += "<input type='text' name='subscriptor_name' value='" + user.id + "' hidden>";
-                html += "<button type='submit' class='pop x'><i class='fa-regular fa-trash-can fa-sm' aria-hidden='true'></i></button>";
-                html += "</form>";
-            // }
+            html += "<form class='link' onsubmit='deleteMember(this, " + user.id + ");'";
+            html += "action='javascript:void(0);'" + "method='post'>";
+            html += "<input type='text' name='subscriptor_name' value='" + user.id + "' hidden>";
+            html += "<button type='submit' class='pop x'><i class='fa-regular fa-trash-can fa-sm' aria-hidden='true'></i></button>";
+            html += "</form>";
             html += "</td>"
             html += "</tr>";
             return html;
@@ -109,7 +162,7 @@
             <label>Description (optional) :</label>
             <textarea id="description" name="description" rows="3" placeholder="Description" <?php if (array_key_exists('description_length', $errors)) { ?>class="errorInput" <?php } ?>><?= $tricount->description ?></textarea>
             <?php if (array_key_exists('description_length', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['description_length']; ?></p>
+                <p id="desc_error" class="errorMessage"><?php echo $errors['description_length']; ?></p>
             <?php } ?>
         </form>
         <h3>Subscriptions</h3>

@@ -162,9 +162,9 @@ class ControllerTricount extends MyController
             Tools::abort("Invalid or missing argument.");
     }
 
-    public function add_subscriptor_service(int $id): void
+    public function add_subscriptor_service(): void
     {
-        
+        Tricount::get_tricount_by_id($_GET['param1'])->persist_subscriptor($_POST["id"]);
     }
 
 // --------------------------- Delete + ConfirmDelete Tricount && Delete Subs ------------------------------------ 
@@ -213,16 +213,19 @@ class ControllerTricount extends MyController
         $this->redirect('user', 'index');
     }
 
-    public function delete_subscriptor_service(int $id): void
+    public function delete_subscriptor_service(): void
     {
-        // $user = $this->get_user_or_redirect();
-        // if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
-        //     $tricount = Tricount::get_tricount_by_id($_GET['param1']);            
-        //     if (!$tricount->has_access($user))
-        //         $this->redirect();
-        //     $tricount->delete_subscriptor($id);
-        // } else
-        //     Tools::abort("Invalid or missing argument");
+        $user = $this->get_user_or_redirect();
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
+            $tricount = Tricount::get_tricount_by_id($_GET['param1']);            
+            if (!$tricount || !$tricount->has_access($user) || !isset($_POST["id"]) || !is_numeric($_POST["id"])) {
+                echo "false";
+                return ;
+            }
+            $tricount->delete_subscriptor($_POST["id"]);
+            echo "true";
+        } else
+            echo "false";
         
     }
 }
