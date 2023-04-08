@@ -89,11 +89,10 @@ class RepartitionTemplates extends Model
     public function add_repartition_template_from_operation(array $list, RepartitionTemplates $repartition_template): void
     {
         $repartition_template->persist_template();
-        $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($this->id);
-        foreach($repartition_template_items as $items){
-            $items->persist_repartition_template_items_with_template_0($list);
-        }
-        
+        foreach($list as $key => $value){
+            $repartition_template_items = new RepartitionTemplateItems((int) $value, User::get_user_by_id($key), $repartition_template);
+            $repartition_template_items->persist_repartition_template_items();
+       }
     }
 
 // --------------------------- Delete Template ------------------------------------ 
