@@ -77,7 +77,6 @@ class ControllerOperation extends MyController
 
                 if ($_POST['amount'] <= 0){
                     $errors ['amount'] = 'Amount must be strictly positive' ;
-
                 }
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
