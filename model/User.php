@@ -25,7 +25,7 @@ class User extends Model
         }
     }
 
-    public static function get_user_by_id(int $id): User |false
+    public static function get_user_by_id(int $id): User | false
     {
         $query = self::execute("SELECT * FROM users WHERE id =:id", ["id" => $id]);
         $data = $query->fetch();

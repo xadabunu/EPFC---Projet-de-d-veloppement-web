@@ -226,6 +226,5 @@ class ControllerTricount extends MyController
             echo "true";
         } else
             echo "false";
-        
     }
 }

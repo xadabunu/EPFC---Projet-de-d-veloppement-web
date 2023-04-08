@@ -27,7 +27,7 @@
             $("form.nosubmit").submit(function(e) {
                 e.preventDefault();
             });
-            add_btn.click(addMember);
+            add_btn.click(addSubscriptor);
             description.bind("input", checkDescription);
             title.bind("input", checkTitle);
         })
@@ -41,19 +41,19 @@
                 ok = false;
                 title.attr("style", "border-color: rgb(220, 53, 69)");
             }
-            if (ok) {
-                checkTitleExists(ok);
-            }
+            if (ok)
+                ok = checkTitleExists();
             return ok;
         }
 
-        async function checkTitleExists(ok) {
+        async function checkTitleExists() {
             const data = await $.getJSON("tricount/tricount_exists_service/" + title.val());
             if (data) {
-                ok = false;
                 errTitle.append("Title already exists");
                 title.attr("style", "border-color: rgb(220, 53, 69)");
+                return false;
             }
+            return true;
         }
 
         function checkDescription() {
@@ -72,18 +72,33 @@
             return html;
         }
 
-        async function deleteMember(btn, id) {
+        async function deleteSubscriptor(btn, id) {
 
             /* -- front -- */
             
             $(btn).closest("tr").hide();
-            // doit encore ajouter l'élément supprimé aux addables, à la liste + ordonner
-            
+            addables[id] = {
+                "name" : $(btn).parents().parents().children("td:first").html(),
+                "id" : id
+            }
+
+            let current = $("form[name='subscriptor']").find("option:first");
+            let next = $(current).next();
+
+            while (addables[id].name > current.html() && $(next).html()) {
+                current = next;
+                next = $(current).next();
+            }
+
+            if (addables[id].name > current.html())
+                current.after(generateSelectHTML(addables[id]));
+            else
+                current.before(generateSelectHTML(addables[id]));
+                        
             /* -- backend -- */
 
             try {
-                const id = $(btn).closest("input").val();
-                await $.post("message/delete_subscriptor_service/" + tricount_id, {"id": id});
+                await $.post("tricount/delete_subscriptor_service/" + tricount_id, {"id": id});
             } catch(e) {
                 table_subs.html("<tr><td>An error occured</td></tr>");
             }
@@ -91,14 +106,15 @@
             return false;
         }
 
-        async function addMember() {
+        async function addSubscriptor() {
 
             /* -- front -- */
-
-            //doit encore retirer l'élément des addables et de la liste
             
             added = $("#subscriptor").find(":selected");
-            added = addables[added.val()];
+            const tmp = added.val();
+            $("#subscriptor").val("-1");
+            added.remove();
+            added = addables[tmp];
             
             if (added) {
                 let current = table_subs.find("tr:first");
@@ -112,22 +128,32 @@
                 }
 
                 if (added.name > td_name.html())
-                    current.after(generateHTML(added));
+                    current.after(generateTableHTML(added));
                 else
-                    current.before(generateHTML(added));
+                    current.before(generateTableHTML(added));
+                $(addables).splice(added.id);
                     
             /* -- back -- */
+
                 await $.post("tricount/add_subscriptor_service/" + tricount_id, {"id": added.id});
-        }
+            }
             return false;
         }
 
-        function generateHTML(user) {
+        function generateSelectHTML(deleted) {
+            let html = "<option value='" + deleted.id + "'>";
+            html += my_echo(deleted.name, 20);
+            html += "</option>";
+
+            return html;
+        }
+
+        function generateTableHTML(user) {
             let html = "";
             html += "<tr class='pop'>";
             html += "<td>" + my_echo(user.name) + "</td>";
             html += "<td class='link'>"
-            html += "<form class='link' onsubmit='deleteMember(this, " + user.id + ");'";
+            html += "<form class='link' onsubmit='deleteSubscriptor(this, " + user.id + ");'";
             html += "action='javascript:void(0);'" + "method='post'>";
             html += "<input type='text' name='subscriptor_name' value='" + user.id + "' hidden>";
             html += "<button type='submit' class='pop x'><i class='fa-regular fa-trash-can fa-sm' aria-hidden='true'></i></button>";
@@ -172,7 +198,7 @@
                     <td><?= strlen($subscriptor->full_name) > 30 ? substr($subscriptor->full_name, 0, 30)."..." : $subscriptor->full_name ?> <?= $tricount->creator == $subscriptor ? "<i> (creator)</i>" : "" ?></td>
                     <td class="link">
                         <?php if (in_array($subscriptor, $tricount->get_deletables())) { ?>
-                            <form class="link nosubmit" onsubmit="deleteMember(this, <?= $subscriptor-> id ?>);" action='tricount/delete_subscriptor/<?= $tricount->id ?>' method='post'>
+                            <form class="link nosubmit" onsubmit="deleteSubscriptor(this, <?= $subscriptor-> id ?>);" action='tricount/delete_subscriptor/<?= $tricount->id ?>' method='post'>
                                 <input type='text' name='subscriptor_name' value='<?= $subscriptor->id ?>' hidden>
                                 <button type="submit" class="pop x"><i class="fa-regular fa-trash-can fa-sm" aria-hidden="true"></i></button>
                             </form>
@@ -181,12 +207,12 @@
                 </tr>
             <?php } ?>
         </table>
-        <form name="subscriptor" method="POST" class="edit nosubmit" onsubmit="addMember();">
+        <form name="subscriptor" method="POST" class="edit nosubmit" onsubmit="addSubscriptor();">
             <table>
                 <tr>
                     <td class="subscriptor">
                         <select name="subscriptor" id="subscriptor">
-                            <option selected disabled>--Add a new subscriber--</option>
+                            <option id="cbo_box" selected disabled value="-1">--Add a new subscriber--</option>
                             <?php foreach ($tricount->get_cbo_users() as $cbo_user) { ?>
                                 <option value="<?= $cbo_user->id ?>"><?= strlen($cbo_user->full_name) > 20 ? substr($cbo_user->full_name, 0, 20)."..." : $cbo_user->full_name ?></option>
                             <?php } ?>
