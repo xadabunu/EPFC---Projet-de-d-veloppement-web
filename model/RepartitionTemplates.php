@@ -56,6 +56,13 @@ class RepartitionTemplates extends Model
         return json_encode($table);
     }
 
+    public static function get_template_data_by_title_and_tricount(string $title, int $tricountId): array | false
+    {
+        $query = self::execute("SELECT * FROM repartition_templates WHERE title = :title AND tricount = :tricountId", ["title" => $title, "tricountId" => $tricountId]);
+        $data = $query->fetch();
+        return $data;
+   }
+
 
 // --------------------------- Validate && Persist ------------------------------------ 
 
@@ -65,6 +72,11 @@ class RepartitionTemplates extends Model
         $errors = [];
         if (strlen($this->title) < 3 || strlen($this->title) > 256) {
             $errors['template_length'] = "Title length must be between 3 and 256.";
+        }
+
+        $data = self::get_template_data_by_title_and_tricount($this->title, $this->tricount->id);
+        if($data ? (empty($data) ? false : ( $this->id  == 0 ? true : ($data['id'] == $this->id ? false : true))) : false){
+            $errors['duplicate_title'] = "Title already exists in this tricount.";
         }
         return $errors;
     }
