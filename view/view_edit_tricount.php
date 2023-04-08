@@ -42,12 +42,12 @@
                 title.attr("style", "border-color: rgb(220, 53, 69)");
             }
             if (ok) {
-                checkTitleExists(ok);
+                checkTitleExists();
             }
             return ok;
         }
 
-        async function checkTitleExists(ok) {
+        async function checkTitleExists() {
             const data = await $.getJSON("tricount/tricount_exists_service/" + title.val());
             if (data) {
                 ok = false;
@@ -66,6 +66,12 @@
             }
         }
 
+        function checkTitleAndDescription() {
+            let ok = checkTitle();
+            ok = checkDescription() && ok;
+            return ok;
+        }
+
         function my_echo(str, len) {
             let html = "";
             html += str.len > len ? substr(user.name, 0, len - 3) + "..." : str;
@@ -82,8 +88,7 @@
             /* -- backend -- */
 
             try {
-                const id = $(btn).closest("input").val();
-                await $.post("message/delete_subscriptor_service/" + tricount_id, {"id": id});
+                await $.post("tricount/delete_subscriptor_service/" + tricount_id, {"id": id});
             } catch(e) {
                 table_subs.html("<tr><td>An error occured</td></tr>");
             }
@@ -147,9 +152,10 @@
             <button form="edittricountform" type="submit" class="button save" id="add">Save</button>
         </header>
         <h3>Settings</h3>
-        <form id="edittricountform" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post" class="edit">
+        <form id="edittricountform" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post" class="edit" onsubmit="return checkTitleAndDescription();">
             <label>Title :</label>
             <input id="title" name="title" type="text" value="<?= $tricount->title ?>" <?php if (array_key_exists('required', $errors) || array_key_exists('title_length', $errors) || array_key_exists('unique_title', $errors)) { ?>class="errorInput" <?php } ?>>
+            <p class = "errorMessage" id="errTitle"></p>
             <?php if (array_key_exists('required', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['required']; ?></p>
             <?php }
