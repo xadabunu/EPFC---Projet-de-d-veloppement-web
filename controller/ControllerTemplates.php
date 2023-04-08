@@ -55,19 +55,19 @@ class ControllerTemplates extends MyController
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
 
+                
+                $repartition_template = new RepartitionTemplates($title, $tricount);
+                $errors = array_merge($errors, $repartition_template->validate_repartition_template());
+                
                 if (count($errors) == 0) {
-                    $repartition_template = new RepartitionTemplates($title, $tricount);
-                    $errors = $repartition_template->validate_repartition_template();
-                    
-                    if (count($errors) == 0) {
-                        $repartition_template->persist_template();
-                        $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($repartition_template->id);
-                        foreach($repartition_template_items as $items){
-                            $items->persist_repartition_template_items_with_template_0($list);
-                        }
-                        $this->redirect('templates', 'manage_templates', $tricount->id);
-                    }
+                    $repartition_template->persist_template();
+                    foreach($list as $key => $value){
+                        $repartition_template_items = new RepartitionTemplateItems((int) $value, User::get_user_by_id($key), $repartition_template);
+                        $repartition_template_items->persist_repartition_template_items();
+                   }
+                    $this->redirect('templates', 'manage_templates', $tricount->id);
                 }
+                
             }
             (new View('add_template'))->show(['list'=> $list,'tricount' => $tricount,'errors' => $errors]);
         }
@@ -78,7 +78,6 @@ class ControllerTemplates extends MyController
 
     public function edit_template(): void
     {
-
         if (isset($_GET['param1']) && is_numeric($_GET['param1']) && isset($_GET['param2']) && is_numeric($_GET['param2'])){
             $list = [];
             $errors = [];
