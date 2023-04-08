@@ -18,12 +18,15 @@ class ControllerTricount extends MyController
     public function tricount_exists_service(): void {
         $rez = "false";
         if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
-            $tricount = Tricount::get_tricount_by_title($_GET["param1"]);
-            if ($tricount) {
-                $rez = "true";
+            $user = $this->get_user_or_redirect();
+            $tricounts = $user->get_created_tricounts();
+            foreach ($tricounts as $tri) {
+                if($tri->title === $_GET["param1"]){
+                    $rez = "true";
+                }
             }
-            echo $rez;
         }
+        echo $rez;    
     }
 
     public function operations(): void
@@ -93,9 +96,6 @@ class ControllerTricount extends MyController
 
         if (isset($_POST['title']) && isset($_POST['description'])) {
             $user = $this->get_user_or_redirect();
-            $tricount = Tricount::get_tricount_by_id($_GET['param1']);
-            if (!$tricount->has_access($user))
-                $this->redirect();
             $title = $_POST['title'];
             $description = $_POST['description'];
             $creator = MyController::get_user_or_redirect();

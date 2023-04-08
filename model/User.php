@@ -46,6 +46,18 @@ class User extends Model
         }
         return $array;
     }
+
+    public function get_created_tricounts() : array
+    {
+        $query = self::execute("SELECT * FROM tricounts WHERE creator = :id", ["id"=> $this->id]);
+        $data = $query->fetchAll();
+        $array = [];
+        foreach ($data as $tricount) {
+            $array[] = new Tricount($tricount['title'], $tricount['created_at'], User::get_user_by_id($tricount['creator']), $tricount['description'], $tricount['id']);
+        }
+        return $array;
+    }
+
     private static function get_user_by_password(string $clear_password): User |false
     {
         $hashed_password = Tools::my_hash($clear_password);
