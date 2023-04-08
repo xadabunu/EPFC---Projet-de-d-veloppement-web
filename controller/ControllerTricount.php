@@ -135,6 +135,7 @@ class ControllerTricount extends MyController
             (new View("edit_tricount"))->show([
                 'tricount' => $tricount,
                 'errors' => $errors,
+                'user' => $user
             ]);
         } else {
             Tools::abort("Invalid or missing argument.");

@@ -12,6 +12,7 @@
     <script>
         let tricount_id, add_btn, subs, table_subs, addables, added, desc_error;
         let title, errTitle, description;
+        const user_id = "<?= $user->id ?>";
 
         $(function() {
             add_btn = $("#add_btn");
@@ -108,6 +109,9 @@
             } catch(e) {
                 table_subs.html("<tr><td>An error occured</td></tr>");
             }
+
+            if (id == user_id)
+                location.reload();
 
             return false;
         }
