@@ -227,11 +227,11 @@
                 <p class="errorMessage"><?php echo $errors['weight']; ?></p>
             <?php } ?>
             Add a new repartition template
-            <table <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
+            <table <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors) || array_key_exists('duplicate_title', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                 <tr>
                     <td class="check"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
                     <td class="template">Save this template</td>
-                    <td><input id="template_title" name="template_title" type="text" placeholder="name"></td>
+                    <td><input id="template_title" name="template_title" type="text" placeholder="name"  value='<?php if (!empty($repartition_template)) {echo $repartition_template->title;} else {echo '';} ?>'></td>
                     <?php if (array_key_exists('empty_template_title', $errors)) { ?>
                         <p class="errorMessage"><?php echo $errors['empty_template_title']; ?></p>
                     <?php } ?>

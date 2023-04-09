@@ -63,6 +63,7 @@ class ControllerOperation extends MyController
             if (!$tricount->has_access($user))
                 $this->redirect();
             $operation = '';
+            $repartition_template='';
             $errors = [];
             $list = [];
             $repartition_template_choosen = '';
@@ -70,9 +71,11 @@ class ControllerOperation extends MyController
 
                 if(is_numeric($_POST['paid_by'])){
                     $operation = new Operation($_POST['title'], Tricount::get_tricount_by_id($_GET['param1']), floatval($_POST['amount']), $_POST['operation_date'], User::get_user_by_id(($_POST['paid_by'])), Date("Y-m-d H:i:s"));
+                    $repartition_template = new RepartitionTemplates($_POST["template_title"], $tricount);
                 }
                 else {
                     $operation = new Operation($_POST['title'], Tricount::get_tricount_by_id($_GET['param1']), floatval($_POST['amount']), $_POST['operation_date'], null, Date("Y-m-d H:i:s"));
+                    $repartition_template = new RepartitionTemplates($_POST["template_title"], $tricount);
                 }
 
                 if ($_POST['amount'] <= 0){
@@ -89,7 +92,7 @@ class ControllerOperation extends MyController
                     $errors = $operation->validate_operations();
 
                     if (isset($_POST["save_template_checkbox"])) {
-                        $repartition_template = new RepartitionTemplates($_POST["template_title"], $tricount);
+                        
                         $errors = array_merge($errors, $repartition_template->validate_repartition_template());
                     }
 
@@ -104,7 +107,7 @@ class ControllerOperation extends MyController
                 }
             }
             (new View("add_operation"))->show([
-                'operation' => $operation,'errors' => $errors,'list'=>$list, 'templateChoosen' => $repartition_template_choosen]);
+                'operation' => $operation,'errors' => $errors,'list'=>$list, 'templateChoosen' => $repartition_template_choosen, 'repartition_template' => $repartition_template]);
         } else
             Tools::abort("Invalid or missing argument.");
     }
@@ -243,7 +246,7 @@ class ControllerOperation extends MyController
                 $this->redirect();
             (new View('delete_operation'))->show(['operation' => $operation]);
         } else {
-            Tools::abort('Invalid or missing arguments.');
+            Tools::abort('Invalid or missing argument.');
         }
     }    
 
@@ -303,7 +306,7 @@ class ControllerOperation extends MyController
                 'titleValue' => $title, 'amountValue' => $amount, 'operation_dateValue' => $operation_date, 'paid_byValue' => $paid_by,
                 'templateChoosen' => $repartition_template_choosen]);
         } else
-            Tools::abort("Invalid or missing arument.");
+            Tools::abort("Invalid or missing argument.");
     }
 
     public function apply_template_add_operation(): void
@@ -345,7 +348,7 @@ class ControllerOperation extends MyController
                 'operation_date' => $operation_date, 'initiator' => $initiator, 'list'=>$list,
                 'templateChoosen' => $repartition_template_choosen]);
         } else
-            Tools::abort("Invalid or missing arument.");
+            Tools::abort("Invalid or missing argument.");
     }
 
 // --------------------------- Javascipt Apply template for add/edit operation ------------------------------------ 
