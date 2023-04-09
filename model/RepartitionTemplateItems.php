@@ -15,21 +15,6 @@ class RepartitionTemplateItems extends Model
 
 // --------------------------- Get ------------------------------------ 
 
-    public function get_repartition_template_items(): array
-    {
-        $array = [];
-        $query = self::execute("SELECT * FROM repartition_template_items WHERE repartition_template = :id", ["id" => $this->repartition_template->id]);
-        $data = $query->fetchAll();
-        foreach ($data as $template_item) {
-            $array[] = new RepartitionTemplateItems($template_item["weight"], User::get_user_by_id($template_item["user"]), RepartitionTemplates::get_repartition_template_by_id($template_item['repartition_template']));
-        }
-        usort($array, function($a, $b)
-            {
-                return strcmp($a->user->full_name, $b->user->full_name);
-            });
-        return $array; 
-    }
-
     public static function get_repartition_template_items_by_repartition_template_id(int $id): array
     {
         $array = [];
@@ -70,17 +55,6 @@ class RepartitionTemplateItems extends Model
 
 
 // --------------------------- Validate && Persist ------------------------------------ 
-
-    public function persist_repartition_template_items_with_list(array $list): void
-    {
-        $this->delete_repartition_template_items();
-        $array = array_keys($list);
-        foreach ($array as $id) {
-            if($this->user->id == $id){
-                self::execute("INSERT INTO repartition_template_items(user, repartition_template, weight) VALUES(:user, :repartition_template, :weight)", ['user' => $id, 'repartition_template' => $this->repartition_template->id, 'weight' => $list[$id]]);
-            }
-        }
-    }
 
     public function persist_repartition_template_items(): void
     {

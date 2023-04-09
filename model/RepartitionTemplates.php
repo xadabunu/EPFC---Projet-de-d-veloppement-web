@@ -20,7 +20,6 @@ class RepartitionTemplates extends Model
         $res = [];
         foreach ($list as $var)
             $res[] = $var['id'];
-
         return $res;
     }     
 
