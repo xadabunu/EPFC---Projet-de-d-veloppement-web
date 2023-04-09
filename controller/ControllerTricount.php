@@ -39,17 +39,10 @@ class ControllerTricount extends MyController
             if (!$tricount->has_access($user))
                 $this->redirect();
             $list = $tricount->get_operations();
-            $total = $tricount->get_total_expenses();
-            $user_total = $tricount->get_user_total($user->id);
-            $alone = $tricount->get_number_of_participants() == 1;
-            $operations_json = $tricount->get_operation_as_json();
             (new View("tricount"))->show([
                 "list" => $list,
                 "tricount" => $tricount,
-                "total" => $total,
-                "user_total" => $user_total,
-                "alone" => $alone,
-                "operations_json" => $operations_json
+                "user" => $user
             ]);
         } else {
             Tools::abort("Invalid or missing argument.");
@@ -183,6 +176,8 @@ class ControllerTricount extends MyController
             $subscriptor = $_POST['subscriptor_name'];
             $tricount->delete_subscriptor($subscriptor);
             $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
+        } else {
+            Tools::abort("Invalid or missing argument");
         }
     }
 

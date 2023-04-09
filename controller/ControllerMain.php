@@ -26,6 +26,9 @@ class ControllerMain extends MyController
         $password = "";
         $errors = [];
 
+        if ($this->get_user_or_false())
+            $this->redirect();
+
         if (isset($_POST['email']) && isset($_POST['password'])) {
             $email = $_POST['email'];
             $password = $_POST['password'];
@@ -47,10 +50,11 @@ class ControllerMain extends MyController
         $password_confirm = '';
         $errors = [];
 
-        if (
-            isset($_POST['email']) && isset($_POST['password']) && isset($_POST['password_confirm'])
-            && isset($_POST['full_name']) && isset($_POST['iban'])
-        ) {
+        if ($this->get_user_or_false())
+            $this->redirect();
+
+        if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['password_confirm'])
+            && isset($_POST['full_name']) && isset($_POST['iban'])) {
 
             $email = $_POST['email'];
             $full_name = $_POST['full_name'];
