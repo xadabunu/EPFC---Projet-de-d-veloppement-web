@@ -95,6 +95,15 @@
             updateAmounts();
         }
 
+        function saveTemplateCheckbox(e) {
+            if($(e).val()){
+                $("#save_template").prop("checked", true);
+            }
+            else{
+                $("#save_template").prop("checked", false);
+            }
+        }
+
         $(function() {
             op_amount = <?= $operation->amount ?>;
             lbl_amount = $("#amount");
@@ -246,7 +255,7 @@
                 <tr>
                     <td class="check"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
                     <td class="template">Save this template</td>
-                    <td><input id="template_title" name="template_title" type="text" size="16" placeholder="name" value='<?php if (!empty($repartition_template)) {echo $repartition_template->title;} else {echo '';} ?>'></td>
+                    <td><input oninput="saveTemplateCheckbox(this);" id="template_title" name="template_title" type="text" size="16" placeholder="name" value='<?php if (!empty($repartition_template)) {echo $repartition_template->title;} else {echo '';} ?>'></td>
 
                     <?php if (array_key_exists('empty_template_title', $errors)) { ?>
                         <p class="errorMessage"><?php echo $errors['empty_template_title']; ?></p>
