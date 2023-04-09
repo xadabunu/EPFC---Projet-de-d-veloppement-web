@@ -21,7 +21,7 @@ class ControllerTricount extends MyController
             $user = $this->get_user_or_redirect();
             $tricounts = $user->get_created_tricounts();
             foreach ($tricounts as $tri) {
-                if($tri->title === $_GET["param1"]){
+                if ($tri->title === $_GET["param1"]) {
                     $rez = "true";
                 }
             }
@@ -38,9 +38,7 @@ class ControllerTricount extends MyController
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             if (!$tricount->has_access($user))
                 $this->redirect();
-            $list = $tricount->get_operations();
             (new View("tricount"))->show([
-                "list" => $list,
                 "tricount" => $tricount,
                 "user" => $user
             ]);

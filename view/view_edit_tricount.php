@@ -28,7 +28,6 @@
             $("form.nosubmit").submit(function(e) {
                 e.preventDefault();
             });
-            add_btn.click(addSubscriptor);
             description.bind("input", checkDescription);
             title.bind("input", checkTitle);
         })
@@ -223,7 +222,7 @@
                 <tr>
                     <td class="subscriptor">
                         <select name="subscriptor" id="subscriptor">
-                            <option id="cbo_box" selected disabled value="-1">--Add a new subscriber--</option>
+                            <option id="cbo_box" selected value="-1">--Add a new subscriber--</option>
                             <?php foreach ($tricount->get_cbo_users() as $cbo_user) { ?>
                                 <option value="<?= $cbo_user->id ?>"><?= strlen($cbo_user->full_name) > 20 ? substr($cbo_user->full_name, 0, 20)."..." : $cbo_user->full_name ?></option>
                             <?php } ?>

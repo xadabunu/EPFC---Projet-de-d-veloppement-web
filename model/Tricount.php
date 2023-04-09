@@ -239,7 +239,13 @@ class Tricount extends Model
 
     public function delete_subscriptor(int $id): void
     {
+        $this->delete_repartition_template_item($id);
         self::execute("DELETE FROM subscriptions WHERE user=:user_id AND tricount=:tricount_id ", ["user_id" => $id, "tricount_id" => $this->id]);
+    }
+
+    private function delete_repartition_template_item(int $id): void
+    {
+        self::execute("DELETE FROM repartition_template_items WHERE user = :id", ["id" => $id]);
     }
 
 

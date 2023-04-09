@@ -243,7 +243,7 @@ class ControllerOperation extends MyController
                 $this->redirect();
             (new View('delete_operation'))->show(['operation' => $operation]);
         } else {
-            Tools::abort('Invalid or missing arguments.');
+            Tools::abort('Invalid or missing argument.');
         }
     }    
 
@@ -303,7 +303,7 @@ class ControllerOperation extends MyController
                 'titleValue' => $title, 'amountValue' => $amount, 'operation_dateValue' => $operation_date, 'paid_byValue' => $paid_by,
                 'templateChoosen' => $repartition_template_choosen]);
         } else
-            Tools::abort("Invalid or missing arument.");
+            Tools::abort("Invalid or missing argument.");
     }
 
     public function apply_template_add_operation(): void
@@ -345,7 +345,7 @@ class ControllerOperation extends MyController
                 'operation_date' => $operation_date, 'initiator' => $initiator, 'list'=>$list,
                 'templateChoosen' => $repartition_template_choosen]);
         } else
-            Tools::abort("Invalid or missing arument.");
+            Tools::abort("Invalid or missing argument.");
     }
 
 // --------------------------- Javascipt Apply template for add/edit operation ------------------------------------ 
