@@ -17,7 +17,8 @@
         document.onreadystatechange = function() {
             if (document.readyState === 'complete') {
                 tblOperations = document.getElementById('operation_list');
-                if (tblOperations) {   
+                if (tblOperations) {
+                    displayTable();   
                     document.getElementById('sort').onchange = function() {
                         sort(this.value);
                     }
