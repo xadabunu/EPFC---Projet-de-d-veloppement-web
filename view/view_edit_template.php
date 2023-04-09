@@ -23,7 +23,8 @@
 
         <form id="edittemplateform" action="templates/edit_template/<?= $tricount->id ?>/<?= $template->id ?>" method="post" class="edit">
             <label for="title">Title :</label>
-            <input id="title" name="title" type="text" size="16" value="<?= $template->title ?>" <?php if (array_key_exists('empty_title', $errors) || array_key_exists('length', $errors)) { ?>class="errorInput" <?php } ?>>
+            <input id="title" name="title" type="text" size="16" value="<?= $template->title ?>" 
+            <?php if (array_key_exists('empty_title', $errors) || array_key_exists('duplicate_title', $errors) || array_key_exists('template_length', $errors)) { ?>class="errorInput" style = "border-color:rgb(220, 53, 69)"<?php } ?>>
 
             <?php if (array_key_exists('duplicate_title', $errors)) { ?>
                         <p class="errorMessage"><?php echo $errors['duplicate_title']; ?></p>

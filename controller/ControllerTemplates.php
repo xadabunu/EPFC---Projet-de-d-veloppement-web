@@ -41,6 +41,7 @@ class ControllerTemplates extends MyController
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
             $list = [];
             $errors = [];
+            $repartition_template = '';
 
             $user = $this->get_user_or_redirect();
             if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
@@ -67,7 +68,7 @@ class ControllerTemplates extends MyController
                 }
                 
             }
-            (new View('add_template'))->show(['list'=> $list,'tricount' => $tricount,'errors' => $errors]);
+            (new View('add_template'))->show(['list'=> $list,'tricount' => $tricount,'errors' => $errors, 'template' => $repartition_template]);
         }
         else{
             Tools::abort('Invalid or missing argument.');
