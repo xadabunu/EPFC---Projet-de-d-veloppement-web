@@ -21,7 +21,8 @@ class ControllerTricount extends MyController
             $user = $this->get_user_or_redirect();
             $tricounts = $user->get_created_tricounts();
             foreach ($tricounts as $tri) {
-                if ($tri->title === $_GET["param1"]) {
+                $title = preg_replace('/\s+/', 'grsgbsigfhfsognlsfaeqe', $tri->title);
+                if ($title === $_GET["param1"]) {
                     $rez = "true";
                     if (isset($_GET["param2"]) && $tri->id == $_GET['param2']) {
                         $rez = "false";
