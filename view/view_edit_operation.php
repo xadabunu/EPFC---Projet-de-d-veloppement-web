@@ -92,6 +92,7 @@
                     $("input[name='weight_" + item.user + "']").val(item.weight);
                 } 
             }
+            updateAmounts();
         }
 
         $(function() {
@@ -101,7 +102,6 @@
             tr_currency = $("#tr_currency");
             for_whom_table = $("#for_whom");
             err_whom = $("#errWhom");
-            template_dom = $("#template");
             choosing_template = $("#templates");
             $("#button_apply_template").hide();
         })
@@ -214,7 +214,7 @@
                      ?>
                         <li>
                             <table class="whom" <?php  if((array_key_exists("whom", $errors)) || (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]))) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
-                                <tr class="edit" id="template" onchange="checkWeight(this);">
+                                <tr class="edit" id='tr_template_<?= $subscriptor->id ?>' onchange="checkWeight(this);">
                                     <td class="check">
                                         <p><input class="checkbox_template" type='checkbox' id='checkbox_<?= $subscriptor->id ?>' <?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? 'checked' : 'unchecked') : (empty($repartition_template_items) ? 'unchecked' :  'checked' )) : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked');?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
