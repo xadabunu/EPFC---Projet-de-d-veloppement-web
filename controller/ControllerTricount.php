@@ -59,14 +59,12 @@ class ControllerTricount extends MyController
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             if (!$tricount->has_access($user))
                 $this->redirect();
-            $list = $tricount->get_subscriptors_with_creator();
             $amounts = [];
-            foreach ($list as $sub) {
+            foreach ($tricount->get_subscriptors_with_creator() as $sub) {
                 $amounts[$sub->id] = $tricount->get_balance($sub->id);
             }
             (new View("balance"))->show([
                 "user" => $user,
-                "subs" => $list,
                 "amounts" => $amounts,
                 "tricount" => $tricount,
                 "max" => max(array_map("abs", $amounts))

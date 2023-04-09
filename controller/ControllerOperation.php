@@ -62,7 +62,7 @@ class ControllerOperation extends MyController
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             if (!$tricount->has_access($user))
                 $this->redirect();
-            $operation = '';
+            $operation = new Operation("", Tricount::get_tricount_by_id($_GET["param1"]), 0, date("Y-m-d"), $user, date("Y/m/d"));
             $repartition_template='';
             $errors = [];
             $list = [];

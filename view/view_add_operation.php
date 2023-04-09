@@ -195,7 +195,7 @@
             </table>
             <label>For whom ? <i>(select at leat one)</i></label>
                 <ul>
-                    <?php foreach (Tricount::get_tricount_by_id($_GET['param1'])->get_subscriptors_with_creator() as $subscriptor){ 
+                    <?php foreach (Tricount::get_tricount_by_id($_GET['param1'])->get_subscriptors_with_creator() as $subscriptor) { 
                         if(!empty($templateChoosen) && $templateChoosen->is_participant_template($subscriptor)){$repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_and_user($templateChoosen, $subscriptor);}
                         else{$repartition_template_items = '';}
                      ?>
