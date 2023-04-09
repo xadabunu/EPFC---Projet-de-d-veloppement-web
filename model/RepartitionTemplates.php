@@ -26,14 +26,12 @@ class RepartitionTemplates extends Model
 
     public static function get_all_repartition_templates_by_tricount_id(int $id): array
     {
-        $query = self::execute("SELECT * FROM repartition_templates WHERE tricount = :id", ["id" => $id]);
+        $query = self::execute("SELECT * FROM repartition_templates WHERE tricount = :id ORDER BY title ASC", ["id" => $id]);
         $data = $query->fetchAll();
         $array = [];
         foreach ($data as $repartition_template) {
-            $tricountInstance = Tricount::get_tricount_by_id($repartition_template['tricount']);
-            $array[] = new RepartitionTemplates($repartition_template['title'], $tricountInstance, $repartition_template['id']);
+            $array[] = new RepartitionTemplates($repartition_template['title'], Tricount::get_tricount_by_id($repartition_template['tricount']), $repartition_template['id']);
         }
-        array_multisort(array_column($array, 'title'), $array);
         return $array;
     }
 

@@ -23,7 +23,10 @@ class RepartitionTemplateItems extends Model
         foreach ($data as $template_item) {
             $array[] = new RepartitionTemplateItems($template_item["weight"], User::get_user_by_id($template_item["user"]), RepartitionTemplates::get_repartition_template_by_id($template_item['repartition_template']));
         }
-        array_multisort(array_column($array, 'user'), $array);
+        usort($array, function($a, $b)
+            {
+                return strcmp($a->user->full_name, $b->user->full_name);
+            });
         return $array; 
     }
 
@@ -35,7 +38,10 @@ class RepartitionTemplateItems extends Model
         foreach ($data as $template_item) {
             $array[] = new RepartitionTemplateItems($template_item["weight"], User::get_user_by_id($template_item["user"]), RepartitionTemplates::get_repartition_template_by_id($template_item['repartition_template']));
         }
-        array_multisort(array_column($array, 'user'), $array);
+        usort($array, function($a, $b)
+            {
+                return strcmp($a->user->full_name, $b->user->full_name);
+            });
         return $array;
     }
 
