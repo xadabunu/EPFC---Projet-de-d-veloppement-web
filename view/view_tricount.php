@@ -17,10 +17,12 @@
         document.onreadystatechange = function() {
             if (document.readyState === 'complete') {
                 tblOperations = document.getElementById('operation_list');
-                displayTable();
-                document.getElementById('sort').onchange = function() {
-                    sort(this.value);
-                }
+                if (tblOperations) {
+                    displayTable();   
+                    document.getElementById('sort').onchange = function() {
+                        sort(this.value);
+                    }
+                }    
             }
         };
 

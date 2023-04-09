@@ -48,13 +48,11 @@ class ControllerTemplates extends MyController
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))
                 $this->redirect();
-            $subscriptors = $tricount->get_subscriptors_with_creator();
 
             if (isset($_POST['title'])) {
                 $title = $_POST['title'];
                 $list = self::get_weight($_POST, $tricount);
                 $errors = array_merge($errors, self::is_valid_fields($_POST, $tricount));
-
                 
                 $repartition_template = new RepartitionTemplates($title, $tricount);
                 $errors = array_merge($errors, $repartition_template->validate_repartition_template());

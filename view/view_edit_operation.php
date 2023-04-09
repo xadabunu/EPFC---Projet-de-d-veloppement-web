@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="<?= $web_root ?>">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
-    <title><?= $titleValue ?> &#11208; Edit</title>
+    <title><?= $operation->title ?> &#11208; Edit</title>
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
     <script>
         let op_amount, err_amount, lbl_amount, tr_currency, for_whom_table, err_whom;

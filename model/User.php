@@ -130,7 +130,7 @@ class User extends Model
         if ((strlen($this->full_name) < 3) || strlen($this->full_name) > 256) {
             $errors['length'] = "Name length must be between 3 and 256.";
         }
-        if (!preg_match("/^[A-Za-zÀ-ÿ]*$/", $this->full_name)) {
+        if (!preg_match("/^[A-Za-zÀ-ÿ\s]*$/", $this->full_name)) {
             $errors['name_contains'] = "Name must contains only letters";
         }
         if (!preg_match("/^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/", $this->iban)) {
