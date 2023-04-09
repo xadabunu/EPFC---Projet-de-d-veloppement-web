@@ -48,7 +48,7 @@
         }
 
         async function checkTitleExists() {
-            const data = await $.getJSON("tricount/tricount_exists_service/" + title.val());
+            const data = await $.getJSON("tricount/tricount_exists_service/" + title.val() + "/" + tricount_id);
             if (data) {
                 errTitle.append("Title already exists");
                 title.attr("style", "border-color: rgb(220, 53, 69)");
