@@ -13,16 +13,25 @@ class Repartitions extends Model
 
 // --------------------------- Get ------------------------------------ 
 
-    public static function get_repartitions_by_operation_id(int $id): array
+  
+    public static function get_all_repartitions_by_operation_id(int $id): array
     {
         $query = self::execute("SELECT * FROM repartitions WHERE operation = :id", ["id" => $id]);
         $data = $query->fetchAll();
         $list = [];
         foreach ($data as $var) {
-            $list[$var['user']] = $var['weight'];
+            $list[] = new Repartitions($var['weight'], Operation::get_operation_by_id($var['operation']), User::get_user_by_id($var['user']));
         }
         return $list;
     }
+
+    public static function get_repartition_by_operation_and_user_id(int $operation_id, User $user): Repartitions
+    {
+        $query = self::execute("SELECT * FROM repartitions WHERE operation = :operation AND user = :user", ["operation" => $operation_id, "user" => $user->id]);
+        $data = $query->fetch();
+        return new Repartitions($data['weight'], Operation::get_operation_by_id($operation_id), $user);
+    }
+
 
 // --------------------------- Delete ------------------------------------ 
 

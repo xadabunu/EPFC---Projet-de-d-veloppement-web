@@ -9,7 +9,7 @@
     <script src="lib/jquery-3.6.3.js" type="text/javascript"></script>
     <title><?= $tricount->title ?> &#11208; Expenses</title>
     <script>
-        const operations = <?= $operations_json ?>;
+        const operations = <?= $tricount->get_operation_as_json() ?>;
         let tblOperations;
         let sortChoice = "operation_date";
         let sortAscending = false;
@@ -17,10 +17,12 @@
         document.onreadystatechange = function() {
             if (document.readyState === 'complete') {
                 tblOperations = document.getElementById('operation_list');
-                displayTable();
-                document.getElementById('sort').onchange = function() {
-                    sort(this.value);
-                }
+                if (tblOperations) {
+                    displayTable();   
+                    document.getElementById('sort').onchange = function() {
+                        sort(this.value);
+                    }
+                }    
             }
         };
 
@@ -68,8 +70,8 @@
             <p><?= strlen($tricount->title) <= 20 ? $tricount->title : substr($tricount->title, 0, 18) . "..." ?> &#11208; Expenses</p>
             <a href="tricount/edit_tricount/<?= $tricount->id ?>" class="button" id="add">Edit</a>
         </header>
-        <?php if (empty($list)) { ?>
-            <?php if ($alone) { ?>
+        <?php if (empty($tricount->get_operations())) { ?>
+            <?php if ($tricount->get_number_of_participants() == 1) { ?>
                 <table>
                     <tr>
                         <th class="empty">You are alone!</th>
@@ -96,28 +98,27 @@
             <?php }
         } else { ?>
             <p class="balance"><a href="tricount/balance/<?= $tricount->id ?>" class="button" id="balance"><b>&#8644;</b> View balance</a></p>
-            <p>Order expenses by:
-                <select id="sort">
-                    <option value="">Select</option>
-                    <option value="operation_date">Date &#9650;</option>
-                    <option value="operation_date">Date &#9660;</option>
-                    <option value="amount">Amount &#9650;</option>
-                    <option value="amount">Amount &#9660;</option>
-                    <option value="initiator">Paid by &#9650;</option>
-                    <option value="initiator">Paid by &#9660;</option>
-                    <option value="title">Title &#9650;</option>
-                    <option value="title">Title &#9660;</option>
+            <p style="font-size : 80%">Order expenses by:
+                <select id="sort" class="selectCSS">
+                    <option value="operation_date">Date  &emsp; &#9650;</option>
+                    <option value="operation_date" selected>Date &emsp; &#9660;</option>
+                    <option value="amount">Amount &emsp; &#9650;</option>
+                    <option value="amount">Amount &emsp; &#9660;</option>
+                    <option value="initiator">Paid by &emsp; &#9650;</option>
+                    <option value="initiator">Paid by &emsp; &#9660;</option>
+                    <option value="title">Title &emsp; &#9650;</option>
+                    <option value="title">Title &emsp; &#9660;</option>
                 </select>
             </p>
             <table id="operation_list">
-                <?php foreach ($list as $operation) { ?>
+                <?php foreach ($tricount->get_operations() as $operation) { ?>
                     <tr>
                         <td>
                             <p><b><a href="operation/details/<?= $operation->id ?>"><?= strlen($operation->title) > 30 ? substr($operation->title, 0, 25) . "..." : $operation->title ?></a></b></p>
                             <p>Paid by <?= strlen($operation->initiator->full_name) > 25 ? substr($operation->initiator->full_name, 0, 23) : $operation->initiator->full_name ?></p>
                         </td>
                         <td class="right">
-                            <p><b><?= round($operation->amount, 2) ?> €</b></p>
+                            <p><b><?= number_format($operation->amount, 2) ?> €</b></p>
                             <p><?= date("d/m/Y", strtotime($operation->operation_date)) ?></p>
                         </td>
                     </tr>
@@ -127,12 +128,12 @@
         <footer>
             <div>
                 <p>MY TOTAL</p>
-                <p><b><?= number_format($user_total, 2) ?> €</b></p>
+                <p><b><?= number_format($tricount->get_user_total($user->id), 2) ?> €</b></p>
             </div>
             <a href="operation/add_operation/<?= $tricount->id ?>" class="circle">+</a>
             <div>
                 <p>TOTAL EXPENSES</p>
-                <p><b><?= number_format($total, 2) ?> €</b></p>
+                <p><b><?= number_format($tricount->get_total_expenses(), 2) ?> €</b></p>
             </div>
         </footer>
     </div>

@@ -16,7 +16,7 @@
             let ok = true;
             title.attr("style", "");
             errTitle.html("");
-            if(!(/^.{3,}$/).test(title.val())) {
+            if (!(/^.{3,}$/).test(title.val())) {
                 errTitle.append("Title lenght must be longer than 3 character");
                 ok = false;
                 title.attr("style", "border-color: rgb(220, 53, 69)");
@@ -25,8 +25,8 @@
         }
 
         async function checkTitleExists() {
-            const data = await $.getJSON("tricount/tricount_exists_service/" + title.val());
-            if(data) {
+            const data = await $.getJSON("Tricount/tricount_exists_service/" + title.val().trim().replaceAll(' ', 'grsgbsigfhfsognlsfaeqe'));
+            if (data) {
                 errTitle.append("Title already exists");
                 title.attr("style", "border-color: rgb(220, 53, 69)");
             }
@@ -35,7 +35,7 @@
         function checkDescription() {
             let ok = true;
             errDescription.html("");
-            if(description.val() !== "" && !(/^.{3,}$/).test(description.val())) {
+            if (description.val() !== "" && !(/^.{3,}$/).test(description.val())) {
                 errDescription.append("Description must be empty or longer than 3 character");
                 ok = false;
                 description.attr("style", "border-color: rgb(220, 53, 69)");
@@ -43,12 +43,12 @@
             else {
                 description.attr("style", "");
             }
-            return ok
+            return ok;
         }
 
         function checkTitleAndDescription() {
             let ok = checkTitle();
-            ok= checkDescription() && ok;
+            ok = checkDescription() && ok;
             return ok;
         }
 

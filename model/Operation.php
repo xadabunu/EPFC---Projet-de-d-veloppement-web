@@ -7,7 +7,7 @@ require_once "model/Repartitions.php";
 
 class Operation extends Model
 {
-    public function __construct(public string $title, public Tricount $tricount, public float $amount, public string $operation_date, public User $initiator, public string $created_at, public ?int $id = 0)
+    public function __construct(public string $title, public Tricount $tricount, public float $amount, public string $operation_date, public ?User $initiator, public string $created_at, public ?int $id = 0)
     {
     }
 
@@ -58,7 +58,7 @@ class Operation extends Model
     }
 
 
-// --------------------------- Méthode has_access --------------------------------
+// --------------------------- Méthode has_access et is_participant --------------------------------
 
 
     public function has_access(User $user): bool
@@ -66,6 +66,19 @@ class Operation extends Model
         $list = $this->get_participants();
         return in_array($user, $list);
     }
+
+   
+    public function is_participant_operation(User $user): bool 
+    {
+        $repartitions =  Repartitions::get_all_repartitions_by_operation_id($this->id);
+        foreach($repartitions as $item){
+            if($item->user->id == $user->id){
+                return true;
+            }
+        }
+        return false;
+    }
+        
 
 
 // --------------------------- Validate && Persist // Delete && delete Cascade des operations ------------------------------------ 

@@ -17,7 +17,6 @@
 
 ### Liste des bugs connus
 
-  * Dans le cas hypothétique où un user créerait un tricount qui ne contient que des dépenses qui ne concernent que leur initiator, la page de la balance n'affiche que le premier subscriptor.
 
 ### Liste des fonctionnalités supplémentaires
 
@@ -27,11 +26,12 @@
 
   * Application dévelopée sans BootStrap.
   * Pour la maintenance un refactoring de certaines fonctions (Surtout les add/edit operations et templates) est à prévoir.
-  * Pour une meilleure expérience utilisateur, il faudrait rajouter des messages de validations lors d'un ajout/edition.
+  * Pour une meilleure expérience utilisateur, il faudrait rajouter des messages de validations lors d'un ajout/edition. (Viendra à l'itération 3)
+  * Pour une meilleure expérience utilisateur il faudrait que les checkBox dans add/edit_operation se cochent si le poid passe de 0 => 1 et que le poid passe à zéro si le user décoche la checkBox.
 
 ## Notes de version itération 2
 
-...
+  * Premier refactoring effectué + nettoyage du code. A parfaire pour l'itération 3.
 
 ## Notes de version itération 3 
 

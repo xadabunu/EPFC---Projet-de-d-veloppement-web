@@ -3,6 +3,7 @@
 require_once "framework/Model.php";
 require_once "model/Tricount.php";
 
+
 class User extends Model
 {
 
@@ -24,7 +25,7 @@ class User extends Model
         }
     }
 
-    public static function get_user_by_id(int $id): User |false
+    public static function get_user_by_id(int $id): User | false
     {
         $query = self::execute("SELECT * FROM users WHERE id =:id", ["id" => $id]);
         $data = $query->fetch();
@@ -45,6 +46,18 @@ class User extends Model
         }
         return $array;
     }
+
+    public function get_created_tricounts() : array
+    {
+        $query = self::execute("SELECT * FROM tricounts WHERE creator = :id", ["id"=> $this->id]);
+        $data = $query->fetchAll();
+        $array = [];
+        foreach ($data as $tricount) {
+            $array[] = new Tricount($tricount['title'], $tricount['created_at'], User::get_user_by_id($tricount['creator']), $tricount['description'], $tricount['id']);
+        }
+        return $array;
+    }
+
     private static function get_user_by_password(string $clear_password): User |false
     {
         $hashed_password = Tools::my_hash($clear_password);
@@ -117,7 +130,7 @@ class User extends Model
         if ((strlen($this->full_name) < 3) || strlen($this->full_name) > 256) {
             $errors['length'] = "Name length must be between 3 and 256.";
         }
-        if (!preg_match("/^[A-Za-zÀ-ÿ]*$/", $this->full_name)) {
+        if (!preg_match("/^[A-Za-zÀ-ÿ\s]*$/", $this->full_name)) {
             $errors['name_contains'] = "Name must contains only letters";
         }
         if (!preg_match("/^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/", $this->iban)) {

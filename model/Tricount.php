@@ -2,7 +2,8 @@
 
 require_once "framework/Model.php";
 require_once "model/Operation.php";
-require_once "model/Template.php";
+require_once "model/RepartitionTemplates.php";
+require_once "model/RepartitionTemplateItems.php";
 require_once "model/User.php";
 
 class Tricount extends Model
@@ -156,7 +157,7 @@ class Tricount extends Model
         return $array;
     }
 
-    public function get_deletables(): array  // Renvoie les participants qui ne peuvent pas être supprimé d'un tricount //
+    public function get_deletables(): array
     {
         $subs = $this->get_subscriptors();
         $array = [];
@@ -168,6 +169,33 @@ class Tricount extends Model
         return $array;
     }
 
+    public function get_subs_as_json(): string
+    {
+        $subs = $this->get_subscriptors_with_creator();
+        $table = [];
+        foreach ($subs as $sub) {
+            $row = [];
+            $row["id"] = $sub->id;
+            $row["name"] = $sub->full_name;
+            $row["deletable"] = in_array($sub, $this->get_deletables());
+            $table[$sub->id] = $row;
+        }
+        return json_encode($table);
+    }
+
+    public function get_addables_as_json(): string
+    {
+        $subs = $this->get_cbo_users();
+        $table = [];
+        foreach ($subs as $sub) {
+            $row = [];
+            $row["id"] = $sub->id;
+            $row["name"] = $sub->full_name;
+            $row["deletable"] = in_array($sub, $this->get_deletables());
+            $table[$sub->id] = $row;
+        }
+        return json_encode($table);
+    }
 
 // --------------------------- Get Operation du tricount ------------------------------------ 
 
@@ -183,7 +211,7 @@ class Tricount extends Model
         return $array;
     }
 
-    public function get_operation_as_json() : string
+    public function get_operation_as_json(): string
     {
         $operations = $this->get_operations();
         $table = [];
@@ -211,7 +239,13 @@ class Tricount extends Model
 
     public function delete_subscriptor(int $id): void
     {
+        $this->delete_repartition_template_item($id);
         self::execute("DELETE FROM subscriptions WHERE user=:user_id AND tricount=:tricount_id ", ["user_id" => $id, "tricount_id" => $this->id]);
+    }
+
+    private function delete_repartition_template_item(int $id): void
+    {
+        self::execute("DELETE FROM repartition_template_items WHERE user = :id", ["id" => $id]);
     }
 
 

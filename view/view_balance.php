@@ -16,7 +16,7 @@
             <p><?= strlen($tricount->title) > 25 ? substr($tricount->title, 0, 22)."..." : $tricount->title ?> &#11208; balance</p>
             <p></p>
         </header>
-        <?php if (count($subs) == 1) { ?>
+        <?php if (count($tricount->get_subscriptors_with_creator()) == 1) { ?>
             <table>
                     <tr>
                         <th class="empty">You are alone!</th>
@@ -30,7 +30,7 @@
                 </table>
             <?php } else {?>
         <table class="balance">
-            <?php foreach ($subs as $sub) { ?>
+            <?php foreach ($tricount->get_subscriptors_with_creator() as $sub) { ?>
                 <tr class="balance">
                     <?php if ($amounts[$sub->id] >= 0) { ?>
                         <td class="balance">
@@ -41,7 +41,7 @@
                                                                                                                         } ?></p>
                         </td>
                         <td class="positive balance">
-                            <p class="<?php if ($amounts[$sub->id] != 0) {echo "positive";} ?> right<?php if ($sub->id === $user->id) {echo " bold";} ?>" style="width: <?= abs($amounts[$sub->id] / $max * 100) ?>%;">
+                            <p class="<?php if ($amounts[$sub->id] != 0) {echo "positive";} ?> right<?php if ($sub->id === $user->id) {echo " bold";} ?>" style="width: <?= $max == 0 ? 0 : abs($amounts[$sub->id] / $max * 100) ?>%;">
                             <p class="inner"><?= round($amounts[$sub->id], 2) ?> €</p>
                         </td>
                     <?php } else { ?>
