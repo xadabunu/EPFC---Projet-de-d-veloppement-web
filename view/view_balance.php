@@ -41,7 +41,7 @@
                                                                                                                         } ?></p>
                         </td>
                         <td class="positive balance">
-                            <p class="<?php if ($amounts[$sub->id] != 0) {echo "positive";} ?> right<?php if ($sub->id === $user->id) {echo " bold";} ?>" style="width: <?= abs($amounts[$sub->id] / $max * 100) ?>%;">
+                            <p class="<?php if ($amounts[$sub->id] != 0) {echo "positive";} ?> right<?php if ($sub->id === $user->id) {echo " bold";} ?>" style="width: <?= $max == 0 ? 0 : abs($amounts[$sub->id] / $max * 100) ?>%;">
                             <p class="inner"><?= round($amounts[$sub->id], 2) ?> €</p>
                         </td>
                     <?php } else { ?>
