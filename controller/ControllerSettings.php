@@ -35,10 +35,10 @@ class ControllerSettings extends MyController
             if($tmpUser->email != $user->email){
                 $errors = array_merge($errors, User::validate_email_unicity($tmpUser->email));
             }
+            $user->email = $_POST['email'];
+            $user->full_name = $_POST['full_name'];
+            $user->iban = $_POST['iban'];
             if (count($errors) == 0) {
-                $user->email = $_POST['email'];
-                $user->full_name = $_POST['full_name'];
-                $user->iban = $_POST['iban'];
                 $user->persist_update();
                 $this->redirect('settings', 'my_settings');
             }
