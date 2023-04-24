@@ -120,31 +120,33 @@
             /* -- front -- */
             
             added = $("#subscriptor").find(":selected");
+            if (added.val() != -1) {
             const tmp = added.val();
-            $("#subscriptor").val("-1");
-            added.remove();
-            added = addables[tmp];
-            
-            if (added) {
-                let current = table_subs.find("tr:first");
-                let td_name = $(current).find("td:first");
-                let next = $(current).next("tr");
+                $("#subscriptor").val("-1").change();
+                added.remove();
+                added = addables[tmp];
+                
+                if (added) {
+                    let current = table_subs.find("tr:first");
+                    let td_name = $(current).find("td:first");
+                    let next = $(current).next("tr");
 
-                while (added.name > td_name.html() && $(next).find("td:first").html()) {
-                    current = next;
-                    next = $(next).next("tr");
-                    td_name = $(current).find("td:first");
+                    while (added.name > td_name.html() && $(next).find("td:first").html()) {
+                        current = next;
+                        next = $(next).next("tr");
+                        td_name = $(current).find("td:first");
+                    }
+
+                    if (added.name > td_name.html())
+                        current.after(generateTableHTML(added));
+                    else
+                        current.before(generateTableHTML(added));
+                    $(addables).splice(added.id);
+                        
+                /* -- back -- */
+
+                    await $.post("tricount/add_subscriptor_service/" + tricount_id, {"id": added.id});
                 }
-
-                if (added.name > td_name.html())
-                    current.after(generateTableHTML(added));
-                else
-                    current.before(generateTableHTML(added));
-                $(addables).splice(added.id);
-                    
-            /* -- back -- */
-
-                await $.post("tricount/add_subscriptor_service/" + tricount_id, {"id": added.id});
             }
             return false;
         }

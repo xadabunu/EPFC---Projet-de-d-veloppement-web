@@ -104,7 +104,7 @@
         }
 
         $(function() {
-            op_amount = 0;
+            op_amount = <?= empty($operation->amount) ? 0 : $operation->amount ?>;
             lbl_amount = $("#amount");
             err_amount = $("#errAmount");
             tr_currency = $("#tr_currency");
@@ -112,6 +112,7 @@
             for_whom_table = $("#for_whom");
             choosing_template = $("#templates");
             $("#button_apply_template").hide();
+            updateAmounts();
         })
     </script>
 </head>
