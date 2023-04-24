@@ -216,7 +216,7 @@ class ControllerTemplates extends MyController
             $tricount = $repartition_template->tricount;
             if (!$tricount->has_access($user))
                 $this->redirect();
-            RepartitionTemplateItems::delete_repartition_template_items_0($repartition_template);
+            RepartitionTemplateItems::delete_repartition_template_items_with_object($repartition_template);
             $repartition_template->delete_repartition_template();
             $this->redirect('templates', 'manage_templates', $repartition_template->tricount->id);
         } else {

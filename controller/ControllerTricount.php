@@ -177,7 +177,7 @@ class ControllerTricount extends MyController
             if (!$tricount->has_access($user))
                 $this->redirect();
             $subscriptor = $_POST['subscriptor_name'];
-            $tricount->delete_subscriptor($subscriptor);
+            $tricount->delete_subscriptor($subscriptor, $tricount->id);
             $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
         } else {
             Tools::abort("Invalid or missing argument");
@@ -221,7 +221,7 @@ class ControllerTricount extends MyController
                 echo "false";
                 return ;
             }
-            $tricount->delete_subscriptor($_POST["id"]);
+            $tricount->delete_subscriptor($_POST["id"], $tricount->id);
             echo "true";
         } else
             echo "false";

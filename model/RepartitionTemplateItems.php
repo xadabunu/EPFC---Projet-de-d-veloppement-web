@@ -49,7 +49,6 @@ class RepartitionTemplateItems extends Model
             $row["weight"] = $items->weight;
             $table[] = $row;
         }
-
         return json_encode($table);
     }
 
@@ -68,7 +67,7 @@ class RepartitionTemplateItems extends Model
         self::execute("DELETE FROM repartition_template_items WHERE repartition_template= :id", ["id" => $this->repartition_template->id]);
     }
 
-    public static function delete_repartition_template_items_0(RepartitionTemplates $repartition_template)
+    public static function delete_repartition_template_items_with_object(RepartitionTemplates $repartition_template)
     {
         self::execute("DELETE FROM repartition_template_items WHERE repartition_template= :id", ["id" => $repartition_template->id]);
     }

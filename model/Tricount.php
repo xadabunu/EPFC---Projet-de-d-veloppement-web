@@ -237,15 +237,18 @@ class Tricount extends Model
         self::execute("INSERT INTO subscriptions(user, tricount) VALUES(:user, :tricount)", ["user" => $id, 'tricount' => $this->id]);
     }
 
-    public function delete_subscriptor(int $id): void
+    public function delete_subscriptor(int $user_id, int $tricount_id): void
     {
-        $this->delete_repartition_template_item($id);
-        self::execute("DELETE FROM subscriptions WHERE user=:user_id AND tricount=:tricount_id ", ["user_id" => $id, "tricount_id" => $this->id]);
+        $this->delete_repartition_template_item($user_id, $tricount_id);
+        self::execute("DELETE FROM subscriptions WHERE user=:user_id AND tricount=:tricount_id ", ["user_id" => $user_id, "tricount_id" => $this->id]);
     }
 
-    private function delete_repartition_template_item(int $id): void
+    private function delete_repartition_template_item(int $user_id, int $tricount_id): void
     {
-        self::execute("DELETE FROM repartition_template_items WHERE user = :id", ["id" => $id]);
+        $repartition_templates = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount_id);
+        foreach($repartition_templates as $template) {
+            self::execute("DELETE FROM repartition_template_items WHERE user = :id AND repartition_template = :template", ["id" => $user_id, "template" => $template->id]);
+        }
     }
 
 
