@@ -69,6 +69,9 @@ class ControllerMain extends MyController
                 $user->persist();
                 $this->log_user($user);
             }
+            else {
+                var_dump($errors);
+            }
         }
         (new View("signup"))->show([
             "email" => $email, "password" => $password, "password_confirm" => $password_confirm,

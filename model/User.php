@@ -133,7 +133,7 @@ class User extends Model
         if (!preg_match("/^[A-Za-zÀ-ÿ\s]*$/", $this->full_name)) {
             $errors['name_contains'] = "Name must contains only letters";
         }
-        if (!preg_match("/^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/", $this->iban)) {
+        if ((strlen($this->iban) > 0) && !preg_match("/^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/", $this->iban)) {
             $errors['iban'] = "IBAN must have an official Belgian IBAN format.";
         }
         return $errors;
@@ -154,12 +154,8 @@ class User extends Model
     public static function validate_passwords(string $password, string $password_confirm): array
     {
         $errors = self::validate_password($password);
-        $errors = array_merge(self::validate_password_unicity($password));
         if ($password != $password_confirm) {
             $errors['password_confirm'] = "You have to enter twice the same password.";
-        }
-        else{
-            $errors = array_merge(self::validate_password_unicity($password));
         }
         return $errors;
     }

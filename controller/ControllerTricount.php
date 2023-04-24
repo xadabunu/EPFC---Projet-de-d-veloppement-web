@@ -146,6 +146,9 @@ class ControllerTricount extends MyController
                 $tricount = Tricount::get_tricount_by_id($_GET['param1']);
                 if (!$tricount->has_access($user))
                     $this->redirect();
+                if (!User::get_user_by_id($subscriptor)) {
+                    $this->redirect('tricount', 'edit_tricount', $tricount->id);
+                }
                 $tricount->persist_subscriptor($subscriptor);
                 $this->redirect('tricount', 'edit_tricount', $_GET['param1']);
             } else {
