@@ -22,7 +22,7 @@
 
             <div class="contains_input">
                 <span class="icon"><i class="fa-regular fa-at fa-sm" aria-hidden="true"></i></span>
-                <input id="email" name="email" type="text" value="<?= $user->email ?>" <?php if (array_key_exists('required', $errors) || array_key_exists('validity', $errors)) { ?>class="errorInput" <?php } ?>>
+                <input id="email" name="email" type="text" value="<?php if(empty($errors)) {echo $user->email;} else {echo $tmpUser->email;}?>" <?php if (array_key_exists('required', $errors) || array_key_exists('validity', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
 
             <?php if (array_key_exists('required', $errors)) { ?>
@@ -34,7 +34,7 @@
 
             <div class="contains_input">
                 <span class="icon"><i class="fa-solid fa-user fa-sm" aria-hidden="true"></i></span>
-                <input id="full_name" name="full_name" type="text" value="<?= $user->full_name ?>" <?php if (array_key_exists('length', $errors) || array_key_exists('name_contains', $errors)) { ?>class="errorInput" <?php } ?>>
+                <input id="full_name" name="full_name" type="text" value="<?php if(empty($errors)) {echo $user->full_name;} else {echo $tmpUser->full_name;}?>" <?php if (array_key_exists('length', $errors) || array_key_exists('name_contains', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
 
             <?php if (array_key_exists('length', $errors)) { ?>
@@ -46,7 +46,7 @@
 
             <div class="contains_input">
                 <span class="icon"><i class="fa-solid fa-credit-card fa-sm" aria-hidden="true"></i></span>
-                <input id="iban" name="iban" type="text" placeholder="IBAN - BE12 3456 7890 1234" value="<?= $user->iban ?>" <?php if (array_key_exists('iban', $errors)) { ?>class="errorInput" <?php } ?>>
+                <input id="iban" name="iban" type="text" placeholder="IBAN - BE12 3456 7890 1234" value="<?php if(empty($errors)) {echo $user->iban;} else {echo $tmpUser->iban;}?>" <?php if (array_key_exists('iban', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
 
             <?php if (array_key_exists('iban', $errors)) { ?>

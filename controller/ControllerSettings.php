@@ -28,6 +28,7 @@ class ControllerSettings extends MyController
     {
         $user = $this->get_user_or_redirect();
         $errors = [];
+        $tmpUser = "";
 
         if (isset($_POST['email']) && isset($_POST['full_name']) && isset($_POST['iban'])) {
             $tmpUser = new User($_POST['email'], $user->hashed_password, $_POST['full_name'], $user->role, $_POST['iban']);
@@ -35,15 +36,16 @@ class ControllerSettings extends MyController
             if($tmpUser->email != $user->email){
                 $errors = array_merge($errors, User::validate_email_unicity($tmpUser->email));
             }
-            $user->email = $_POST['email'];
-            $user->full_name = $_POST['full_name'];
-            $user->iban = $_POST['iban'];
+            
             if (count($errors) == 0) {
+                $user->email = $_POST['email'];
+                $user->full_name = $_POST['full_name'];
+                $user->iban = $_POST['iban'];
                 $user->persist_update();
                 $this->redirect('settings', 'my_settings');
             }
         }
-        (new View("edit_profile"))->show(["user" => $user, 'errors' => $errors]);
+        (new View("edit_profile"))->show(["user" => $user, 'errors' => $errors, "tmpUser" => $tmpUser]);
     }
 
 
