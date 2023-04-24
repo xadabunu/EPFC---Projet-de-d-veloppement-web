@@ -269,7 +269,7 @@ class Tricount extends Model
         }
         $array = self::get_tricounts_list($this->creator->id);
         foreach ($array as $data) {
-            if (strtoupper($this->title) == strtoupper($data->title) && $this->id != $data->id) {
+            if (strtolower($this->title) == strtolower($data->title) && $this->id != $data->id) {
                 $errors['unique_title'] = "Title must be unique";
             }
         }
