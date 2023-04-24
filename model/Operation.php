@@ -23,10 +23,10 @@ class Operation extends Model
 
     public function get_previous(): int | null
     {
-        $query = self::execute("WITH tmp AS (SELECT * FROM operations WHERE tricount = :tricount_id ORDER BY operation_date)
+        $query = self::execute("WITH tmp AS (SELECT * FROM operations WHERE tricount = :tricount_id ORDER BY operation_date DESC)
                         select prev_id
                         from ( select id, 
-                            lag(id) over (ORDER BY created_at) as prev_id
+                            lag(id) over (ORDER BY operation_date DESC) as prev_id
                             from tmp) as t where id = :op_id", [
             "tricount_id" => $this->tricount->id,
             "op_id" => $this->id
@@ -36,10 +36,10 @@ class Operation extends Model
 
     public function get_next(): int | null
     {
-        $query = self::execute("WITH tmp AS (SELECT * FROM operations WHERE tricount = :tricount_id ORDER BY operation_date)
+        $query = self::execute("WITH tmp AS (SELECT * FROM operations WHERE tricount = :tricount_id ORDER BY operation_date DESC)
                         select next_id
                         from ( select id, 
-                            lead(id) over (ORDER BY created_at) as next_id
+                            lead(id) over (ORDER BY operation_date DESC) as next_id
                             from tmp) as t where id = :op_id", [
             "tricount_id" => $this->tricount->id,
             "op_id" => $this->id
