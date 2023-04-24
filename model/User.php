@@ -58,18 +58,6 @@ class User extends Model
         return $array;
     }
 
-    private static function get_user_by_password(string $clear_password): User |false
-    {
-        $hashed_password = Tools::my_hash($clear_password);
-        $query = self::execute("SELECT * FROM users WHERE hashed_password =:hashed_password", ["hashed_password" => $hashed_password]);
-        $data = $query->fetch();
-        if ($query->rowcount() == 0) {
-            return false;
-        } else {
-            return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["iban"], $data["id"]);
-        }
-    }
-
 
 // --------------------------- Validate && Persist // Delete User ------------------------------------ 
 
@@ -101,16 +89,6 @@ class User extends Model
         $user = self::get_user_by_email($email);
         if ($user) {
             $errors['validity'] = "This email is not available";
-        }
-        return $errors;
-    }
-
-    public static function validate_password_unicity(string $clear_password): array
-    {
-        $errors = [];
-        $user = self::get_user_by_password($clear_password);
-        if ($user){
-            $errors['password_validity'] = "The new password must be different from the old.";
         }
         return $errors;
     }

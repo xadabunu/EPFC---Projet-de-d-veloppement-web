@@ -61,9 +61,9 @@ class ControllerSettings extends MyController
             $password_confirm = $_POST['password_confirm'];
             $current_password = $_POST['current_password'];
 
-
             $errors = self::validate_current_password($current_password, $user->hashed_password);
             $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
+            $errors = array_merge($errors, self::validate_new_password($password, $user));
 
             if (count($errors) == 0) {
                 $user->hashed_password = Tools::my_hash($password);
@@ -71,19 +71,24 @@ class ControllerSettings extends MyController
                 $this->redirect('settings', 'my_settings');
             }
         }
-
         (new View("change_password"))->show(["user" => $user, 'errors' => $errors, 'password_confirm' => $password_confirm, 'password' => $password, 'current_password' => $current_password]);
     }
-
 
     private function validate_current_password(String $current_password, String $hashed_password): array
     {
         $errors = [];
-
         if (!User::check_password($current_password, $hashed_password)) {
             $errors['current_wrong_password'] = 'Wrong current password';
         }
+        return $errors;
+    }
 
+    private function validate_new_password(String $new_password, User $user): array
+    {
+        $errors = [];
+        if (Tools::my_hash($new_password) == $user->hashed_password) {
+            $errors['password_validity'] = "The new password must be different from the old.";
+        }
         return $errors;
     }
 
