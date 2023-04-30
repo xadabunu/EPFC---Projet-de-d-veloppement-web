@@ -355,14 +355,14 @@ class ControllerOperation extends MyController
 
     public function get_repartition_template_by_id_as_json():void
     {
-        if(isset($_GET["param1"]) && is_numeric($_GET["param1"])){
+        if (isset($_GET["param1"]) && is_numeric($_GET["param1"])) {
             echo RepartitionTemplates::get_repartition_template_by_id_as_json(intval($_GET["param1"]));
         }
     }
 
     public function get_repartition_template_items_by_repartition_template_id_as_json() : void
     {
-        if(isset($_GET["param1"]) && is_numeric($_GET["param1"])){
+        if (isset($_GET["param1"]) && is_numeric($_GET["param1"])) {
             echo RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id_as_json(intval($_GET["param1"]));
         }
     }
