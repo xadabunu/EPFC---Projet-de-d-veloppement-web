@@ -32,6 +32,8 @@ class Tricount extends Model
     {
         $query = self::execute("SELECT * FROM tricounts WHERE id = :id", ["id" => $id]);
         $data = $query->fetch();
+        if (!$data)
+            Tools::abort("Invalid or missing argument.");
         return new Tricount($data['title'], $data['created_at'], User::get_user_by_id($data['creator']), $data['description'], $data['id']);
     }
 
@@ -40,17 +42,6 @@ class Tricount extends Model
         $query = self::execute("SELECT * FROM  tricounts WHERE title =:title", ["title" => $title]);
         $data = $query->fetch();
         return new Tricount($data['title'], $data['created_at'], User::get_user_by_id($data['creator']), $data['description'], $data['id']);
-    }
-
-    public static function get_all_tricounts_id(): array
-    {
-        $list = (self::execute("SELECT id FROM tricounts", []))->fetchAll();
-        $res = [];
-
-        foreach ($list as $var)
-            $res[] = $var['id'];
-
-        return $res;
     }
 
 

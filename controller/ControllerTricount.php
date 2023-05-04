@@ -37,8 +37,6 @@ class ControllerTricount extends MyController
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $user = $this->get_user_or_redirect();
-            if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
-                $this->redirect();
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             if (!$tricount->has_access($user))
                 $this->redirect();
@@ -55,8 +53,6 @@ class ControllerTricount extends MyController
     {
         $user = $this->get_user_or_redirect();
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
-            if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
-                $this->redirect();
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             if (!$tricount->has_access($user))
                 $this->redirect();
@@ -110,8 +106,6 @@ class ControllerTricount extends MyController
 
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $user = $this->get_user_or_redirect();
-            if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
-                $this->redirect();
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             if (!$tricount->has_access($user))
                 $this->redirect();
@@ -139,8 +133,6 @@ class ControllerTricount extends MyController
     public function add_subscriptors(): void
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
-            if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
-                $this->redirect();
             if (isset($_POST['subscriptor'])) {
                 $user = $this->get_user_or_redirect();
                 $subscriptor = $_POST['subscriptor'];
@@ -184,8 +176,6 @@ class ControllerTricount extends MyController
     {
         if (isset($_POST['subscriptor_name'])) {
             $user = $this->get_user_or_redirect();
-            if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
-                $this->redirect();
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
             if (!$tricount->has_access($user))
                 $this->redirect();
@@ -201,8 +191,6 @@ class ControllerTricount extends MyController
     {
         if(isset($_GET['param1']) && is_numeric($_GET['param1'])){
         $user = $this->get_user_or_redirect();
-        if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
-            $this->redirect();
         $tricount = Tricount::get_tricount_by_id($_GET['param1']);
         if (!$tricount->has_access($user))
             $this->redirect();
@@ -216,8 +204,6 @@ class ControllerTricount extends MyController
     public function confirm_delete_tricount(): void
     {
         $user = $this->get_user_or_redirect();
-        if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
-            $this->redirect();
         $tricount = tricount::get_tricount_by_id($_GET['param1']);
         if (!$tricount->has_access($user))
             $this->redirect();

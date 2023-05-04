@@ -21,8 +21,6 @@ class ControllerTemplates extends MyController
     {
         if (isset($_GET["param1"]) && is_numeric($_GET["param1"])) {
             $user = $this->get_user_or_redirect();
-            if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
-                $this->redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))
                 $this->redirect();
@@ -44,8 +42,6 @@ class ControllerTemplates extends MyController
             $repartition_template = '';
 
             $user = $this->get_user_or_redirect();
-            if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
-                $this->redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))
                 $this->redirect();
@@ -81,9 +77,6 @@ class ControllerTemplates extends MyController
             $list = [];
             $errors = [];
 
-            if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id())) {
-                $this->redirect();
-            }
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))
@@ -190,9 +183,6 @@ class ControllerTemplates extends MyController
         if (isset($_GET['param1']) && is_numeric($_GET['param1']) && isset($_GET['param2']) && is_numeric($_GET['param2'])) {
             if (!in_array($_GET['param1'], RepartitionTemplates::get_all_template_ids())) {
                 $this->redirect();
-            }
-            if (!in_array($_GET['param2'], Tricount::get_all_tricounts_id())) {
-                $this->redirect();  
             }
             $repartition_template = RepartitionTemplates::get_repartition_template_by_id($_GET["param1"]);      
             $user = $this->get_user_or_redirect();
