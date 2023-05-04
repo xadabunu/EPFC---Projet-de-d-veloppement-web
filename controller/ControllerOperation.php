@@ -24,8 +24,6 @@ class ControllerOperation extends MyController
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $user = $this->get_user_or_redirect();
-            if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
-                $this->redirect();
             $op = Operation::get_operation_by_id($_GET['param1']);
             if (!$op->tricount->has_access($user))
                 $this->redirect();
@@ -164,8 +162,6 @@ class ControllerOperation extends MyController
         $repartition_template_choosen = [];
 
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
-            if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
-                $this->redirect();
             $operation = Operation::get_operation_by_id($_GET['param1']);
             $user = $this->get_user_or_redirect();
             if (!$operation->tricount->has_access($user))
@@ -239,8 +235,6 @@ class ControllerOperation extends MyController
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
             $user = $this->get_user_or_redirect();
-            if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
-                $this->redirect();
             $operation = Operation::get_operation_by_id($_GET['param1']);
             if (!$operation->tricount->has_access($user))
                 $this->redirect();
@@ -253,8 +247,6 @@ class ControllerOperation extends MyController
     public function confirm_delete_operation(): void
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])){
-            if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
-                $this->redirect();
             $operation = Operation::get_operation_by_id($_GET['param1']);
             $operation->delete_operation_cascade();
             $this->redirect('tricount', 'operations', $operation->tricount->id);
@@ -279,8 +271,6 @@ class ControllerOperation extends MyController
 
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $user = $this->get_user_or_redirect();
-            if (!in_array($_GET['param1'], Operation::get_all_operations_id()))
-                $this->redirect();
             $operation = Operation::get_operation_by_id($_GET['param1']);
             if (!$operation->tricount->has_access($user))
                 $this->redirect();

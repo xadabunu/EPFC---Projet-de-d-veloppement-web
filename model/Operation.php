@@ -18,6 +18,8 @@ class Operation extends Model
     {
         $query = self::execute("SELECT * FROM operations WHERE id = :id", ["id" => $id]);
         $data = $query->fetch();
+        if (!$data)
+            Tools::abort("Invalid or missing argument.");
         return new Operation($data['title'], Tricount::get_tricount_by_id($data['tricount']), $data['amount'], $data['operation_date'], User::get_user_by_id($data['initiator']), $data['created_at'], $data['id']);
     }
 
@@ -45,16 +47,6 @@ class Operation extends Model
             "op_id" => $this->id
         ]);
         return ($query->fetch())['next_id'];
-    }
-
-    public static function get_all_operations_id(): array
-    {
-        $list = (self::execute("SELECT id FROM operations", []))->fetchAll();
-        $res = [];
-        foreach ($list as $var)
-            $res[] = $var['id'];
-
-        return $res;
     }
 
 
