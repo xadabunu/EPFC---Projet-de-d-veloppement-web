@@ -81,9 +81,6 @@ class ControllerTemplates extends MyController
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))
                 $this->redirect();
-            if (!in_array($_GET['param2'], RepartitionTemplates::get_all_template_ids())) {
-                $this->redirect();
-            }
             $repartition_template = RepartitionTemplates::get_repartition_template_by_id($_GET["param2"]);
             if ($repartition_template->tricount->id != $_GET['param1']) {
                 $this->redirect();
@@ -181,9 +178,6 @@ class ControllerTemplates extends MyController
     public function delete_template(): void
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1']) && isset($_GET['param2']) && is_numeric($_GET['param2'])) {
-            if (!in_array($_GET['param1'], RepartitionTemplates::get_all_template_ids())) {
-                $this->redirect();
-            }
             $repartition_template = RepartitionTemplates::get_repartition_template_by_id($_GET["param1"]);      
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param2"]);

@@ -14,15 +14,6 @@ class RepartitionTemplates extends Model
 
 // --------------------------- Get sur les Template ------------------------------------ 
 
-    public static function get_all_template_ids() : array 
-    {
-        $list = (self::execute("SELECT id FROM repartition_templates", []))->fetchAll();
-        $res = [];
-        foreach ($list as $var)
-            $res[] = $var['id'];
-        return $res;
-    }     
-
     public static function get_all_repartition_templates_by_tricount_id(int $id): array
     {
         $query = self::execute("SELECT * FROM repartition_templates WHERE tricount = :id ORDER BY title ASC", ["id" => $id]);
@@ -38,6 +29,8 @@ class RepartitionTemplates extends Model
     {
         $query = self::execute("SELECT * FROM repartition_templates WHERE id = :id", ["id" => $id]);
         $data = $query->fetch();
+        if (!$data)
+            Tools::abort("Invalid or missing argument.");
         return new RepartitionTemplates($data['title'], Tricount::get_tricount_by_id($data['tricount']), $data['id']);
     }
 
