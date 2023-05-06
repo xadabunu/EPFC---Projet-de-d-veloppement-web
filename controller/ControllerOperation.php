@@ -32,14 +32,12 @@ class ControllerOperation extends MyController
             foreach ($list as $participant) {
                 $amounts[$participant->id] = $op->get_user_amount($participant->id);
             }
-            $prev = $op->get_previous();
-            $next = $op->get_next();
             (new View("operation"))->show([
                 "user" => $user,
                 "operation" => $op,
                 "list" => $list,
-                "next" => $next,
-                "previous" => $prev,
+                "next" => $op->get_next(),
+                "previous" => $op->get_previous(),
                 "amounts" => $amounts
             ]);
         } else {

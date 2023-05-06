@@ -93,7 +93,7 @@ class Tricount extends Model
         foreach ($list as $op) {
             $spent += $op->get_user_amount($user_id);
         }
-        return $paid - $spent;
+        return round($paid - $spent, 2);
     }
 
 
@@ -169,7 +169,7 @@ class Tricount extends Model
             $row["id"] = $sub->id;
             $row["name"] = $sub->full_name;
             $row["deletable"] = in_array($sub, $this->get_deletables());
-            $table[$sub->id] = $row;
+            $table[] = $row;
         }
         return json_encode($table);
     }

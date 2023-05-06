@@ -51,7 +51,7 @@ class RepartitionTemplates extends Model
         $query = self::execute("SELECT * FROM repartition_templates WHERE title = :title AND tricount = :tricountId", ["title" => $title, "tricountId" => $tricountId]);
         $data = $query->fetch();
         return $data;
-   }
+    }
 
 
 // --------------------------- Validate && Persist ------------------------------------ 
@@ -65,7 +65,7 @@ class RepartitionTemplates extends Model
         }
 
         $data = self::get_template_data_by_title_and_tricount($this->title, $this->tricount->id);
-        if($data ? (empty($data) ? false : ( $this->id  == 0 ? true : ($data['id'] == $this->id ? false : true))) : false){
+        if ($data ? (empty($data) ? false : ( $this->id  == 0 ? true : ($data['id'] == $this->id ? false : true))) : false) {
             $errors['duplicate_title'] = "Title already exists in this tricount.";
         }
         return $errors;
@@ -91,10 +91,10 @@ class RepartitionTemplates extends Model
     public function add_repartition_template_from_operation(array $list, RepartitionTemplates $repartition_template): void
     {
         $repartition_template->persist_template();
-        foreach($list as $key => $value){
+        foreach($list as $key => $value) {
             $repartition_template_items = new RepartitionTemplateItems((int) $value, User::get_user_by_id($key), $repartition_template);
             $repartition_template_items->persist_repartition_template_items();
-       }
+        }
     }
 
 // --------------------------- Delete Template ------------------------------------ 
@@ -109,13 +109,11 @@ class RepartitionTemplates extends Model
     public function is_participant_template(User $user): bool 
     {
         $repartition_template_items =  RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($this->id);
-        foreach( $repartition_template_items as $items){
-            if($items->user->id == $user->id){
+        foreach( $repartition_template_items as $items) {
+            if ($items->user->id == $user->id) {
                 return true;
             }
         }
         return false;
     }
-    
-
 }
