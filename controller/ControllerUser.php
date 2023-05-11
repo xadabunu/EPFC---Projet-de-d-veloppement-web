@@ -12,6 +12,9 @@ class ControllerUser extends MyController
     {
         $this->my_tricounts();
     }
+
+
+
 // --------------------------- Liste des tricounts ------------------------------------ 
 
 

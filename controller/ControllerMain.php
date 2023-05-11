@@ -69,13 +69,21 @@ class ControllerMain extends MyController
                 $user->persist();
                 $this->log_user($user);
             }
-            else {
-                var_dump($errors);
-            }
         }
         (new View("signup"))->show([
             "email" => $email, "password" => $password, "password_confirm" => $password_confirm,
             "full_name" => $full_name, "iban" => $iban, "errors" => $errors
         ]);
+    }
+
+    public function email_available_service() : void {
+        $res = 'true';
+        if (isset($_GET["param1"]) && $_GET["param1"] !== "" ) {
+            $user = User::get_user_by_email($_GET["param1"]);
+            if ($user) {
+                $res = "false";
+            }
+        }
+        echo $res;
     }
 }

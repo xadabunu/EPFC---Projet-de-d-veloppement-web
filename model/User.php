@@ -88,7 +88,7 @@ class User extends Model
         $errors = [];
         $user = self::get_user_by_email($email);
         if ($user) {
-            $errors['validity'] = "This email is not available";
+            $errors['validity'] = "This email already exists";
         }
         return $errors;
     }
@@ -100,7 +100,7 @@ class User extends Model
             $errors['required'] = "Email is required.";
         }
         if (strlen($this->email) > 256) {
-            $errors['email_length'] = "Email address can't be longer then 256 characters.";
+            $errors['email_length'] = "Email address cannot be longer than 256 characters.";
         }
         if (!preg_match('/^[a-zA-Z0-9]{1,20}[@]{1}[a-zA-A0-9]{1,15}[.]{1}[a-z]{1,7}$/', $this->email)) {
             $errors['validity'] = "Not a valid email address.";

@@ -8,6 +8,165 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
+    <script src="lib/just-validate-4.2.0.production.min.js" type="text/javascript"></script>
+    <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
+    <script>
+        let emailAvailable;
+
+        function debounce (fn, time) {
+            var timer;
+
+            return function() {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    fn.apply(this, arguments);
+                }, time);
+            }
+        }
+
+        $(function() {
+            const validation = new JustValidate('#signupform', {
+                validateBeforeSubmitting : true,
+                lockForm : true,
+                focusInvalidField : false,
+                successLabelCssClass : ['success'],
+                errorLabelCssClass : ['errorMessage']
+            });
+
+            validation
+                .addField('#email', [
+                    {
+                        rule : 'required',
+                        errorMessage : 'Email field is required'
+                    },
+                    {
+                        rule : 'maxLength',
+                        value : 256,
+                        errorMessage : 'Email address cannot be longer than 256 characters'
+                    },
+                    {
+                        rule : 'customRegexp',
+                        value : /^[a-zA-Z0-9]{1,20}[@]{1}[a-zA-A0-9]{1,15}[.]{1}[a-z]{1,7}$/,
+                        errorMessage : 'Not a valid Email address'
+                    },
+                ], { successMessage : 'Looks good !'})
+
+                .addField('#full_name', [
+                    {
+                        rule : 'required',
+                        errorMessage : 'Full Name field is required'
+                    },
+                    {
+                        rule : 'minLength',
+                        value : 3,
+                        errorMessage : 'Name length must be between 3 and 256'
+                    },
+                    {
+                        rule : 'maxLength',
+                        value : 256,
+                        errorMessage : 'Name length must be between 3 and 256'
+                    },
+                ], { successMessage : 'Looks good !'})
+
+                .addField('#password', [
+                    {
+                        rule : 'required',
+                        errorMessage : 'Password is required'
+                    },
+                    {
+                        rule: 'minLength',
+                        value : 8,
+                        errorMessage: 'Minimum 8 characters'
+                    },
+                    {
+                        rule: 'maxLength',
+                        value : 16,
+                        errorMessage: 'Maximum 16 characters'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /[A-Z]/,
+                        errorMessage: 'Password must contain an uppercase letter'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /\d/,
+                        errorMessage: 'Password must contain a digit'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /['";:,.\/?\\-]/,
+                        errorMessage: 'Password must contain an special character'
+                    },
+                ], { successMessage : 'Looks good !'})
+
+                .addField('#password_confirm', [
+                    {
+                        rule: 'required',
+                        errorMessage: 'Field is required'
+                    },
+                    {
+                        rule: 'minLength',
+                        value : 8,
+                        errorMessage: 'Minimum 8 characters'
+                    },
+                    {
+                        rule: 'maxLength',
+                        value : 16,
+                        errorMessage: 'Maximum 16 characters'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /[A-Z]/,
+                        errorMessage: 'Password must contain an uppercase letter'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /\d/,
+                        errorMessage: 'Password must contain a digit'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /['";:,.\/?\\-]/,
+                        errorMessage: 'Password must contain an special character'
+                    },
+                    {
+                        validator : function(value, fields) {
+                            if (fields['#password'] && fields['#password_confirm'].elem) {
+                                const repeatPasswordValue = fields['#password'].elem.value;
+                                return value === repeatPasswordValue;
+                            }
+                            return true;
+                        },
+                        errorMessage : 'You have to enter twice the same password '
+                    },
+                ], { successMessage : 'Looks good !'})
+
+                .addField('#iban', [
+                    {
+                        rule : 'customRegexp',
+                        value : '/^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/',
+                        errorMessage : 'IBAN must have an official Belgian IBAN format'
+                    },
+                ], { successMessage : 'Looks good !'})
+
+                .onValidate(debounce(async function(event) {
+                    emailAvailable = await $.getJSON("Main/email_available_service/" + $("#email").val());
+                    if (!emailAvailable)
+                        this.showErrors({ '#pseudo': 'This email already exists' });
+                }, 300))
+
+                .onSuccess(function(event) {
+                    if (emailAvailable) {
+                        event.target.submit();
+                    }
+                });
+
+            $("input:text:first").focus();    
+        });
+
+    </script>
 </head>
 
 <body>

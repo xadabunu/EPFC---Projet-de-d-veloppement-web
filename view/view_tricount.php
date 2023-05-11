@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="<?= $web_root ?>">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
-    <script src="lib/jquery-3.6.3.js" type="text/javascript"></script>
+    <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
     <title><?= $tricount->title ?> &#11208; Expenses</title>
     <script>
         const operations = <?= $tricount->get_operation_as_json() ?>;
