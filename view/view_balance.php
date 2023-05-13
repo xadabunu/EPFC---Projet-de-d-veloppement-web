@@ -33,7 +33,6 @@
             let background_colors= [];
             let max = 0;
             const session = <?= json_encode($_SESSION) ?>;
-            console.log(session.user.id);
 
             <?php foreach ($amounts as $amount) { ?>
                 a = <?= $amount ?>;
@@ -90,7 +89,7 @@
                             },
                             font: {
                                 weight: "bold",
-                                size: 18
+                                size: 16
                             }
                         }
                     }

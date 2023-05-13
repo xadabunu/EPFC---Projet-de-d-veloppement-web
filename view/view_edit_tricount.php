@@ -9,10 +9,14 @@
     <link href="css/styles.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
+    <script src="lib/sweetalert2@11.js"></script>
     <script>
         let tricount_id, add_btn, subs, table_subs, addables, added, desc_error;
         let title, errTitle, description;
         const user_id = "<?= $user->id ?>";
+        const db_title = "<?= $tricount->title ?>";
+        const db_description = "<?= $tricount->description ?>";
+        let delete_btn, back_btn;
 
         $(function() {
             add_btn = $("#add_btn");
@@ -24,13 +28,67 @@
             desc_error = $("#desc_error");
             title = $("#title");
             errTitle = $("#errTitle");
+            delete_btn = $("#delete");
+            back_btn = $("#back");
 
             $("form.nosubmit").submit(function(e) {
                 e.preventDefault();
             });
             description.bind("input", checkDescription);
             title.bind("input", checkTitle);
+
+            delete_btn.attr("href", "javascript:confirmDelete()");
+            back_btn.attr("href", "javascript:confirmBack()");
         })
+
+        function confirmDelete() {
+            const tricount = {
+                id: <?= $tricount->id ?>,
+                title: "<?= $tricount->title ?>",
+                creator: "<?= $tricount->creator->full_name ?>",
+                date: "<?= $tricount->created_at ?>"
+            };
+            Swal.fire({
+                title: "Confirm Tricount deletion",
+                html: `
+                    <p>Do you really want to delete tricount "<b>${tricount.title}</b>"
+                    and all of its dependencies ?</p>
+                    <p>This process cannot be undone.</p>
+                `,
+                icon: 'warning',
+                position: 'top',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                focusCancel: true
+            }).then((result) => {
+                if (result.isConfirmed)
+                    location.replace("tricount/confirm_delete_tricount/" + tricount.id);
+            });
+        }
+
+        function confirmBack() {
+            if (db_title.trim() != title.val().trim() || db_description.trim() != description.val().trim()) {
+                Swal.fire({
+                    title: "Unsaved changes !",
+                    html: `
+                        <p>Are you sure you want to leave this form ? Changes you made will not be saved.</p>
+                    `,
+                    icon: 'warning',
+                    position: 'top',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c747c',
+                    confirmButtonText: 'Leave Page',
+                    focusCancel: true
+                }).then((result) => {
+                    if (result.isConfirmed)
+                        location.replace("tricount/operations/" + tricount_id);
+                    });
+                } else
+                    location.replace("tricount/operations/" + tricount_id);
+        }
 
         function checkTitle() {
             let ok = true;
@@ -237,7 +295,7 @@
             </table>
         </form>
         <a href="templates/manage_templates/<?= $tricount->id ?>" class="button bottom2 manage">Manage repartition template</a>
-        <a href="tricount/delete_tricount/<?= $tricount->id ?>" class="button bottom2 delete">Delete this tricount</a>
+        <a href="tricount/delete_tricount/<?= $tricount->id ?>" id="delete" class="button bottom2 delete">Delete this tricount</a>
     </div>
 </body>
 

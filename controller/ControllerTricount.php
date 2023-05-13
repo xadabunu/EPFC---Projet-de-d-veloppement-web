@@ -189,14 +189,14 @@ class ControllerTricount extends MyController
 
     public function delete_tricount(): void
     {
-        if(isset($_GET['param1']) && is_numeric($_GET['param1'])){
+        if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
         $user = $this->get_user_or_redirect();
         $tricount = Tricount::get_tricount_by_id($_GET['param1']);
         if (!$tricount->has_access($user))
             $this->redirect();
         (new View("delete_tricount"))->show(['tricount' => $tricount]);
         }
-        else{
+        else {
             Tools::abort("Invalid or missing argument");
         }
     }    

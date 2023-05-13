@@ -43,7 +43,7 @@
 
         function checkWeight(e) {
             err_whom.html("");
-            $(e).parent().parent().attr("style", "");            
+            $(e).parent().parent().attr("style", "");
 
             var x =  $(e).find(".whom_weight");
             var g = $(e).find("input:checkbox");

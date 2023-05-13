@@ -76,7 +76,8 @@ class ControllerMain extends MyController
         ]);
     }
 
-    public function email_available_service() : void {
+    public function email_available_service(): void
+    {
         $res = 'true';
         if (isset($_GET["param1"]) && $_GET["param1"] !== "" ) {
             $user = User::get_user_by_email($_GET["param1"]);
