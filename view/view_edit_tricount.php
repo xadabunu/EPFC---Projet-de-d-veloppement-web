@@ -11,25 +11,25 @@
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
     <script src="lib/sweetalert2@11.js"></script>
     <script>
-        let tricount_id, add_btn, subs, table_subs, addables, added, desc_error;
-        let title, errTitle, description;
+        let table_subs, added, desc_error, title, errTitle, description;
+
         const user_id = "<?= $user->id ?>";
         const db_title = "<?= $tricount->title ?>";
         const db_description = "<?= $tricount->description ?>";
-        let delete_btn, back_btn;
+		const tricount = {
+                id: <?= $tricount->id ?>,
+                title: "<?= $tricount->title ?>",
+            };
+        let addables = <?= $tricount->get_addables_as_json() ?>;
+        let tricount_id = <?= $_GET['param1']?>;
+        let subs = <?= $tricount->get_subs_as_json() ?>;
 
         $(function() {
-            add_btn = $("#add_btn");
             table_subs = $("#table_subs");
-            subs = <?= $tricount->get_subs_as_json() ?>;
-            addables = <?= $tricount->get_addables_as_json() ?>;
-            tricount_id = <?= $_GET['param1']?>;
             description = $("#description");
             desc_error = $("#desc_error");
             title = $("#title");
             errTitle = $("#errTitle");
-            delete_btn = $("#delete");
-            back_btn = $("#back");
 
             $("form.nosubmit").submit(function(e) {
                 e.preventDefault();
@@ -37,17 +37,30 @@
             description.bind("input", checkDescription);
             title.bind("input", checkTitle);
 
-            delete_btn.attr("href", "javascript:confirmDelete()");
-            back_btn.attr("href", "javascript:confirmBack()");
+            $("#delete").attr("href", "javascript:confirmDelete()");
+            $("#back").attr("href", "javascript:confirmBack()");
         })
 
+		async function deleteConfirmed() {
+			$.ajax({
+				url: "tricount/delete_tricount_service/" + tricount_id,
+				type: "POST",
+				dataType: "text",
+				cache: false,
+				success: Swal.fire({
+					title: "Deleted!",
+					html: "<p>This tricount has been deleted</p>",
+					icon: "success",
+					position: "top",
+					confirmButtonColor: "#6f66e2",
+					focusConfirm: true
+				}).then((result) => {
+					location.replace("user/my_tricounts")
+				})
+			});
+		}
+
         function confirmDelete() {
-            const tricount = {
-                id: <?= $tricount->id ?>,
-                title: "<?= $tricount->title ?>",
-                creator: "<?= $tricount->creator->full_name ?>",
-                date: "<?= $tricount->created_at ?>"
-            };
             Swal.fire({
                 title: "Confirm Tricount deletion",
                 html: `
@@ -61,10 +74,11 @@
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!',
-                focusCancel: true
+        		focusCancel: true
             }).then((result) => {
-                if (result.isConfirmed)
-                    location.replace("tricount/confirm_delete_tricount/" + tricount.id);
+                if (result.isConfirmed) {
+					deleteConfirmed();
+				}
             });
         }
 
@@ -73,7 +87,8 @@
                 Swal.fire({
                     title: "Unsaved changes !",
                     html: `
-                        <p>Are you sure you want to leave this form ? Changes you made will not be saved.</p>
+                        <p>Are you sure you want to leave this form ?
+                        Changes you made will not be saved.</p>
                     `,
                     icon: 'warning',
                     position: 'top',
@@ -132,7 +147,7 @@
 
         function my_echo(str, len) {
             let html = "";
-            html += str.len > len ? substr(user.name, 0, len - 3) + "..." : str;
+            html += str.len > len ? substr(str, 0, len - 3) + "..." : str;
             return html;
         }
 
