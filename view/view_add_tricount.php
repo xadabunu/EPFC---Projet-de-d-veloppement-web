@@ -7,6 +7,7 @@
     <base href="<?= $web_root ?>">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
+    <script src="lib/sweetalert2@11.js"></script>
     <title>Add Tricount</title>
     <script>
         let title, errTitle, description, errDescription;
@@ -46,6 +47,29 @@
             return ok;
         }
 
+        function confirmBack() {
+            if (description.val() != "" || title.val() != "") {
+                Swal.fire({
+                    title: "Unsaved changes !",
+                    html: `
+                        <p>Are you sure you want to leave this form ?
+                        Changes you made will not be saved.</p>
+                    `,
+                    icon: 'warning',
+                    position: 'top',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c747c',
+                    confirmButtonText: 'Leave Page',
+                    focusCancel: true
+                }).then((result) => {
+                    if (result.isConfirmed)
+                        location.replace("user/my_tricounts/");
+                    });
+                } else
+                    location.replace("user/my_tricounts/");
+        }
+
         function checkTitleAndDescription() {
             let ok = checkTitle();
             ok = checkDescription() && ok;
@@ -62,6 +86,7 @@
             title.bind("input", checkTitleExists);
             description.bind("input", checkDescription);
 
+            $("#back").attr("href", "javascript:confirmBack()");
             $("input:text:first").focus();
         });
 
