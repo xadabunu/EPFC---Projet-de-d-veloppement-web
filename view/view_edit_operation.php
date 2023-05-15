@@ -8,8 +8,20 @@
     <link href="css/styles.css" rel="stylesheet" type="text/css">
     <title><?= $operation->title ?> &#11208; Edit</title>
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
+    <script src="lib/sweetalert2@11.js"></script>
     <script>
-        let op_amount, err_amount, lbl_amount, tr_currency, for_whom_table, err_whom;
+        let op_amount, err_amount, lbl_amount, tr_currency, for_whom_table, err_whom, weights = [];
+        const operation = {
+            id: "<?= $operation->id ?>",
+            title: "<?= $operation->title ?>",
+            initiator: {
+                id: <?= $operation->initiator->id ?>,
+                name: "<?= $operation->initiator->full_name ?>",
+            },
+            date: "<?= $operation->operation_date ?>",
+            amount: <?= $operation->amount ?>,
+            tricount_id: <?= $operation->tricount->id ?>
+        };
 
         function checkAmount() {
             err_amount.html("");
@@ -104,6 +116,90 @@
             }
         }
 
+        function hasChanges() {
+            var temp = getWeights();           
+            return $("#title").val() != operation.title ||
+            $("#amount").val() != operation.amount ||
+            $("#operation_date").val() != operation.date ||
+            $("#paid_by").val() != operation.initiator.id ||
+            temp.toString() != weights.toString();
+        }
+
+        function confirmBack() {
+            if (hasChanges()) {
+                Swal.fire({
+                    title: "Unsaved changes !",
+                    html: `
+                        <p>Are you sure you want to leave this form ?
+                        Changes you made will not be saved.</p>
+                    `,
+                    icon: 'warning',
+                    position: 'top',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c747c',
+                    confirmButtonText: 'Leave Page',
+                    focusCancel: true
+                }).then((result) => {
+                    if (result.isConfirmed)
+                        location.replace("operation/details/" + operation.id);
+                    });
+                } else
+                    location.replace("operation/details/" + operation.id);
+        }
+
+        function getWeights() {
+            var table = [];
+            $("table.whom tr").each((i, elem) => {
+                var check = $(elem).find(".checkbox_template");
+                if ($(check).prop("checked")) {
+                    table[$(check).attr("id").substring(9)] = $(elem).find(".whom_weight").val();
+                }
+            });
+            return table;
+        }
+
+        function deleteConfirmed() {
+            $.ajax({
+				url: "operation/delete_operation_service/" + operation.id,
+				type: "POST",
+				dataType: "text",
+				cache: false,
+				success: Swal.fire({
+					title: "Deleted!",
+					html: "<p>This operation has been deleted</p>",
+					icon: "success",
+					position: "top",
+					confirmButtonColor: "#6f66e2",
+					focusConfirm: true
+				}).then((result) => {
+					location.replace("tricount/operations/" + operation.tricount_id);
+				})
+			});
+        }
+
+        function confirmDelete() {
+            Swal.fire({
+                title: "Confirm Operation deletion",
+                html: `
+                    <p>Do you really want to delete operation "<b>${operation.title}</b>"
+                    and all of its dependencies ?</p>
+                    <p>This process cannot be undone.</p>
+                `,
+                icon: 'warning',
+                position: 'top',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+        		focusCancel: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+					deleteConfirmed();
+				}
+            });
+        }
+
         $(function() {
             op_amount = <?= $operation->amount ?>;
             lbl_amount = $("#amount");
@@ -113,6 +209,9 @@
             err_whom = $("#errWhom");
             choosing_template = $("#templates");
             $("#button_apply_template").hide();
+            $("#back").attr("href", "javascript:confirmBack()");
+            $("#delete").attr("href", "javascript:confirmDelete()");
+            weights = getWeights();
         })
     </script>
 </head>
@@ -269,7 +368,7 @@
                 </tr>
             </table>
             
-            <a href="operation/delete_operation/<?= $operation->id ?>" class="button bottom2 delete delete2">Delete this operation</a>
+            <a href="operation/delete_operation/<?= $operation->id ?>" id="delete" class="button bottom2 delete delete2">Delete this operation</a>
         </form>
     </div>
 </body>

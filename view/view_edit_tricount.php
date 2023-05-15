@@ -55,7 +55,7 @@
 					confirmButtonColor: "#6f66e2",
 					focusConfirm: true
 				}).then((result) => {
-					location.replace("user/my_tricounts")
+					location.replace("user/my_tricounts");
 				})
 			});
 		}
