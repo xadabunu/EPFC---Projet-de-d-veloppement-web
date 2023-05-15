@@ -97,12 +97,14 @@
             updateAmounts();
         }
 
-        function saveTemplateCheckbox(e) {
-            if($(e).val()){
-                $("#save_template").prop("checked", true);
+        function saveTemplateCheckbox() {
+            if ($("#save_template").is(":checked")) {
+                $("#template_title").prop("disabled", false);
+                $("#td_template_title").css("background-color", "white");
             }
-            else{
-                $("#save_template").prop("checked", false);
+            else {
+                $("#template_title").prop("disabled", true);
+                $("#td_template_title").css("background-color", "rgb(233, 236, 239)");
             }
         }
 
@@ -193,8 +195,33 @@
                     }
                 ], {errorsContainer : "#errorWeight"})
 
+                .addField("#template_title", [
+                    {
+                        rule : 'required',
+                        errorMessage : 'You have to name your template',
+                    },
+                    {
+                        rule: 'minLength',
+                        value: 3,
+                        errorMessage: 'Title length must be between 3 and 256',
+
+                    },
+                    {
+                        rule: 'maxLength',
+                        value: 256,
+                        errorMessage: 'Title length must be between 3 and 256'
+                    }
+                ], {errorsContainer : '#save_template_error'})
+
+                .onValidate(async function(event) {
+                    titleAvailable = await $.getJSON("operation/template_title_available/" + $("#template_title").val());
+                    if (!titleAvailable)
+                        this.showErrors({ '#template_title': 'Name already exists' });
+                })
+
                 .onSuccess(function(event) {
-                    event.target.submit();
+                    if(titleAvailable)
+                        event.target.submit();
                 });
 
 
@@ -207,6 +234,9 @@
             choosing_template = $("#templates");
             $("#button_apply_template").hide();
             $("input:text:first").focus();
+            $("#template_title").prop("disabled", true);
+            $("#td_template_title").css("background-color", "rgb(233, 236, 239)");
+            let titleAvailable;
         })
     </script>
 </head>
@@ -348,10 +378,12 @@
             Add a new repartition template
             <table <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors) || array_key_exists('duplicate_title', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                 <tr>
-                    <td class="check"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
+                    <td class="check" oninput="saveTemplateCheckbox();"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
                     <td class="template">Save this template</td>
-                    <td><input oninput="saveTemplateCheckbox(this);" id="template_title" name="template_title" type="text" size="16" placeholder="name" value='<?php if (!empty($repartition_template)) {echo $repartition_template->title;} else {echo '';} ?>'></td>
-
+                    <td id="td_template_title" ><div style="color:silver">Name</div><input id="template_title" name="template_title" type="text" size="16" value='<?php if (!empty($repartition_template)) {echo $repartition_template->title;} else {echo '';} ?>'></td>
+                </tr>
+            </table>
+            <div id="save_template_error"></div>
                     <?php if (array_key_exists('empty_template_title', $errors)) { ?>
                         <p class="errorMessage"><?php echo $errors['empty_template_title']; ?></p>
                     <?php } ?>
@@ -361,8 +393,7 @@
                     <?php if (array_key_exists('duplicate_title', $errors)) { ?>
                         <p class="errorMessage"><?php echo $errors['duplicate_title']; ?></p>
                     <?php } ?>
-                </tr>
-            </table>
+                
             
             <a href="operation/delete_operation/<?= $operation->id ?>" class="button bottom2 delete delete2">Delete this operation</a>
         </form>

@@ -580,6 +580,18 @@ td:has(input#amount.errorInput) {
     border-top-left-radius: 10px;
 }
 
+td:has(input#template_title.errorInput) {
+    border: 2px solid rgb(220, 53, 69);
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+td:has(input#template_title.successField) {
+    border: 2px solid green;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
 td.weight:has(input.errorInput) {
     border: 2px solid rgb(220, 53, 69);
     border-bottom-right-radius: 10px;

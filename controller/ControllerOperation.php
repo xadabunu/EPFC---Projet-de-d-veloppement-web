@@ -350,4 +350,14 @@ class ControllerOperation extends MyController
             echo RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id_as_json(intval($_GET["param1"]));
         }
     }
+    
+    public function template_title_available(): void {
+        $res = "true";
+        if(isset($_GET["param1"]) && $_GET["param1"] !== ""){
+            $template_title = RepartitionTemplates::get_repartition_template_by_title($_GET["param1"]);
+            if($template_title)
+                $res = "false";
+        }
+        echo $res;
+    }
 }
