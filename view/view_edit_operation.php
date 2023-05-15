@@ -322,7 +322,7 @@
                                         <p><input class="checkbox_template" type='checkbox' id='checkbox_<?= $subscriptor->id ?>' <?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? 'checked' : 'unchecked') : (empty($repartition_template_items) ? 'unchecked' :  'checked' )) : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked');?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
-                                    <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
+                                    <?= strlen($subscriptor->full_name) > 20 ? substr($subscriptor->full_name, 0, 20)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight" id="td_amount">
                                         <p>Amount</p>
