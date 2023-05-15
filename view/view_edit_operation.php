@@ -9,6 +9,8 @@
     <title><?= $operation->title ?> &#11208; Edit</title>
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
     <script src="lib/sweetalert2@11.js"></script>
+    <script src="lib/just-validate-4.2.0.production.min.js" type="text/javascript"></script>
+    <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
     <script>
         let op_amount, err_amount, lbl_amount, tr_currency, for_whom_table, err_whom, weights = [];
         const operation = {
@@ -107,12 +109,14 @@
             updateAmounts();
         }
 
-        function saveTemplateCheckbox(e) {
-            if($(e).val()){
-                $("#save_template").prop("checked", true);
+        function saveTemplateCheckbox() {
+            if ($("#save_template").is(":checked")) {
+                $("#template_title").prop("disabled", false);
+                $("#td_template_title").css("background-color", "white");
             }
-            else{
-                $("#save_template").prop("checked", false);
+            else {
+                $("#template_title").prop("disabled", true);
+                $("#td_template_title").css("background-color", "rgb(233, 236, 239)");
             }
         }
 
@@ -201,6 +205,122 @@
         }
 
         $(function() {
+            const validation = new JustValidate('#edit_operation_form', {
+                validateBeforeSubmitting: true,
+                lockForm: true,
+                focusInvalidField: false,
+                successLabelCssClass: ['success'],
+                errorLabelCssClass: ['errorMessage'],
+                errorFieldCssClass: ['errorInput'],
+                successFieldCssClass: ['successField']
+            });
+
+            validation
+                .addField('#title', [
+                    {
+                        rule: 'required',
+                        errorMessage: 'Title is required'
+                    },
+                    {
+                        rule: 'minLength',
+                        value: 3,
+                        errorMessage: 'Title length must be between 3 and 256',
+
+                    },
+                    {
+                        rule: 'maxLength',
+                        value: 256,
+                        errorMessage: 'Title length must be between 3 and 256'
+                    },
+                ], {errorsContainer: "#errorTitle", successMessage: "Looks good !"})
+
+                .addField('#amount', [
+                    {
+                        rule : 'required',
+                        errorMessage : 'Amount field cannot be empty'
+                    },
+                    {
+                        rule : 'number',
+                        errorMessage : 'Amount  must be a number'
+                    },
+                    {
+                        rule : 'minNumber',
+                        value : 0.01,
+                        errorMessage : 'Amount must be superior than 0,01'
+                    }
+
+                ], {errorsContainer: "#errorAmount", successMessage: "Looks good !"})
+
+                .addField('#operation_date', [
+                    {
+                        rule : 'required',
+                        errorMessage : 'Operation date is required'
+                    },
+                    {
+                    plugin : JustValidatePluginDate(() => {
+                        return {
+                            format : 'dd/MM/yyyy',
+                            isBeforeOrEqual : '15/05/2023'
+                        };
+                    }),
+                            errorMessage: 'Date should be before the date of the day'
+                    }
+                ], {errorsContainer : '#errorOperation_date'})
+
+                .addField('#paid_by', [
+                    {
+                        rule : 'required',
+                        errorMessage : 'You have to select an initiator'
+                    }
+                ], {errorsContainer: "#errorPaidBy", successMessage: "Looks good !"})
+
+                .addRequiredGroup(
+                    '#whomGroup',
+                    'You should select at least one one participant'
+                )
+
+                .addField("#weight", [
+                    {
+                        rule : 'integer',
+                        errorMessage : 'Weight must be an integer'
+                    },
+                    {
+                        rule : 'minNumber',
+                        value : 0,
+                        errorMessage : 'Weight must be positive'
+                    }
+                ], {errorsContainer : "#errorWeight"})
+
+                .addField("#template_title", [
+                    {
+                        rule : 'required',
+                        errorMessage : 'You have to name your template',
+                    },
+                    {
+                        rule: 'minLength',
+                        value: 3,
+                        errorMessage: 'Title length must be between 3 and 256',
+
+                    },
+                    {
+                        rule: 'maxLength',
+                        value: 256,
+                        errorMessage: 'Title length must be between 3 and 256'
+                    }
+                ], {errorsContainer : '#save_template_error'})
+
+                .onValidate(async function(event) {
+                    titleAvailable = await $.getJSON("operation/template_title_available/" + $("#template_title").val());
+                    if (!titleAvailable)
+                        this.showErrors({ '#template_title': 'Name already exists' });
+                })
+
+                .onSuccess(function(event) {
+                    if(titleAvailable)
+                        event.target.submit();
+                });
+
+
             op_amount = <?= $operation->amount ?>;
             lbl_amount = $("#amount");
             err_amount = $("#errAmount");
@@ -212,6 +332,10 @@
             $("#back").attr("href", "javascript:confirmBack()");
             $("#delete").attr("href", "javascript:confirmDelete()");
             weights = getWeights();
+            $("input:text:first").focus();
+            $("#template_title").prop("disabled", true);
+            $("#td_template_title").css("background-color", "rgb(233, 236, 239)");
+            let titleAvailable;
         })
     </script>
 </head>
@@ -306,7 +430,7 @@
                 </tr>
             </table>
             <label>For whom ? <i>(select at leat one)</i></label>
-                <ul>
+                <ul id='whomGroup'>
                     <?php foreach ($operation->tricount->get_subscriptors_with_creator() as $subscriptor){ 
                         if (!empty($templateChoosen) && $templateChoosen->is_participant_template($subscriptor)) {
                             $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_and_user($templateChoosen, $subscriptor);}
@@ -327,7 +451,7 @@
                                         <p><input class="checkbox_template" type='checkbox' id='checkbox_<?= $subscriptor->id ?>' <?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? 'checked' : 'unchecked') : (empty($repartition_template_items) ? 'unchecked' :  'checked' )) : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked');?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
-                                    <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
+                                    <?= strlen($subscriptor->full_name) > 20 ? substr($subscriptor->full_name, 0, 20)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight" id="td_amount">
                                         <p>Amount</p>
@@ -335,13 +459,14 @@
                                     </td>
                                     <td class="weight">
                                         <p>Weight</p>
-                                        <input type='text' class="whom_weight" name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? $repartition->weight : '1') : (empty($repartition_template_items) ? '1' : $repartition_template_items->weight)) : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
+                                        <input id='weight' type='text' class="whom_weight" name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? $repartition->weight : '1') : (empty($repartition_template_items) ? '1' : $repartition_template_items->weight)) : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
                                     </td>
                                 </tr>
                             </table>
                         </li>
                     <?php } ?>
                 </ul>
+                <div id='errorWeight'></div>
                 <p class="errorMessage" id="errWhom">
                     <?php if (array_key_exists('whom', $errors)) { echo $errors['whom']; } ?>
                 </p>
@@ -352,10 +477,12 @@
             Add a new repartition template
             <table <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors) || array_key_exists('duplicate_title', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                 <tr>
-                    <td class="check"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
+                    <td class="check" oninput="saveTemplateCheckbox();"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
                     <td class="template">Save this template</td>
-                    <td><input oninput="saveTemplateCheckbox(this);" id="template_title" name="template_title" type="text" size="16" placeholder="name" value='<?php if (!empty($repartition_template)) {echo $repartition_template->title;} else {echo '';} ?>'></td>
-
+                    <td id="td_template_title" ><div style="color:silver">Name</div><input id="template_title" name="template_title" type="text" size="16" value='<?php if (!empty($repartition_template)) {echo $repartition_template->title;} else {echo '';} ?>'></td>
+                </tr>
+            </table>
+            <div id="save_template_error"></div>
                     <?php if (array_key_exists('empty_template_title', $errors)) { ?>
                         <p class="errorMessage"><?php echo $errors['empty_template_title']; ?></p>
                     <?php } ?>
@@ -365,8 +492,7 @@
                     <?php if (array_key_exists('duplicate_title', $errors)) { ?>
                         <p class="errorMessage"><?php echo $errors['duplicate_title']; ?></p>
                     <?php } ?>
-                </tr>
-            </table>
+                
             
             <a href="operation/delete_operation/<?= $operation->id ?>" id="delete" class="button bottom2 delete delete2">Delete this operation</a>
         </form>

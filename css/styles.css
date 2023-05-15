@@ -574,15 +574,55 @@ td.empty>.text_confirm_title {
     font-size: 150%;
 }
 
+td:has(input#amount.errorInput) {
+    border: 2px solid rgb(220, 53, 69);
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+td:has(input#template_title.errorInput) {
+    border: 2px solid rgb(220, 53, 69);
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+td:has(input#template_title.successField) {
+    border: 2px solid green;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+td.weight:has(input.errorInput) {
+    border: 2px solid rgb(220, 53, 69);
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+td.weight:has(input.successField) {
+    border: 2px solid green;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+
+td:has(input#amount.successField){
+    border: 2px solid green;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
 .errorInput {
     border: 2px solid rgb(220, 53, 69);
-    ;
 }
 
 td.subscriptor {
     padding: 0;
     height: min-content;
     font-size: 130%;
+}
+
+td#amount:last-child, td#amount:first-child {
+    border: solid 2px rgb(223, 223, 223);
 }
 
 td.subscriptor.input {
@@ -618,15 +658,20 @@ tr.currency input:focus {
 }
 
 tr.currency {
-    border: solid 2px rgb(223, 223, 223);
-    border-radius: 10px;
+
     display: flex;
     justify-content: space-between;
     font-size: 100%;
 }
 
 tr.currency>td {
+    border: solid 2px rgb(223, 223, 223);
     padding: 10px;
+}
+
+tr.currency>td:first-child {
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
 }
 
 tr.currency .right {
@@ -747,8 +792,13 @@ td.template {
     justify-content: center;
 }
 
-.contains_input>input {
+/* .contains_input>input {
     padding-left: 13%;
+} */
+
+.test {
+    position: relative;
+    margin-right: 50%;
 }
 
 .fa-trash-can {
@@ -809,6 +859,24 @@ textarea {
     font-size: 80%;
 }
 
-.success {
-    color: yellowgreen;
+.input_fields {
+    margin: 10px auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+.success {
+    color: green!important;
+    font-size: small;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 5px;
+}
+
+.successField {
+    border-color: green;
+  }
+

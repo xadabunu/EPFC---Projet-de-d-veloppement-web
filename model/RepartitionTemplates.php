@@ -53,6 +53,13 @@ class RepartitionTemplates extends Model
         return $data;
     }
 
+    public static function get_repartition_template_by_title(string $title): RepartitionTemplates
+    {
+        $query = self::execute("SELECT * FROM repartition_templates WHERE title = :title", ["title" => $title]);
+        $data = $query->fetch();
+        return new RepartitionTemplates($data['title'], Tricount::get_tricount_by_id($data['tricount']), $data['id']);
+    }
+
 
 // --------------------------- Validate && Persist ------------------------------------ 
 

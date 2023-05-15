@@ -8,6 +8,147 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
+    <script src="lib/just-validate-4.2.0.production.min.js" type="text/javascript"></script>
+    <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
+    <script>
+
+         $(function() {
+            const validation = new JustValidate('#changepasswordform', {
+                validateBeforeSubmitting : true,
+                lockForm : true,
+                focusInvalidField : false,
+                successLabelCssClass : ['success'],
+                errorLabelCssClass: ['errorMessage'],
+                errorFieldCssClass: ['errorInput'],
+                successFieldCssClass: ['successField']
+            });
+
+            validation
+            .addField('#current_password', [
+                    {
+                        rule : 'required',
+                        errorMessage : 'Password is required'
+                    },
+                    {
+                        rule: 'minLength',
+                        value : 8,
+                        errorMessage: 'Minimum 8 characters'
+                    },
+                    {
+                        rule: 'maxLength',
+                        value : 16,
+                        errorMessage: 'Maximum 16 characters'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /[A-Z]/,
+                        errorMessage: 'Password must contain an uppercase letter'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /\d/,
+                        errorMessage: 'Password must contain a digit'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /['";:,.\/?\\-]/,
+                        errorMessage: 'Password must contain a special character'
+                    },
+                ], {errorsContainer : '#errorCurrentPassword'})
+
+                .addField("#password", [
+                    {
+                        rule : 'required',
+                        errorMessage : 'Password is required'
+                    },
+                    {
+                        rule: 'minLength',
+                        value : 8,
+                        errorMessage: 'Minimum 8 characters'
+                    },
+                    {
+                        rule: 'maxLength',
+                        value : 16,
+                        errorMessage: 'Maximum 16 characters'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /[A-Z]/,
+                        errorMessage: 'Password must contain an uppercase letter'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /\d/,
+                        errorMessage: 'Password must contain a digit'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /['";:,.\/?\\-]/,
+                        errorMessage: 'Password must contain a special character'
+                    },
+                    {
+                        validator : function(value, fields) {
+                            if (fields['#current_password'] && fields['#current_password'].elem) {
+                                const repeatPasswordValue = fields['#current_password'].elem.value;
+                                return value !== repeatPasswordValue;
+                            }
+                            return true;
+                        },
+                        errorMessage : 'You have to enter a password different from the current '
+                    },
+                ], {errorsContainer : '#errorPassword'})
+
+                .addField('#password_confirm', [
+                    {
+                        rule: 'required',
+                        errorMessage: 'Field is required'
+                    },
+                    {
+                        rule: 'minLength',
+                        value : 8,
+                        errorMessage: 'Minimum 8 characters'
+                    },
+                    {
+                        rule: 'maxLength',
+                        value : 16,
+                        errorMessage: 'Maximum 16 characters'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /[A-Z]/,
+                        errorMessage: 'Password must contain an uppercase letter'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /\d/,
+                        errorMessage: 'Password must contain a digit'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /['";:,.\/?\\-]/,
+                        errorMessage: 'Password must contain a special character'
+                    },
+                    {
+                        validator : function(value, fields) {
+                            if (fields['#password'] && fields['#password'].elem) {
+                                const repeatPasswordValue = fields['#password'].elem.value;
+                                return value === repeatPasswordValue;
+                            }
+                            return true;
+                        },
+                        errorMessage : 'You have to enter twice the same password '
+                    },
+                ], {errorsContainer : '#errorPasswordconfirm'})
+
+                .onSuccess(function(event) {
+                        event.target.submit();
+                });
+
+            $("input:text:first").focus();    
+
+        });        
+    </script>    
 </head>
 
 <body>
@@ -22,8 +163,9 @@
 
             <div class="contains_input">
                 <span class="icon"><i class="fa-solid fa-lock fa-sm" aria-hidden="true"></i></span>
-                <input name="current_password" type="password" placeholder="Current password" value="" <?php if (array_key_exists('current_wrong_password', $errors)) { ?>class="errorInput" <?php } ?>>
+                <input id="current_password" name="current_password" type="password" placeholder="Current password" value="" <?php if (array_key_exists('current_wrong_password', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
+            <div id="errorCurrentPassword"></div>
 
             <?php if (array_key_exists('current_wrong_password', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['current_wrong_password']; ?></p>
@@ -33,8 +175,9 @@
 
             <div class="contains_input">
                 <span class="icon"><i class="fa-solid fa-lock fa-sm" aria-hidden="true"></i></span>
-                <input name="password" type="password" placeholder="New password" value="<?= $password ?>" <?php if (array_key_exists('password_length', $errors) || array_key_exists('password_validity', $errors) || array_key_exists('password_confirm', $errors) || array_key_exists('password_format', $errors)) { ?>class="errorInput" <?php } ?>>
+                <input id="password" name="password" type="password" placeholder="New password" value="<?= $password ?>" <?php if (array_key_exists('password_length', $errors) || array_key_exists('password_validity', $errors) || array_key_exists('password_confirm', $errors) || array_key_exists('password_format', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
+            <div id="errorPassword"></div>
 
             <?php if (array_key_exists('password_length', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['password_length']; ?></p>
@@ -47,6 +190,7 @@
                 <span class="icon"><i class="fa-solid fa-lock fa-sm" aria-hidden="true"></i></span>
                 <input id="password_confirm" name="password_confirm" type="password" placeholder="Confirm your new password" value="<?= $password_confirm ?>" <?php if (array_key_exists('password_length', $errors) || array_key_exists('password_validity', $errors) || array_key_exists('password_confirm', $errors) || array_key_exists('password_format', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
+            <div id="errorPasswordconfirm"></div>
 
             <?php if (array_key_exists('password_confirm', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['password_confirm']; ?></p>
