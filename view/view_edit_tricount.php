@@ -9,13 +9,29 @@
     <link href="css/styles.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
+    <script src="lib/sweetalert2@11.js"></script>
     <script src="lib/just-validate-4.2.0.production.min.js" type="text/javascript"></script>
     <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
     <script>
-        let tricount_id, add_btn, subs, table_subs, addables, added, desc_error;
-        let title, errTitle, description;
         let titleAvailable;
+        let table_subs, added, desc_error, title, errTitle, description;
         const user_id = "<?= $user->id ?>";
+        const db_title = "<?= $tricount->title ?>";
+        const db_description = "<?= $tricount->description ?>";
+		const tricount = {
+                id: <?= $tricount->id ?>,
+                title: "<?= $tricount->title ?>",
+            };
+        let addables = <?= $tricount->get_addables_as_json() ?>;
+        const tricount_id = <?= $_GET['param1']?>;
+        let subs = <?= $tricount->get_subs_as_json() ?>;
+
+        $(function() {
+            table_subs = $("#table_subs");
+            description = $("#description");
+            desc_error = $("#desc_error");
+            title = $("#title");
+            errTitle = $("#errTitle");
 
 
         function debounce (fn, time) {
@@ -41,6 +57,7 @@
                 errorLabelCssClass: ['errorMessage'],
                 successFieldCssClass: ['successField']
             });
+
 
             validation
                 .addField('#title', [
@@ -95,20 +112,24 @@
             // table_subs = $("#table_subs");
             // subs = <?= $tricount->get_subs_as_json() ?>;
             // addables = <?= $tricount->get_addables_as_json() ?>;
-            tricount_id = <?= $_GET['param1']?>;
-            // description = $("#description");
+           
+            description = $("#description");
             // desc_error = $("#desc_error");
-            // title = $("#title");
-            // errTitle = $("#errTitle");
+            title = $("#title");
+            errTitle = $("#errTitle");
 
-            // $("form.nosubmit").submit(function(e) {
-            //     e.preventDefault();
-            // });
+           
             // description.bind("input", checkDescription);
             // title.bind("input", checkTitle);
 
+            $("form.nosubmit").submit(function(e) {
+                e.preventDefault();
+            });
+
             $("input:text:first").focus();
 
+            $("#delete").attr("href", "javascript:confirmDelete()");
+            $("#back").attr("href", "javascript:confirmBack()");
         })
 
         // function checkTitle() {
@@ -124,6 +145,90 @@
         //         ok = checkTitleExists();
         //     return ok;
         // }
+
+            //description.bind("input", checkDescription);
+            //title.bind("input", checkTitle);
+
+        })
+
+		async function deleteConfirmed() {
+			$.ajax({
+				url: "tricount/delete_tricount_service/" + tricount_id,
+				type: "POST",
+				dataType: "text",
+				cache: false,
+				success: Swal.fire({
+					title: "Deleted!",
+					html: "<p>This tricount has been deleted</p>",
+					icon: "success",
+					position: "top",
+					confirmButtonColor: "#6f66e2",
+					focusConfirm: true
+				}).then((result) => {
+					location.replace("user/my_tricounts")
+				})
+			});
+		}
+
+        function confirmDelete() {
+            Swal.fire({
+                title: "Confirm Tricount deletion",
+                html: `
+                    <p>Do you really want to delete tricount "<b>${tricount.title}</b>"
+                    and all of its dependencies ?</p>
+                    <p>This process cannot be undone.</p>
+                `,
+                icon: 'warning',
+                position: 'top',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+        		focusCancel: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+					deleteConfirmed();
+				}
+            });
+        }
+
+        function confirmBack() {
+            if (db_title.trim() != title.val().trim() || db_description.trim() != description.val().trim()) {
+                Swal.fire({
+                    title: "Unsaved changes !",
+                    html: `
+                        <p>Are you sure you want to leave this form ?
+                        Changes you made will not be saved.</p>
+                    `,
+                    icon: 'warning',
+                    position: 'top',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c747c',
+                    confirmButtonText: 'Leave Page',
+                    focusCancel: true
+                }).then((result) => {
+                    if (result.isConfirmed)
+                        location.replace("tricount/operations/" + tricount_id);
+                    });
+                } else
+                    location.replace("tricount/operations/" + tricount_id);
+        }
+
+        function checkTitle() {
+            let ok = true;
+            title.attr("style", "");
+            errTitle.html("");
+            if (!(/^.{3,}$/).test(title.val())) {
+                errTitle.append("Title lenght must be longer than 3 character");
+                ok = false;
+                title.attr("style", "border-color: rgb(220, 53, 69)");
+            }
+            if (ok)
+                ok = checkTitleExists();
+            return ok;
+        }
+
 
         // async function checkTitleExists() {
         //     const data = await $.getJSON("tricount/tricount_exists_service/" + title.val() + "/" + tricount_id);
@@ -154,7 +259,7 @@
 
         function my_echo(str, len) {
             let html = "";
-            html += str.len > len ? substr(user.name, 0, len - 3) + "..." : str;
+            html += str.len > len ? substr(str, 0, len - 3) + "..." : str;
             return html;
         }
 
@@ -319,7 +424,7 @@
             </table>
         </form>
         <a href="templates/manage_templates/<?= $tricount->id ?>" class="button bottom2 manage">Manage repartition template</a>
-        <a href="tricount/delete_tricount/<?= $tricount->id ?>" class="button bottom2 delete">Delete this tricount</a>
+        <a href="tricount/delete_tricount/<?= $tricount->id ?>" id="delete" class="button bottom2 delete">Delete this tricount</a>
     </div>
 </body>
 

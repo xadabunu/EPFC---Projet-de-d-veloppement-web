@@ -9,6 +9,7 @@
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
     <script src="lib/just-validate-4.2.0.production.min.js" type="text/javascript"></script>
     <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
+    <script src="lib/sweetalert2@11.js"></script>
     <title>Add Tricount</title>
     <script>
         let title, errTitle, description, errDescription, titleAvailable;
@@ -57,7 +58,6 @@
 
         function debounce (fn, time) {
             var timer;
-
             return function() {
                 clearTimeout(timer);
                 timer = setTimeout(() => {
@@ -65,6 +65,31 @@
                 }, time);
             }
         }
+
+
+        function confirmBack() {
+            console.log("test")
+            if (description.val() != "" || title.val() != "") {
+                Swal.fire({
+                    title: "Unsaved changes !",
+                    html: `
+                        <p>Are you sure you want to leave this form ?
+                        Changes you made will not be saved.</p>
+                    `,
+                    icon: 'warning',
+                    position: 'top',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c747c',
+                    confirmButtonText: 'Leave Page',
+                    focusCancel: true
+                }).then((result) => {
+                    if (result.isConfirmed)
+                        location.replace("user/my_tricounts/");
+                    });
+                } else
+                    location.replace("user/my_tricounts/");
+        }            
 
         $(function() {
 
@@ -77,6 +102,7 @@
                 errorFieldCssClass: ['errorInput'],
                 successFieldCssClass: ['successField']
             });
+
 
             validation
                 .addField('#title', [
@@ -128,15 +154,17 @@
                 
 
 
-            // title = $("#title");
-            // errTitle = $("#errTitle");
-            // description = $("#description");
-            // errDescription = $("#errDescription");
+            title = $("#title");
+            errTitle = $("#errTitle");
+            description = $("#description");
+            errDescription = $("#errDescription");
 
-            // title.bind("input", checkTitle);
-            // title.bind("input", checkTitleExists);
-            // description.bind("input", checkDescription);
-            // onsubmit=" return checkTitleAndDescription();"
+            //title.bind("input", checkTitle);
+            //title.bind("input", checkTitleExists);
+            //description.bind("input", checkDescription);
+            //onsubmit=" return checkTitleAndDescription();"
+
+            $("#back").attr("href", "javascript:confirmBack()");
             $("input:text:first").focus();
         });
 
