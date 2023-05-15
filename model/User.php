@@ -58,7 +58,6 @@ class User extends Model
         return $array;
     }
 
-
 // --------------------------- Validate && Persist // Delete User ------------------------------------ 
 
 
