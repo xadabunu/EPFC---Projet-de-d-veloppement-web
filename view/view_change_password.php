@@ -8,6 +8,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
+    <script src="lib/just-validate-4.2.0.production.min.js" type="text/javascript"></script>
+    <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
+    <script>
+
+         $(function() {
+            const validation = new JustValidate('#changepasswordform', {
+                validateBeforeSubmitting : true,
+                lockForm : true,
+                focusInvalidField : false,
+                successLabelCssClass : ['success'],
+                errorLabelCssClass: ['errorMessage'],
+                errorFieldCssClass: ['errorInput'],
+                successFieldCssClass: ['successField']
+            });
+
+            validation
+            .addField('#password', [
+                    {
+                        rule : 'required',
+                        errorMessage : 'Password is required'
+                    },
+                    {
+                        rule: 'minLength',
+                        value : 8,
+                        errorMessage: 'Minimum 8 characters'
+                    },
+                    {
+                        rule: 'maxLength',
+                        value : 16,
+                        errorMessage: 'Maximum 16 characters'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /[A-Z]/,
+                        errorMessage: 'Password must contain an uppercase letter'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /\d/,
+                        errorMessage: 'Password must contain a digit'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /['";:,.\/?\\-]/,
+                        errorMessage: 'Password must contain a special character'
+                    },
+                ], {errorsContainer : '#errorPassword', successMessage : 'Looks good !'})
+
+                .addField('#password_confirm', [
+                    {
+                        rule: 'required',
+                        errorMessage: 'Field is required'
+                    },
+                    {
+                        rule: 'minLength',
+                        value : 8,
+                        errorMessage: 'Minimum 8 characters'
+                    },
+                    {
+                        rule: 'maxLength',
+                        value : 16,
+                        errorMessage: 'Maximum 16 characters'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /[A-Z]/,
+                        errorMessage: 'Password must contain an uppercase letter'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /\d/,
+                        errorMessage: 'Password must contain a digit'
+                    },
+                    {
+                        rule: 'customRegexp',
+                        value : /['";:,.\/?\\-]/,
+                        errorMessage: 'Password must contain a special character'
+                    },
+                    {
+                        validator : function(value, fields) {
+                            if (fields['#password'] && fields['#password'].elem) {
+                                const repeatPasswordValue = fields['#password'].elem.value;
+                                return value === repeatPasswordValue;
+                            }
+                            return true;
+                        },
+                        errorMessage : 'You have to enter twice the same password '
+                    },
+                ], {errorsContainer : '#errorPassword_confirm', successMessage : 'Looks good !'})
+
+            $("input:text:first").focus();    
+
+        });        
+    </script>    
 </head>
 
 <body>
