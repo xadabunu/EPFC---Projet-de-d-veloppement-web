@@ -10,7 +10,49 @@
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
     <script src="lib/just-validate-4.2.0.production.min.js" type="text/javascript"></script>
     <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
+    <script src="lib/sweetalert2@11.js"></script>
     <script>
+        let template = {
+            weights: []
+        };
+
+        function getWeights() {
+            var table = [];
+            $("table.whom tr").each((i, elem) => {
+                var check = $(elem).find(".checkbox_template");
+                if ($(check).prop("checked")) {
+                    table[$(check).attr("id").substring(9)] = $(elem).find(".whom_weight").val();
+                }
+            });
+            return table;
+        }
+
+        function hasChanges() {
+            return $("#title").val() != "" || template.weights.toString() != getWeights().toString();
+        }
+
+        function confirmBack() {
+            if (hasChanges()) {
+                Swal.fire({
+                    title: "Unsaved changes !",
+                    html: `
+                        <p>Are you sure you want to leave this form ?
+                        Changes you made will not be saved.</p>
+                    `,
+                    icon: 'warning',
+                    position: 'top',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c747c',
+                    confirmButtonText: 'Leave Page',
+                    focusCancel: true
+                }).then((result) => {
+                    if (result.isConfirmed)
+                        location.replace("templates/manage_templates/" + <?= $_GET['param1'] ?>);
+                });
+            } else
+                location.replace("templates/manage_templates/" + <?= $_GET['param1'] ?>);
+        }
 
          $(function() {
             let titleAvailable;
@@ -72,7 +114,9 @@
                         event.target.submit();
                 });
 
-            $("input:text:first").focus();    
+            $("input:text:first").focus();
+            $("#back").attr("href", "javascript:confirmBack()")
+            template.weights = getWeights();    
 
         });        
     </script>   
@@ -107,15 +151,15 @@
                      ?>
                         <li>
                             <table class="whom" <?php  if( (array_key_exists("whom", $errors))  ||  (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]) )  ) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
-                                <tr class="edit">
+                                <tr class="edit" id='tr_template_<?= $subscriptor->id ?> weight'>
                                     <td class="check">
-                                        <p><input type='checkbox' <?php echo empty($list) ? 'checked' : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked'); ?> name='<?= $subscriptor->id ?>' value=''></p>
+                                        <p><input type='checkbox' class="checkbox_template" id='checkbox_<?= $subscriptor->id ?>' <?php echo empty($list) ? 'checked' : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked'); ?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight">
-                                        <p>Weight</p><input id='weight' type='text' name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($list) ? ('1') : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
+                                        <p>Weight</p><input id='weight' class="whom_weight" type='number' name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($list) ? ('1') : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
                                     </td> 
                                 </tr>
                             </table>

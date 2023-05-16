@@ -208,6 +208,21 @@ class ControllerTemplates extends MyController
         }
     }
 
+    public function delete_template_service()
+    {
+        $user = $this->get_user_or_false();
+        if (isset($_GET["param1"])) {
+            $repartition_template = RepartitionTemplates::get_repartition_template_by_id($_GET["param1"]); 
+        }
+        if ($user && $repartition_template && $repartition_template->tricount->has_access($user)) {
+            RepartitionTemplateItems::delete_repartition_template_items_with_object($repartition_template);
+            $repartition_template->delete_repartition_template();
+            echo "true";
+        }
+        else
+            echo "false";
+    }
+
 // --------------------------- Javascipt Apply template for add/edit operation ------------------------------------ 
 
 
