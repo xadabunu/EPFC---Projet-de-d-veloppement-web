@@ -207,4 +207,17 @@ class ControllerTemplates extends MyController
             Tools::abort("Invalid or missing argument");
         }
     }
+
+// --------------------------- Javascipt Apply template for add/edit operation ------------------------------------ 
+
+
+    public function template_title_available(): void {
+        $res = "true";
+        if(isset($_GET["param1"]) && $_GET["param1"] !== ""){
+            $template_title = RepartitionTemplates::get_repartition_template_by_title($_GET["param1"]);
+            if($template_title)
+                $res = "false";
+        }
+        echo $res;
+    }
 }
