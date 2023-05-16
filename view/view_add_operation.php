@@ -252,19 +252,23 @@
 
                 .addField("#template_title", [
                     {
-                        rule : 'required',
-                        errorMessage : 'You have to name your template',
+                        validator: (value) => {
+                            return !$("#save_template").is(":checked") || $("#template_title").val();
+                        },
+                        errorMessage : 'You have to name your template',  
                     },
                     {
-                        rule: 'minLength',
-                        value: 3,
-                        errorMessage: 'Title length must be between 3 and 256',
+                        validator: (value) => {
+                            return !$("#save_template").is(":checked") || $("#template_title").val().length >= 3;
+                        },
+                        errorMessage : 'Title length must be between 3 and 256',  
+                    },
+                    {
+                        validator: (value) => {
+                            return !$("#save_template").is(":checked") || $("#template_title").val().length <= 256;
+                        },
+                        errorMessage : 'Title length must be between 3 and 256', 
 
-                    },
-                    {
-                        rule: 'maxLength',
-                        value: 256,
-                        errorMessage: 'Title length must be between 3 and 256'
                     }
                 ], {errorsContainer : '#save_template_error'})
 

@@ -7,6 +7,58 @@
     <base href="<?= $web_root ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
+    <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
+    <script src="lib/just-validate-4.2.0.production.min.js" type="text/javascript"></script>
+    <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
+    <script>
+
+         $(function() {
+            let titleAvailable;
+
+            const validation = new JustValidate('#addtemplateform', {
+                validateBeforeSubmitting : true,
+                lockForm : true,
+                focusInvalidField : false,
+                successLabelCssClass : ['success'],
+                errorLabelCssClass: ['errorMessage'],
+                errorFieldCssClass: ['errorInput'],
+                successFieldCssClass: ['successField']
+            });
+
+            validation
+                .addField('#title', [
+                        {
+                            rule: 'required',
+                            errorMessage: 'Title is required'
+                        },
+                        {
+                            rule: 'minLength',
+                            value: 3,
+                            errorMessage: 'Title length must be between 3 and 256',
+
+                        },
+                        {
+                            rule: 'maxLength',
+                            value: 256,
+                            errorMessage: 'Title length must be between 3 and 256'
+                        },
+                    ], {errorsContainer: "#errorTitle"})
+
+                    .onValidate(async function(event) {
+                    titleAvailable = await $.getJSON("templates/template_title_available/" + $('#title').val());
+                    if (!titleAvailable)
+                        this.showErrors({'#title': 'Name already exists' });
+                })
+
+                .onSuccess(function(event) {
+                    if(titleAvailable)
+                        event.target.submit();
+                });
+
+            $("input:text:first").focus();    
+
+        });        
+    </script>   
 </head>
 
 <body>
@@ -21,7 +73,7 @@
             <label for="title">Title :</label>
             <input id="title" name="title" type="text" size="16" value="<?= empty($template) ? '' : $template->title ?>" 
             <?php if (array_key_exists('empty_title', $errors) || array_key_exists('duplicate_title', $errors) || array_key_exists('template_length', $errors)) { ?>class="errorInput" style = "border-color:rgb(220, 53, 69)"<?php } ?>>
-
+            <div id="errorTitle"></div>
             <?php if (array_key_exists('duplicate_title', $errors)) { ?>
                     <p class="errorMessage"><?php echo $errors['duplicate_title']; ?></p>
             <?php } ?>
