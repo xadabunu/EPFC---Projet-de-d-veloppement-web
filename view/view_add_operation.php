@@ -273,7 +273,7 @@
                 ], {errorsContainer : '#save_template_error'})
 
                 .onValidate(async function(event) {
-                    titleAvailable = await $.getJSON("operation/template_title_available/" + $("#template_title").val());
+                    titleAvailable = await $.post("operation/template_title_available/" , {"title" : $("#template_title").val()}, null, 'json');
                     if (!titleAvailable)
                         this.showErrors({ '#template_title': 'Name already exists' });
                 })

@@ -69,7 +69,7 @@
                 ], {errorsContainer : '#errorIban', successMessage : 'Looks good !'})
 
                 .onValidate((async function(event) {
-                    emailAvailable = await $.getJSON("Settings/email_available_service/" + $("#email").val());
+                    emailAvailable = await $.post("Settings/email_available_service/" , {"email" : $("#email").val()}, null, 'json');
                     if (!emailAvailable)
                         this.showErrors({ '#email': 'This email already exists' });
                 }))

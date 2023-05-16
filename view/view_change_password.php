@@ -144,7 +144,7 @@
                 ], {errorsContainer : '#errorPasswordconfirm'})
 
                 .onValidate(async function(event) {
-                    passwordIsCorrect = await $.getJSON("Settings/current_password_is_correct/" + $("#current_password").val());
+                    passwordIsCorrect = await $.post("Settings/current_password_is_correct/" , {"password" : $("#current_password").val()}, null, 'json'); //+ $("#current_password").val());
                     if (!passwordIsCorrect)
                         this.showErrors({'#current_password': 'Wrong current password' });
                 })

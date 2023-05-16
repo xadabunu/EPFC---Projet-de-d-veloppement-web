@@ -96,8 +96,8 @@ class ControllerSettings extends MyController
 
     public function email_available_service() : void {
         $res = 'true';
-        if (isset($_GET["param1"]) && $_GET["param1"] !== "" ) {
-            $user = User::get_user_by_email($_GET["param1"]);
+        if (isset($_POST["email"]) && $_POST["email"] !== "" ) {
+            $user = User::get_user_by_email($_POST["email"]);
             if ($user) {
                 $res = "false";
             }
@@ -107,9 +107,9 @@ class ControllerSettings extends MyController
 
     public function current_password_is_correct(): void {
         $res = "true";
-        if(isset($_GET["param1"]) && $_GET["param1"] !== ""){
-            $passwordIsCorrect = User::current_password_is_correct($_GET["param1"], $this->get_user_or_redirect());
-            if($passwordIsCorrect)
+        if(isset($_POST["password"]) && $_POST["password"] !== ""){
+            $passwordIsCorrect = User::current_password_is_correct($_POST["password"], $this->get_user_or_redirect());
+            if(!$passwordIsCorrect)
                 $res = "false";
         }
         echo $res;
