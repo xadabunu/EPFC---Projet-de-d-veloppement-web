@@ -63,7 +63,7 @@
                 .addField('#iban', [
                     {
                         rule : 'customRegexp',
-                        value : '/^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/',
+                        value : /^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/,
                         errorMessage : 'IBAN must have an official Belgian IBAN format'
                     },
                 ], {errorsContainer : '#errorIban', successMessage : 'Looks good !'})

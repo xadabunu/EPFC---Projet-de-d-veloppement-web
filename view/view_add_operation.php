@@ -19,7 +19,6 @@
             paid_by: <?= $operation->initiator->id ?>
         };
 
-
         function checkAmount() {
             err_amount.html("");
             tr_currency.attr("style", "");
@@ -193,7 +192,7 @@
                         value: 256,
                         errorMessage: 'Title length must be between 3 and 256'
                     },
-                ], {errorsContainer: "#errorTitle", successMessage: "Looks good !"})
+                ], {errorsContainer: "#errorTitle"})
 
                 .addField('#amount', [
                     {
@@ -210,7 +209,7 @@
                         errorMessage : 'Amount must be superior than 0,01'
                     }
 
-                ], {errorsContainer: "#errorAmount", successMessage: "Looks good !"})
+                ], {errorsContainer: "#errorAmount"})
 
                 .addField('#operation_date', [
                     {
@@ -220,9 +219,8 @@
                     {
                     plugin : JustValidatePluginDate(() => {
                         return {
-                            format : 'dd/MM/yyyy',
-                            isBeforeOrEqual : '15/05/2023'
-                        };
+                            format : 'yyyy-mm-dd',
+                            isBeforeOrEqual : date                        };
                     }),
                             errorMessage: 'Date should be before the date of the day'
                     }
@@ -233,7 +231,7 @@
                         rule : 'required',
                         errorMessage : 'You have to select an initiator'
                     }
-                ], {errorsContainer: "#errorPaidBy", successMessage: "Looks good !"})
+                ], {errorsContainer: "#errorPaidBy"})
 
                 .addRequiredGroup(
                     '#whomGroup',
