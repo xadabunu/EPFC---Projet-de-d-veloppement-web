@@ -855,16 +855,18 @@ textarea {
     justify-content: center;
 }
 
-.success {
-    color: green!important;
-    font-size: small;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    margin-top: 5px;
-}
-
 .successField {
     border-color: green;
   }
 
+td:has(input.successField:focus) {
+    border: 2px solid green;
+    box-shadow: 0 0 10px 3px  rgb(66, 194, 49);
+    border-radius: 10px;
+}
+
+td:has(input.errorInput:focus) {
+    border: 2px solid rgb(220, 53, 69);
+    box-shadow: 0 0 10px 3px  rgb(243, 123, 123);
+    border-radius: 10px;
+}

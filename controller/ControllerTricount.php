@@ -17,14 +17,14 @@ class ControllerTricount extends MyController
 
     public function tricount_exists_service(): void {
         $rez = "false";
-        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
+        if (isset($_POST["title"]) && $_POST["title"] !== "") {
             $user = $this->get_user_or_redirect();
             $tricounts = $user->get_created_tricounts();
             foreach ($tricounts as $tri) {
-                $title = preg_replace('/\s+/', 'grsgbsigfhfsognlsfaeqe', trim($tri->title));
-                if ($title === strtolower($_GET["param1"])) {
+                $title = trim($tri->title);
+                if ($title === strtolower($_POST["title"])) {
                     $rez = "true";
-                    if (isset($_GET["param2"]) && $tri->id == $_GET['param2']) {
+                    if (isset($_POST["tricount_id"]) && $tri->id == $_POST['tricount_id']) {
                         $rez = "false";
                     }
                 }

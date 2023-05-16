@@ -12,7 +12,7 @@
     <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
     <script>
         let op_amount, err_amount, lbl_amount, tr_currency, for_whom_table, err_whom;
-
+        let date = new Date().toISOString().substring(0, 10);
         function checkAmount() {
             err_amount.html("");
             tr_currency.attr("style", "");
@@ -134,7 +134,7 @@
                         value: 256,
                         errorMessage: 'Title length must be between 3 and 256'
                     },
-                ], {errorsContainer: "#errorTitle", successMessage: "Looks good !"})
+                ], {errorsContainer: "#errorTitle"})
 
                 .addField('#amount', [
                     {
@@ -151,7 +151,7 @@
                         errorMessage : 'Amount must be superior than 0,01'
                     }
 
-                ], {errorsContainer: "#errorAmount", successMessage: "Looks good !"})
+                ], {errorsContainer: "#errorAmount"})
 
                 .addField('#operation_date', [
                     {
@@ -161,8 +161,8 @@
                     {
                     plugin : JustValidatePluginDate(() => {
                         return {
-                            format : 'dd/MM/yyyy',
-                            isBeforeOrEqual : '15/05/2023'
+                            format : 'yyyy-mm-dd',
+                            isBeforeOrEqual : date
                         };
                     }),
                             errorMessage: 'Date should be before the date of the day'
@@ -174,7 +174,7 @@
                         rule : 'required',
                         errorMessage : 'You have to select an initiator'
                     }
-                ], {errorsContainer: "#errorPaidBy", successMessage: "Looks good !"})
+                ], {errorsContainer: "#errorPaidBy"})
 
                 .addRequiredGroup(
                     '#whomGroup',
@@ -224,6 +224,7 @@
                                                                                             } else {
                                                                                                 echo $operation->title;
                                                                                             } ?>" <?php if (array_key_exists('empty_title', $errors) || array_key_exists('length', $errors)) { ?>class="errorInput" <?php } ?>>
+            <div id="errorTitle"></div>
             <?php if (array_key_exists('empty_title', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['empty_title']; ?></p>
             <?php }
@@ -240,6 +241,7 @@
                     <td class="right">EUR</td>
                 </tr>
             </table>
+            <div id="errorAmount"></div>
             <p class="errorMessage" id="errAmount">
                 <?php if (array_key_exists('amount', $errors)) {
                     echo $errors['amount']; } ?>
@@ -253,6 +255,7 @@
                                                                                 } else {
                                                                                     echo $operation->operation_date;
                                                                                 } ?>" <?php if (array_key_exists('empty_date', $errors)) { ?>class="errorInput" <?php } ?>>
+            <div id="errorDescription"></div>
             <?php if (array_key_exists('empty_date', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['empty_date']; ?></p>
             <?php } ?>
@@ -273,6 +276,7 @@
                 } ?>
 
             </select>
+            <div id="errorPaidBy"></div>
             <?php if (array_key_exists('empty_initiator', $errors)) { ?>
                 <p class="errorMessage"><?php echo $errors['empty_initiator']; ?></p>
             <?php } ?>
