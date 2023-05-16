@@ -52,7 +52,7 @@
                         value : /^[a-zA-Z0-9]{1,20}[@]{1}[a-zA-A0-9]{1,15}[.]{1}[a-z]{1,7}$/,
                         errorMessage : 'Not a valid Email address'
                     },
-                ], {errorsContainer : '#errorMail', successMessage : 'Looks good !'})
+                ], {errorsContainer : '#errorMail'})
 
                 .addField('#full_name', [
                     {
@@ -69,7 +69,7 @@
                         value : 256,
                         errorMessage : 'Name length must be between 3 and 256'
                     },
-                ], {errorsContainer : '#errorName', successMessage : 'Looks good !'})
+                ], {errorsContainer : '#errorName'})
 
                 .addField('#password', [
                     {
@@ -101,7 +101,7 @@
                         value : /['";:,.\/?\\-]/,
                         errorMessage: 'Password must contain a special character'
                     },
-                ], {errorsContainer : '#errorPassword', successMessage : 'Looks good !'})
+                ], {errorsContainer : '#errorPassword'})
 
                 .addField('#password_confirm', [
                     {
@@ -143,18 +143,18 @@
                         },
                         errorMessage : 'You have to enter twice the same password '
                     },
-                ], {errorsContainer : '#errorPassword_confirm', successMessage : 'Looks good !'})
+                ], {errorsContainer : '#errorPassword_confirm'})
 
                 .addField('#iban', [
                     {
                         rule : 'customRegexp',
-                        value : '/^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/',
+                        value : /^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/,
                         errorMessage : 'IBAN must have an official Belgian IBAN format'
                     },
-                ], {errorsContainer : '#errorIban', successMessage : 'Looks good !'})
+                ], {errorsContainer : '#errorIban'})
 
                 .onValidate((async function(event) {
-                    emailAvailable = await $.getJSON("Main/email_available_service/" + $("#email").val());
+                    emailAvailable = await $.post("Main/email_available_service/", {"email" : $("#email").val()}, null, 'json');
                     if (!emailAvailable)
                         this.showErrors({ '#email': 'This email already exists' });
                 }))

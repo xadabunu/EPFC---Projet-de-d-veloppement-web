@@ -17,14 +17,14 @@ class ControllerTricount extends MyController
 
     public function tricount_exists_service(): void {
         $rez = "false";
-        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
+        if (isset($_POST["title"]) && $_POST["title"] !== "") {
             $user = $this->get_user_or_redirect();
             $tricounts = $user->get_created_tricounts();
             foreach ($tricounts as $tri) {
-                $title = preg_replace('/\s+/', 'grsgbsigfhfsognlsfaeqe', trim($tri->title));
-                if ($title === strtolower($_GET["param1"])) {
+                $title = trim($tri->title);
+                if ($title === strtolower($_POST["title"])) {
                     $rez = "true";
-                    if (isset($_GET["param2"]) && $tri->id == $_GET['param2']) {
+                    if (isset($_POST["tricount_id"]) && $tri->id == $_POST['tricount_id']) {
                         $rez = "false";
                     }
                 }
@@ -213,14 +213,17 @@ class ControllerTricount extends MyController
 
     public function delete_tricount_service(): void
     {
-        $user = $this->get_user_or_redirect();
+        $user = $this->get_user_or_false();
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);
-            if (!$tricount->has_access($user))
+            if (!$tricount->has_access($user)) {
                 echo "false";
+                return ;
+            }
             else {
                 $tricount->delete_tricount_cascade();
                 echo "true";
+                return ;
             }
         }
         echo "false";
@@ -228,7 +231,7 @@ class ControllerTricount extends MyController
 
     public function delete_subscriptor_service(): void
     {
-        $user = $this->get_user_or_redirect();
+        $user = $this->get_user_or_false();
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);            
             if (!$tricount || !$tricount->has_access($user) || !isset($_POST["id"]) || !is_numeric($_POST["id"])) {

@@ -12,7 +12,7 @@
     <script src="lib/sweetalert2@11.js"></script>
     <title>Add Tricount</title>
     <script>
-        let title, errTitle, description, errDescription, titleAvailable;
+        let title, errTitle, description, errDescription, titleExists;
 
 
         // function checkTitle() {
@@ -121,7 +121,7 @@
                         value : 256,
                         errorMessage : 'Title length must be between 3 and 256'
                     },
-                ], {errorsContainer : "#errorTitle" , successMessage :"Looks good !"})
+                ], {errorsContainer : "#errorTitle"})
 
                 .addField('#description', [
                     {
@@ -138,17 +138,18 @@
                         },
                         errorMessage : 'Description must be empty or longer than 2'
                     }
-                ], {errorsContainer : "#errorDescription", successMessage : 'Looks good !'})
+                ], {errorsContainer : "#errorDescription"})
 
                 .onValidate(debounce(async function(event) {
-                    titleAvailable = await $.getJSON("Tricount/tricount_exists_service/" + $("#title").val().trim().replaceAll(' ', 'grsgbsigfhfsognlsfaeqe'));
-                    if (titleAvailable){
-                        this.showErrors({ '#title': 'This title already exists' });
+                    titleExists = await $.post("Tricount/tricount_exists_service/", {"title" : title.val()}, null, 'json');
+                    console.log(titleExists);
+                    if (titleExists){
+                        this.showErrors({ '#title': 'This title already exists !!' });
                     } 
                 }, 300))
 
                 .onSuccess(function(event) {
-                    if (!titleAvailable)
+                    if (!titleExists)
                         event.target.submit();
                 });
                 

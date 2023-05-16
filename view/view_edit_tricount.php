@@ -75,7 +75,7 @@
                         value : 256,
                         errorMessage : 'Title length must be between 3 and 256'
                     },
-                ], {errorsContainer : "#errorTitle", successMessage : 'Looks good !'})
+                ], {errorsContainer : "#errorTitle"})
 
                 .addField('#description', [
                     {
@@ -92,10 +92,12 @@
                         },
                         errorMessage : 'Description must be empty or longer than 2'
                     }
-                ], {errorsContainer : "#errorDescription", successMessage : 'Looks good !'})
+                ], {errorsContainer : "#errorDescription"})
 
                 .onValidate(debounce(async function(event) {
-                    titleAvailable = await $.getJSON("Tricount/tricount_exists_service/" + $("#title").val() + "/" + tricount_id);
+                    titleAvailable = await $.post("Tricount/tricount_exists_service/",
+                                                                    {"title" : $("#title").val(),
+                                                                    "tricount_id" : tricount_id }, null, 'json');
                     if (titleAvailable)
                         this.showErrors({ '#title': 'This title already exists' });
                 }, 300))
@@ -165,7 +167,7 @@
 					confirmButtonColor: "#6f66e2",
 					focusConfirm: true
 				}).then((result) => {
-					location.replace("user/my_tricounts")
+					location.replace("user/my_tricounts");
 				})
 			});
 		}
