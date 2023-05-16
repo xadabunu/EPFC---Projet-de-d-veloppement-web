@@ -13,7 +13,34 @@
     <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
     <script src="lib/sweetalert2@11.js"></script>
     <script>
-        let emailAvailable
+        let emailAvailable;
+        const db_email = "<?= $user->email ?>";
+        const db_name = "<?= $user->full_name ?>";
+        const db_iban = "<?= $user->iban ?>";
+        const user_id = "<?= $user->id ?>";
+
+        function confirmBack() {
+            if (db_email.trim() != $('#email').val()){
+                Swal.fire({
+                    title: "Unsaved changes !",
+                    html: `
+                        <p>Are you sure you want to leave this form ?
+                        Changes you made will not be saved.</p>
+                    `,
+                    icon: 'warning',
+                    position: 'top',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c747c',
+                    confirmButtonText: 'Leave Page',
+                    focusCancel: true
+                }).then((result) => {
+                    if (result.isConfirmed)
+                        location.replace("Settings/my_settings/" + user_id);
+                    });
+                } else
+                    location.replace("Settings/my_settings/" + user_id);
+        }
 
          $(function() {
             const validation = new JustValidate('#editprofileform', {
@@ -81,9 +108,12 @@
                     }
                 });
 
-            $("input:text:first").focus();    
+            $("input:text:first").focus();
+            $("#back").attr("href", "javascript:confirmBack()");    
 
-        });        
+        });
+        
+        
     </script>    
 </head>
 
