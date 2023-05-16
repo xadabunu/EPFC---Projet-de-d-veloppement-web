@@ -62,17 +62,18 @@ class ControllerOperation extends MyController
             $list = [];
             $repartition_template_choosen = '';
             if (isset($_POST['title']) && isset($_POST['amount']) && isset($_POST['operation_date']) && isset($_POST['paid_by'])) {
+                
+                $operation = new Operation(
+                    trim($_POST['title']),
+                    Tricount::get_tricount_by_id($_GET['param1']),
+                    floatval($_POST['amount']),
+                    $_POST['operation_date'],
+                    is_numeric($_POST['paid_by']) ? User::get_user_by_id(($_POST['paid_by'])) : null,
+                    Date("Y-m-d H:i:s")
+                );
+                $repartition_template = new RepartitionTemplates(trim($_POST["template_title"]), $tricount);
 
-                if(is_numeric($_POST['paid_by'])){
-                    $operation = new Operation($_POST['title'], Tricount::get_tricount_by_id($_GET['param1']), floatval($_POST['amount']), $_POST['operation_date'], User::get_user_by_id(($_POST['paid_by'])), Date("Y-m-d H:i:s"));
-                    $repartition_template = new RepartitionTemplates($_POST["template_title"], $tricount);
-                }
-                else {
-                    $operation = new Operation($_POST['title'], Tricount::get_tricount_by_id($_GET['param1']), floatval($_POST['amount']), $_POST['operation_date'], null, Date("Y-m-d H:i:s"));
-                    $repartition_template = new RepartitionTemplates($_POST["template_title"], $tricount);
-                }
-
-                if ($_POST['amount'] <= 0){
+                if ($_POST['amount'] <= 0) {
                     $errors ['amount'] = 'Amount must be strictly positive' ;
                 }
                 $list = self::get_weight($_POST, $tricount);
@@ -252,6 +253,20 @@ class ControllerOperation extends MyController
 
     }
 
+    public function delete_operation_service()
+    {
+        $user = $this->get_user_or_false();
+        if (isset($_GET["param1"])) {
+            $operation = Operation::get_operation_by_id($_GET["param1"]);
+        }
+        if ($user && $operation && $operation->tricount->has_access($user)) {
+            $operation->delete_operation_cascade();
+            echo "true";
+        }
+        else
+            echo "false";
+    }
+
 // --------------------------- Apply template for add/edit operation ------------------------------------ 
 
     public function apply_template_edit_operation(): void
@@ -349,5 +364,15 @@ class ControllerOperation extends MyController
         if (isset($_GET["param1"]) && is_numeric($_GET["param1"])) {
             echo RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id_as_json(intval($_GET["param1"]));
         }
+    }
+    
+    public function template_title_available(): void {
+        $res = "true";
+        if(isset($_GET["param1"]) && $_GET["param1"] !== ""){
+            $template_title = RepartitionTemplates::get_repartition_template_by_title($_GET["param1"]);
+            if($template_title)
+                $res = "false";
+        }
+        echo $res;
     }
 }

@@ -8,11 +8,25 @@
     <link href="css/styles.css" rel="stylesheet" type="text/css">
     <title><?= $operation->title ?> &#11208; Edit</title>
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
+    <script src="lib/sweetalert2@11.js"></script>
     <script src="lib/just-validate-4.2.0.production.min.js" type="text/javascript"></script>
     <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
     <script>
-        let op_amount, err_amount, lbl_amount, tr_currency, for_whom_table, err_whom;
         let date = new Date().toISOString().substring(0, 10);
+        let op_amount, err_amount, lbl_amount, tr_currency, for_whom_table, err_whom, weights = [];
+        const operation = {
+            id: "<?= $operation->id ?>",
+            title: "<?= $operation->title ?>",
+            initiator: {
+                id: <?= $operation->initiator->id ?>,
+                name: "<?= $operation->initiator->full_name ?>",
+            },
+            date: "<?= $operation->operation_date ?>",
+            amount: <?= $operation->amount ?>,
+            tricount_id: <?= $operation->tricount->id ?>
+        };
+
+
         function checkAmount() {
             err_amount.html("");
             tr_currency.attr("style", "");
@@ -97,13 +111,99 @@
             updateAmounts();
         }
 
-        function saveTemplateCheckbox(e) {
-            if($(e).val()){
-                $("#save_template").prop("checked", true);
+        function saveTemplateCheckbox() {
+            if ($("#save_template").is(":checked")) {
+                $("#template_title").prop("disabled", false);
+                $("#td_template_title").css("background-color", "white");
             }
-            else{
-                $("#save_template").prop("checked", false);
+            else {
+                $("#template_title").prop("disabled", true);
+                $("#td_template_title").css("background-color", "rgb(233, 236, 239)");
             }
+        }
+
+        function hasChanges() {
+            var temp = getWeights();           
+            return $("#title").val() != operation.title ||
+            $("#amount").val() != operation.amount ||
+            $("#operation_date").val() != operation.date ||
+            $("#paid_by").val() != operation.initiator.id ||
+            temp.toString() != weights.toString();
+        }
+
+        function confirmBack() {
+            if (hasChanges()) {
+                Swal.fire({
+                    title: "Unsaved changes !",
+                    html: `
+                        <p>Are you sure you want to leave this form ?
+                        Changes you made will not be saved.</p>
+                    `,
+                    icon: 'warning',
+                    position: 'top',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c747c',
+                    confirmButtonText: 'Leave Page',
+                    focusCancel: true
+                }).then((result) => {
+                    if (result.isConfirmed)
+                        location.replace("operation/details/" + operation.id);
+                    });
+                } else
+                    location.replace("operation/details/" + operation.id);
+        }
+
+        function getWeights() {
+            var table = [];
+            $("table.whom tr").each((i, elem) => {
+                var check = $(elem).find(".checkbox_template");
+                if ($(check).prop("checked")) {
+                    table[$(check).attr("id").substring(9)] = $(elem).find(".whom_weight").val();
+                }
+            });
+            return table;
+        }
+
+        function deleteConfirmed() {
+            $.ajax({
+				url: "operation/delete_operation_service/" + operation.id,
+				type: "POST",
+				dataType: "text",
+				cache: false,
+				success: Swal.fire({
+					title: "Deleted!",
+					html: "<p>This operation has been deleted</p>",
+					icon: "success",
+					position: "top",
+					confirmButtonColor: "#6f66e2",
+					focusConfirm: true
+				}).then((result) => {
+					location.replace("tricount/operations/" + operation.tricount_id);
+				})
+			});
+        }
+
+        function confirmDelete() {
+            Swal.fire({
+                title: "Confirm Operation deletion",
+                html: `
+                    <p>Do you really want to delete operation "<b>${operation.title}</b>"
+                    and all of its dependencies ?</p>
+                    <p>This process cannot be undone.</p>
+                `,
+                icon: 'warning',
+                position: 'top',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+        		focusCancel: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+					deleteConfirmed();
+				}
+            });
         }
 
         $(function() {
@@ -193,8 +293,33 @@
                     }
                 ], {errorsContainer : "#errorWeight"})
 
+                .addField("#template_title", [
+                    {
+                        rule : 'required',
+                        errorMessage : 'You have to name your template',
+                    },
+                    {
+                        rule: 'minLength',
+                        value: 3,
+                        errorMessage: 'Title length must be between 3 and 256',
+
+                    },
+                    {
+                        rule: 'maxLength',
+                        value: 256,
+                        errorMessage: 'Title length must be between 3 and 256'
+                    }
+                ], {errorsContainer : '#save_template_error'})
+
+                .onValidate(async function(event) {
+                    titleAvailable = await $.getJSON("operation/template_title_available/" + $("#template_title").val());
+                    if (!titleAvailable)
+                        this.showErrors({ '#template_title': 'Name already exists' });
+                })
+
                 .onSuccess(function(event) {
-                    event.target.submit();
+                    if(titleAvailable)
+                        event.target.submit();
                 });
 
 
@@ -206,7 +331,13 @@
             err_whom = $("#errWhom");
             choosing_template = $("#templates");
             $("#button_apply_template").hide();
+            $("#back").attr("href", "javascript:confirmBack()");
+            $("#delete").attr("href", "javascript:confirmDelete()");
+            weights = getWeights();
             $("input:text:first").focus();
+            $("#template_title").prop("disabled", true);
+            $("#td_template_title").css("background-color", "rgb(233, 236, 239)");
+            let titleAvailable;
         })
     </script>
 </head>
@@ -326,7 +457,7 @@
                                         <p><input class="checkbox_template" type='checkbox' id='checkbox_<?= $subscriptor->id ?>' <?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? 'checked' : 'unchecked') : (empty($repartition_template_items) ? 'unchecked' :  'checked' )) : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked');?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
-                                    <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
+                                    <?= strlen($subscriptor->full_name) > 20 ? substr($subscriptor->full_name, 0, 20)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight" id="td_amount">
                                         <p>Amount</p>
@@ -352,10 +483,12 @@
             Add a new repartition template
             <table <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors) || array_key_exists('duplicate_title', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                 <tr>
-                    <td class="check"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
+                    <td class="check" oninput="saveTemplateCheckbox();"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
                     <td class="template">Save this template</td>
-                    <td><input oninput="saveTemplateCheckbox(this);" id="template_title" name="template_title" type="text" size="16" placeholder="name" value='<?php if (!empty($repartition_template)) {echo $repartition_template->title;} else {echo '';} ?>'></td>
-
+                    <td id="td_template_title" ><div style="color:silver">Name</div><input id="template_title" name="template_title" type="text" size="16" value='<?php if (!empty($repartition_template)) {echo $repartition_template->title;} else {echo '';} ?>'></td>
+                </tr>
+            </table>
+            <div id="save_template_error"></div>
                     <?php if (array_key_exists('empty_template_title', $errors)) { ?>
                         <p class="errorMessage"><?php echo $errors['empty_template_title']; ?></p>
                     <?php } ?>
@@ -365,10 +498,9 @@
                     <?php if (array_key_exists('duplicate_title', $errors)) { ?>
                         <p class="errorMessage"><?php echo $errors['duplicate_title']; ?></p>
                     <?php } ?>
-                </tr>
-            </table>
+                
             
-            <a href="operation/delete_operation/<?= $operation->id ?>" class="button bottom2 delete delete2">Delete this operation</a>
+            <a href="operation/delete_operation/<?= $operation->id ?>" id="delete" class="button bottom2 delete delete2">Delete this operation</a>
         </form>
     </div>
 </body>
