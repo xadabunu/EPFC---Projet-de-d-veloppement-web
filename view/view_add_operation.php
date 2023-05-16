@@ -324,7 +324,7 @@
             <table class="edit" id="currency">
                 <tr class="currency" id="tr_currency" <?php if (array_key_exists('amount', $errors) || array_key_exists('empty_amount', $errors)) { ?>style="border-color: rgb(220, 53, 69)" <?php } ?>>
                     <td>
-                        <input id="amount" name="amount" type="number" placeholder="Amount" onchange="checkAmount();" value='<?php if (!empty($operation->amount)) {
+                        <input id="amount" name="amount" type="text" placeholder="Amount" onchange="checkAmount();" value='<?php if (!empty($operation->amount)) {
                                                                                                                                 echo $operation->amount;
                                                                                                                             } else {
                                                                                                                                 echo '';
