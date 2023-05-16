@@ -105,4 +105,14 @@ class ControllerSettings extends MyController
         echo $res;
     }
 
+    public function current_password_is_correct(): void {
+        $res = "true";
+        if(isset($_GET["param1"]) && $_GET["param1"] !== ""){
+            $passwordIsCorrect = User::current_password_is_correct($_GET["param1"], $this->get_user_or_redirect());
+            if($passwordIsCorrect)
+                $res = "false";
+        }
+        echo $res;
+    }
+
 }

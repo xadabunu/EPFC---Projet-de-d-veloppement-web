@@ -14,6 +14,8 @@
     <script>
 
          $(function() {
+            let passwordIsCorrect;
+
             const validation = new JustValidate('#changepasswordform', {
                 validateBeforeSubmitting : true,
                 lockForm : true,
@@ -54,7 +56,7 @@
                         rule: 'customRegexp',
                         value : /['";:,.\/?\\-]/,
                         errorMessage: 'Password must contain a special character'
-                    },
+                    }
                 ], {errorsContainer : '#errorCurrentPassword'})
 
                 .addField("#password", [
@@ -96,7 +98,7 @@
                             return true;
                         },
                         errorMessage : 'You have to enter a password different from the current '
-                    },
+                    }
                 ], {errorsContainer : '#errorPassword'})
 
                 .addField('#password_confirm', [
@@ -138,10 +140,17 @@
                             return true;
                         },
                         errorMessage : 'You have to enter twice the same password '
-                    },
+                    }
                 ], {errorsContainer : '#errorPasswordconfirm'})
 
+                .onValidate(async function(event) {
+                    passwordIsCorrect = await $.getJSON("Settings/current_password_is_correct/" + $("#current_password").val());
+                    if (!passwordIsCorrect)
+                        this.showErrors({'#current_password': 'Wrong current password' });
+                })
+
                 .onSuccess(function(event) {
+                    if(passwordIsCorrect)
                         event.target.submit();
                 });
 

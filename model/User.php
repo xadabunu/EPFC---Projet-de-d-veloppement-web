@@ -92,6 +92,12 @@ class User extends Model
         return $errors;
     }
 
+    public static function current_password_is_correct(string $current_password, User $current_user) {
+        if (Tools::my_hash($current_password) == $current_user->hashed_password) 
+            return true;
+        return false;
+    }
+
     public function validate(): array
     {
         $errors = [];
