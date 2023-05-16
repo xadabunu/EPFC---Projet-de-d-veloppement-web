@@ -27,27 +27,44 @@
 
             validation
                 .addField('#title', [
-                        {
-                            rule: 'required',
-                            errorMessage: 'Title is required'
-                        },
-                        {
-                            rule: 'minLength',
-                            value: 3,
-                            errorMessage: 'Title length must be between 3 and 256',
+                    {
+                        rule: 'required',
+                        errorMessage: 'Title is required',
+                    },
+                    {
+                        rule: 'minLength',
+                        value: 3,
+                        errorMessage: 'Title length must be between 3 and 256',
 
-                        },
-                        {
-                            rule: 'maxLength',
-                            value: 256,
-                            errorMessage: 'Title length must be between 3 and 256'
-                        },
-                    ], {errorsContainer: "#errorTitle"})
+                    },
+                    {
+                        rule: 'maxLength',
+                        value: 256,
+                        errorMessage: 'Title length must be between 3 and 256'
+                    },
+                ], {errorsContainer: "#errorTitle"})
 
-                    .onValidate(async function(event) {
-                    titleAvailable = await $.getJSON("templates/template_title_available/" + $('#title').val());
+                .addRequiredGroup(
+                    '#whomGroup',
+                    'You should select at least one participant'
+                )
+
+                .addField("#weight", [
+                    {
+                        rule : 'integer',
+                        errorMessage : 'Weight must be an integer'
+                    },
+                    {
+                        rule : 'minNumber',
+                        value : 0,
+                        errorMessage : 'Weight must be positive'
+                    }
+                ], {errorsContainer : "#errorWeight"})
+
+                .onValidate(async function(event) {
+                    titleAvailable = await $.post("templates/template_title_available/", {"title" : $("#title").val()}, null, 'json'); 
                     if (!titleAvailable)
-                        this.showErrors({'#title': 'Name already exists' });
+                        this.showErrors({'#title': 'Title already exists' });
                 })
 
                 .onSuccess(function(event) {
@@ -85,7 +102,7 @@
                 <p class="errorMessage"><?php echo $errors['template_length']; ?></p>
             <?php } ?>
                 <label>Template items :</label>
-                <ul>
+                <ul id="whomGroup">
                     <?php foreach ($tricount->get_subscriptors_with_creator() as $subscriptor){ 
                      ?>
                         <li>
@@ -98,7 +115,7 @@
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight">
-                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($list) ? ('1') : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
+                                        <p>Weight</p><input id='weight' type='text' name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($list) ? ('1') : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
                                     </td> 
                                 </tr>
                             </table>

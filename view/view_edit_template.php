@@ -18,6 +18,7 @@
 
          $(function() {
             let titleAvailable;
+            let current_title = <?= json_encode($template->title) ?>;
 
             const validation = new JustValidate('#edittemplateform', {
                 validateBeforeSubmitting : true,
@@ -31,27 +32,46 @@
 
             validation
                 .addField('#title', [
-                        {
-                            rule: 'required',
-                            errorMessage: 'Title is required'
-                        },
-                        {
-                            rule: 'minLength',
-                            value: 3,
-                            errorMessage: 'Title length must be between 3 and 256',
+                    {
+                        rule: 'required',
+                        errorMessage: 'Title is required'
+                    },
+                    {
+                        rule: 'minLength',
+                        value: 3,
+                        errorMessage: 'Title length must be between 3 and 256',
 
-                        },
-                        {
-                            rule: 'maxLength',
-                            value: 256,
-                            errorMessage: 'Title length must be between 3 and 256'
-                        },
-                    ], {errorsContainer: "#errorTitle"})
+                    },
+                    {
+                        rule: 'maxLength',
+                        value: 256,
+                        errorMessage: 'Title length must be between 3 and 256'
+                    },
+                ], {errorsContainer: "#errorTitle"})
 
-                    .onValidate(async function(event) {
-                    titleAvailable = await $.getJSON("templates/template_title_available/" + $('#title').val());
+                .addRequiredGroup(
+                    '#whomGroup',
+                    'You should select at least one participant'
+                )
+
+                .addField("#weight", [
+                    {
+                        rule : 'integer',
+                        errorMessage : 'Weight must be an integer'
+                    },
+                    {
+                        rule : 'minNumber',
+                        value : 0,
+                        errorMessage : 'Weight must be positive'
+                    }
+                ], {errorsContainer : "#errorWeight"})
+
+                .onValidate(async function(event) {
+                    titleAvailable = await $.post("templates/template_title_available/", {"title" : $("#title").val()}, null, 'json'); 
+                    if ($("#title").val() == current_title)
+                        titleAvailable = true;
                     if (!titleAvailable)
-                        this.showErrors({'#title': 'Name already exists' });
+                        this.showErrors({'#title': 'Title already exists' });
                 })
 
                 .onSuccess(function(event) {
@@ -89,7 +109,7 @@
             <?php } ?>
 
                 <label>Template items :</label>
-                <ul>
+                <ul id="whomGroup">
                     <?php foreach ($tricount->get_subscriptors_with_creator() as $subscriptor){
                     if($template->is_participant_template($subscriptor)){
                         $repartition_template_items = RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_and_user($template, $subscriptor);
@@ -105,7 +125,7 @@
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight">
-                                        <p>Weight</p><input type='text' name='weight_<?= $subscriptor->id ?>' value='<?php echo array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ?  $list[$subscriptor->id] : "1")  : ($template->is_participant_template($subscriptor) ? $repartition_template_items->weight : "1"); ?>'>
+                                        <p>Weight</p><input id='weight' type='text' name='weight_<?= $subscriptor->id ?>' value='<?php echo array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ?  $list[$subscriptor->id] : "1")  : ($template->is_participant_template($subscriptor) ? $repartition_template_items->weight : "1"); ?>'>
                                     </td> 
                                 </tr>
                             </table>
