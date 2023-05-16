@@ -26,13 +26,6 @@
         const tricount_id = <?= $_GET['param1']?>;
         let subs = <?= $tricount->get_subs_as_json() ?>;
 
-        $(function() {
-            table_subs = $("#table_subs");
-            description = $("#description");
-            desc_error = $("#desc_error");
-            title = $("#title");
-            errTitle = $("#errTitle");
-
 
         function debounce (fn, time) {
             var timer;
@@ -45,9 +38,7 @@
             }
         }
 
-
         $(function() {
-
             const validation = new JustValidate('#edittricountform', {
                 validateBeforeSubmitting : true,
                 lockForm : true,
@@ -57,7 +48,6 @@
                 errorLabelCssClass: ['errorMessage'],
                 successFieldCssClass: ['successField']
             });
-
 
             validation
                 .addField('#title', [
@@ -111,12 +101,11 @@
 
 
             // add_btn = $("#add_btn");
-            // table_subs = $("#table_subs");
             // subs = <?= $tricount->get_subs_as_json() ?>;
-            // addables = <?= $tricount->get_addables_as_json() ?>;
-           
             description = $("#description");
-            // desc_error = $("#desc_error");
+            table_subs = $("#table_subs");
+            description = $("#description");
+            desc_error = $("#desc_error");
             title = $("#title");
             errTitle = $("#errTitle");
 
@@ -151,7 +140,7 @@
             //description.bind("input", checkDescription);
             //title.bind("input", checkTitle);
 
-        })
+        
 
 		async function deleteConfirmed() {
 			$.ajax({

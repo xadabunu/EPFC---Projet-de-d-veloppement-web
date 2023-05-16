@@ -11,8 +11,36 @@
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
     <script src="lib/just-validate-4.2.0.production.min.js" type="text/javascript"></script>
     <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
+    <script src="lib/sweetalert2@11.js"></script>
     <script>
-        let emailAvailable
+        let emailAvailable;
+        const db_email = "<?= $user->email ?>";
+        const db_name = "<?= $user->full_name ?>";
+        const db_iban = "<?= $user->iban ?>";
+        const user_id = "<?= $user->id ?>";
+
+        function confirmBack() {
+            if (db_email.trim() != $('#email').val()){
+                Swal.fire({
+                    title: "Unsaved changes !",
+                    html: `
+                        <p>Are you sure you want to leave this form ?
+                        Changes you made will not be saved.</p>
+                    `,
+                    icon: 'warning',
+                    position: 'top',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c747c',
+                    confirmButtonText: 'Leave Page',
+                    focusCancel: true
+                }).then((result) => {
+                    if (result.isConfirmed)
+                        location.replace("Settings/my_settings/" + user_id);
+                    });
+                } else
+                    location.replace("Settings/my_settings/" + user_id);
+        }
 
          $(function() {
             const validation = new JustValidate('#editprofileform', {
@@ -41,7 +69,7 @@
                         value : /^[a-zA-Z0-9]{1,20}[@]{1}[a-zA-A0-9]{1,15}[.]{1}[a-z]{1,7}$/,
                         errorMessage : 'Not a valid Email address'
                     },
-                ], {errorsContainer : '#errorMail', successMessage : 'Looks good !'})
+                ], {errorsContainer : '#errorMail'})
 
                 .addField('#full_name', [
                     {
@@ -58,7 +86,7 @@
                         value : 256,
                         errorMessage : 'Name length must be between 3 and 256'
                     },
-                ], {errorsContainer : '#errorName', successMessage : 'Looks good !'})
+                ], {errorsContainer : '#errorName'})
 
                 .addField('#iban', [
                     {
@@ -66,10 +94,10 @@
                         value : /^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/,
                         errorMessage : 'IBAN must have an official Belgian IBAN format'
                     },
-                ], {errorsContainer : '#errorIban', successMessage : 'Looks good !'})
+                ], {errorsContainer : '#errorIban'})
 
                 .onValidate((async function(event) {
-                    emailAvailable = await $.post("Settings/email_available_service/" , {"email" : $("#email").val()}, null, 'json');
+                    emailAvailable = await $.post("Main/email_available_service/", {"email" : $("#email").val()}, null, 'json');
                     if (!emailAvailable)
                         this.showErrors({ '#email': 'This email already exists' });
                 }))
@@ -80,9 +108,12 @@
                     }
                 });
 
-            $("input:text:first").focus();    
+            $("input:text:first").focus();
+            $("#back").attr("href", "javascript:confirmBack()");    
 
-        });        
+        });
+        
+        
     </script>    
 </head>
 
