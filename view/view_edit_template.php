@@ -18,9 +18,9 @@
     <script>
         let weights = [];
         const template = {
-            title = <? $template->title ?>,
-            id = <? $template->id ?>,
-            tricount_id = <? $template->tricount->id ?>
+            title : "<? $template->title ?>",
+            id : "<? $template->id ?>",
+            tricount_id : "<? $template->tricount->id ?>"
         }
         
 
@@ -173,7 +173,9 @@
             $("#delete").attr("href", "javascript:confirmDelete()");
             weights = getWeights(); 
 
-        });        
+        }); 
+        $("#back").attr("href", "javascript:confirmBack()");
+        $("#delete").attr("href", "javascript:confirmDelete()");       
     </script>   
 </head>
 
