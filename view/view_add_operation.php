@@ -10,9 +10,14 @@
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
     <script src="lib/just-validate-4.2.0.production.min.js" type="text/javascript"></script>
     <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
+    <script src="lib/sweetalert2@11.js"></script>
     <script>
         let op_amount, err_amount, lbl_amount, tr_currency, for_whom_table, err_whom;
-        let date = new Date();
+        let date = new Date().toISOString().substring(0, 10);
+        let operation = {
+            weights: [],
+            paid_by: <?= $operation->initiator->id ?>
+        };
 
 
         function checkAmount() {
@@ -104,6 +109,48 @@
                 $("#template_title").prop("disabled", true);
                 $("#td_template_title").css("background-color", "rgb(233, 236, 239)");
             }
+        }
+
+        function getWeights() {
+            var table = [];
+            $("table.whom tr").each((i, elem) => {
+                var check = $(elem).find(".checkbox_template");
+                if ($(check).prop("checked")) {
+                    table[$(check).attr("id").substring(9)] = $(elem).find(".whom_weight").val();
+                }
+            });
+            return table;
+        }
+
+        function hasChanges() {
+            return $("#title").val() != "" ||
+            $("#amount").val() != "" ||
+            $("#operation_date").val() != date ||
+            operation.paid_by != $("#paid_by").val() ||
+            operation.weights.toString() != getWeights().toString();
+        }
+
+        function confirmBack() {
+            if (hasChanges()) {
+                Swal.fire({
+                    title: "Unsaved changes !",
+                    html: `
+                        <p>Are you sure you want to leave this form ?
+                        Changes you made will not be saved.</p>
+                    `,
+                    icon: 'warning',
+                    position: 'top',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c747c',
+                    confirmButtonText: 'Leave Page',
+                    focusCancel: true
+                }).then((result) => {
+                    if (result.isConfirmed)
+                        location.replace("tricount/operations/" + <?= $_GET['param1'] ?>);
+                });
+            } else
+                location.replace("tricount/operations/" + <?= $_GET['param1'] ?>);
         }
 
         function debounce(fn, time) {
@@ -234,9 +281,6 @@
                         event.target.submit();
                 });
 
-
-            
-
             op_amount = <?= empty($operation->amount) ? 0 : $operation->amount ?>;
             lbl_amount = $("#amount");
             err_amount = $("#errAmount");
@@ -250,7 +294,9 @@
             $('#amount').attr('onChange', "");
             $("#template_title").prop("disabled", true);
             $("#td_template_title").css("background-color", "rgb(233, 236, 239)");
+            $("#back").attr("href", "javascript:confirmBack()")
             let titleAvailable;
+            operation.weights = getWeights();
         });
     </script>
 </head>
