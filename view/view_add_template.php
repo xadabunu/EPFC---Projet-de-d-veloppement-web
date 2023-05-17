@@ -55,7 +55,6 @@
         }
 
          $(function() {
-            let titleAvailable;
 
             const validation = new JustValidate('#addtemplateform', {
                 validateBeforeSubmitting : true,
@@ -115,6 +114,7 @@
                 });
 
             $("input:text:first").focus();
+            let titleAvailable;
             $("#back").attr("href", "javascript:confirmBack()")
             template.weights = getWeights();    
 
