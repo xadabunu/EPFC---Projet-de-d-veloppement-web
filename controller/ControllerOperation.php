@@ -71,8 +71,11 @@ class ControllerOperation extends MyController
                     is_numeric($_POST['paid_by']) ? User::get_user_by_id(($_POST['paid_by'])) : null,
                     Date("Y-m-d H:i:s")
                 );
-                $repartition_template = new RepartitionTemplates(trim($_POST["template_title"]), $tricount);
 
+                if (isset($_POST['template_title'])) {
+                    $repartition_template = new RepartitionTemplates(trim($_POST["template_title"]), $tricount);
+                }
+                
                 if ($_POST['amount'] <= 0) {
                     $errors ['amount'] = 'Amount must be strictly positive' ;
                 }

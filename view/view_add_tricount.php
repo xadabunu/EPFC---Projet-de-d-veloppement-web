@@ -98,6 +98,11 @@
             description = $("#description");
             errDescription = $("#errDescription");
 
+            $("#add").attr("disabled", true);
+            if (checkTitleAndDescription()) {
+                $("#add").attr("disabled", false);
+            }
+
             <?php if (Configuration::get("JustValidate")) { ?>
 
                 const validation = new JustValidate('#add_tricount_form', {
@@ -168,6 +173,7 @@
                 description.bind("input", checkDescription);
                 
             <?php } ?>
+            
             $("#back").attr("href", "javascript:confirmBack()");
             $("input:text:first").focus();
         });
