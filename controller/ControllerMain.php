@@ -83,6 +83,9 @@ class ControllerMain extends MyController
             $user = User::get_user_by_email($_POST["email"]);
             if ($user) {
                 $res = "false";
+                if (isset($_POST['user_email']) && $_POST['user_email'] === $_POST['email']) {
+                    $res = 'true';
+                }
             }
         }
         echo $res;

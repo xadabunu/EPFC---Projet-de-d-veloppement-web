@@ -21,7 +21,8 @@
             balance_table.display = "none";
             balance_table.before("<canvas id='myChart'></canvas>");
             balance_table.remove();
-            generateCanvas();
+            if ("<?=  count($tricount->get_subscriptors_with_creator()) ?>" > 1)
+                generateCanvas();
         })
 
         function generateCanvas() {
