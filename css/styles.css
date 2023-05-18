@@ -542,6 +542,7 @@ form>h3 {
     color: rgb(220, 53, 69) !important;
     font-size: 50%;
     margin-bottom: 1%;
+    margin-left : 15px;
     font-weight: bold;
 }
 
@@ -781,9 +782,22 @@ td.template {
     justify-content: center;
 }
 
+.input_with_icon {
+    margin-left: 50px;
+}
+
+.icon_position {
+    margin : 14px;
+}
+
+.error_with_icon {
+    margin-left : 50px;
+    margin-top : 0px;
+}
+
 .icon {
     position: absolute;
-    left: 15px;
+    left: 1px;
     top: 0;
     font-size: 25px;
     height: 100%;

@@ -177,53 +177,53 @@
         <form id="signupform" action="main/signup" method="post" class="connect2">
             <div class="formtitle">Sign Up</div>
             <div class="contains_input">
-                <span class="icon"><i class="fa-regular fa-at fa-sm test" aria-hidden="true"></i></span>
-                <input autocomplete="off" id="email" name="email" type="text" placeholder="Email" value="<?= $email ?>" <?php if (array_key_exists('required', $errors) || array_key_exists('validity', $errors)) { ?>class="errorInput" <?php } ?>>
+                <span class="icon"><i class="fa-regular fa-at fa-sm icon_position" aria-hidden="true"></i></span>
+                <input class="input_with_icon" autocomplete="off" id="email" name="email" type="text" placeholder="Email" value="<?= $email ?>" <?php if (array_key_exists('required', $errors) || array_key_exists('validity', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
-            <div id="errorMail"></div>
+            <div class="error_with_icon" id="errorMail"></div>
             <?php if (array_key_exists('required', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['required']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['required']; ?></p>
             <?php }
             if (array_key_exists('validity', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['validity']; ?></p>
+                <p class="errorMessage error_with_icon "><?php echo $errors['validity']; ?></p>
             <?php } ?>
             <div class="contains_input">
-                <span class="icon"><i class="fa-solid fa-user fa-sm test" aria-hidden="true"></i></span>
-                <input id="full_name" name="full_name" type="text" placeholder="Full Name" value="<?= $full_name ?>" <?php if (array_key_exists('length', $errors) || array_key_exists('name_contains', $errors)) { ?>class="errorInput" <?php } ?>>
+                <span class="icon"><i class="fa-solid fa-user fa-sm icon_position" aria-hidden="true"></i></span>
+                <input class="input_with_icon" id="full_name" name="full_name" type="text" placeholder="Full Name" value="<?= $full_name ?>" <?php if (array_key_exists('length', $errors) || array_key_exists('name_contains', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
-            <div id="errorName"></div>
+            <div class="error_with_icon" id="errorName"></div>
             <?php if (array_key_exists('length', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['length']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['length']; ?></p>
             <?php }
             if (array_key_exists('name_contains', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['name_contains']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['name_contains']; ?></p>
             <?php } ?>
             <div class="contains_input">
-                <span class="icon"><i class="fa-solid fa-credit-card fa-sm test" aria-hidden="true"></i></span>
-                <input id="iban" name="iban" type="text" placeholder="IBAN - BE12 3456 7890 1234" value="<?= $iban ?>" <?php if (array_key_exists('iban', $errors)) { ?>class="errorInput" <?php } ?>>
+                <span class="icon"><i class="fa-solid fa-credit-card fa-sm icon_position" aria-hidden="true"></i></span>
+                <input class="input_with_icon" id="iban" name="iban" type="text" placeholder="IBAN - BE12 3456 7890 1234" value="<?= $iban ?>" <?php if (array_key_exists('iban', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
-            <div id="errorIban"></div>
+            <div class="error_with_icon" id="errorIban"></div>
             <?php if (array_key_exists('iban', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['iban']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['iban']; ?></p>
             <?php } ?>
             <div class="contains_input">
-                <span class="icon"><i class="fa-solid fa-lock fa-sm test" aria-hidden="true"></i></span>
-                <input id="password" name="password" type="password" placeholder="Password" value="<?= $password ?>" <?php if (array_key_exists('password_length', $errors) || array_key_exists('password_format', $errors)) { ?>class="errorInput" <?php } ?>>
+                <span class="icon"><i class="fa-solid fa-lock fa-sm  icon_position" aria-hidden="true"></i></span>
+                <input class="input_with_icon" id="password" name="password" type="password" placeholder="Password" value="<?= $password ?>" <?php if (array_key_exists('password_length', $errors) || array_key_exists('password_format', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
-            <div id="errorPassword"></div>
+            <div class="error_with_icon" id="errorPassword"></div>
             <?php if (array_key_exists('password_length', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['password_length']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['password_length']; ?></p>
             <?php }
             if (array_key_exists('password_format', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['password_format']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['password_format']; ?></p>
             <?php } ?>
             <div class="contains_input">
-                <span class="icon"><i class="fa-solid fa-lock fa-sm test" aria-hidden="true"></i></span>
-                <input id="password_confirm" name="password_confirm" type="password" placeholder="Confirm your password" value="<?= $password_confirm ?>" <?php if (array_key_exists('password_confirm', $errors)) { ?>class="errorInput" <?php } ?>>
+                <span class="icon"><i class="fa-solid fa-lock fa-sm  icon_position" aria-hidden="true"></i></span>
+                <input class="input_with_icon" id="password_confirm" name="password_confirm" type="password" placeholder="Confirm your password" value="<?= $password_confirm ?>" <?php if (array_key_exists('password_confirm', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
-            <div id="errorPassword_confirm"></div>
+            <div class="error_with_icon" id="errorPassword_confirm"></div>
             <?php if (array_key_exists('password_confirm', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['password_confirm']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['password_confirm']; ?></p>
             <?php } ?>
             <input class='login' type="submit" value="Sign Up">
             <a href="index.php" class="button bottom" id='back'>Cancel</a>

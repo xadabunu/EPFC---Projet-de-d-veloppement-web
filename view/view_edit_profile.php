@@ -129,39 +129,39 @@
         <form id="editprofileform" action="settings/edit_profile" method="post" class="edit">
 
             <div class="contains_input">
-                <span class="icon"><i class="fa-regular fa-at fa-sm" aria-hidden="true"></i></span>
-                <input id="email" name="email" type="text" value="<?php if(empty($errors)) {echo $user->email;} else {echo $tmpUser->email;}?>" <?php if (array_key_exists('required', $errors) || array_key_exists('validity', $errors)) { ?>class="errorInput" <?php } ?>>
+                <span class="icon"><i class="fa-regular fa-at fa-sm icon_position" aria-hidden="true"></i></span>
+                <input class="input_with_icon" id="email" name="email" type="text" value="<?php if(empty($errors)) {echo $user->email;} else {echo $tmpUser->email;}?>" <?php if (array_key_exists('required', $errors) || array_key_exists('validity', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
-            <div id="errorMail"></div>
+            <div class="error_with_icon" id="errorMail"></div>
 
             <?php if (array_key_exists('required', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['required']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['required']; ?></p>
             <?php }
             if (array_key_exists('validity', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['validity']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['validity']; ?></p>
             <?php } ?>
 
             <div class="contains_input">
-                <span class="icon"><i class="fa-solid fa-user fa-sm" aria-hidden="true"></i></span>
-                <input id="full_name" name="full_name" type="text" value="<?php if(empty($errors)) {echo $user->full_name;} else {echo $tmpUser->full_name;}?>" <?php if (array_key_exists('length', $errors) || array_key_exists('name_contains', $errors)) { ?>class="errorInput" <?php } ?>>
+                <span class="icon"><i class="fa-solid fa-user fa-sm icon_position" aria-hidden="true"></i></span>
+                <input class="input_with_icon" id="full_name" name="full_name" type="text" value="<?php if(empty($errors)) {echo $user->full_name;} else {echo $tmpUser->full_name;}?>" <?php if (array_key_exists('length', $errors) || array_key_exists('name_contains', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
-            <div id="errorName"></div>
+            <div class="error_with_icon" id="errorName"></div>
 
             <?php if (array_key_exists('length', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['length']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['length']; ?></p>
             <?php }
             if (array_key_exists('name_contains', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['name_contains']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['name_contains']; ?></p>
             <?php } ?>
 
             <div class="contains_input">
-                <span class="icon"><i class="fa-solid fa-credit-card fa-sm" aria-hidden="true"></i></span>
-                <input id="iban" name="iban" type="text" placeholder="IBAN - BE12 3456 7890 1234" value="<?php if(empty($errors)) {echo $user->iban;} else {echo $tmpUser->iban;}?>" <?php if (array_key_exists('iban', $errors)) { ?>class="errorInput" <?php } ?>>
+                <span class="icon"><i class="fa-solid fa-credit-card fa-sm icon_position" aria-hidden="true"></i></span>
+                <input class="input_with_icon" id="iban" name="iban" type="text" placeholder="IBAN - BE12 3456 7890 1234" value="<?php if(empty($errors)) {echo $user->iban;} else {echo $tmpUser->iban;}?>" <?php if (array_key_exists('iban', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
-            <div id="errorIban"></div>
+            <div class="error_with_icon" id="errorIban"></div>
 
             <?php if (array_key_exists('iban', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['iban']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['iban']; ?></p>
             <?php } ?>
         </form>
     </div>

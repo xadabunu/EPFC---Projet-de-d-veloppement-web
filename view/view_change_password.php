@@ -200,42 +200,42 @@
         <form id="changepasswordform" action="settings/change_password" method="post" class="edit">
 
             <div class="contains_input">
-                <span class="icon"><i class="fa-solid fa-lock fa-sm" aria-hidden="true"></i></span>
-                <input id="current_password" name="current_password" type="password" placeholder="Current password" value="" <?php if (array_key_exists('current_wrong_password', $errors)) { ?>class="errorInput" <?php } ?>>
+                <span class="icon"><i class="fa-solid fa-lock fa-sm icon_position" aria-hidden="true"></i></span>
+                <input class="input_with_icon" id="current_password" name="current_password" type="password" placeholder="Current password" value="" <?php if (array_key_exists('current_wrong_password', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
-            <div id="errorCurrentPassword"></div>
+            <div class="error_with_icon" id="errorCurrentPassword"></div>
 
             <?php if (array_key_exists('current_wrong_password', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['current_wrong_password']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['current_wrong_password']; ?></p>
             <?php } ?>
 
             <br><br>
 
             <div class="contains_input">
-                <span class="icon"><i class="fa-solid fa-lock fa-sm" aria-hidden="true"></i></span>
-                <input id="password" name="password" type="password" placeholder="New password" value="<?= $password ?>" <?php if (array_key_exists('password_length', $errors) || array_key_exists('password_validity', $errors) || array_key_exists('password_confirm', $errors) || array_key_exists('password_format', $errors)) { ?>class="errorInput" <?php } ?>>
+                <span class="icon"><i class="fa-solid fa-lock fa-sm icon_position" aria-hidden="true"></i></span>
+                <input class="input_with_icon" id="password" name="password" type="password" placeholder="New password" value="<?= $password ?>" <?php if (array_key_exists('password_length', $errors) || array_key_exists('password_validity', $errors) || array_key_exists('password_confirm', $errors) || array_key_exists('password_format', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
-            <div id="errorPassword"></div>
+            <div class="error_with_icon" id="errorPassword"></div>
 
             <?php if (array_key_exists('password_length', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['password_length']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['password_length']; ?></p>
             <?php }
             if (array_key_exists('password_format', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['password_format']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['password_format']; ?></p>
             <?php } ?>
 
             <div class="contains_input">
-                <span class="icon"><i class="fa-solid fa-lock fa-sm" aria-hidden="true"></i></span>
-                <input id="password_confirm" name="password_confirm" type="password" placeholder="Confirm your new password" value="<?= $password_confirm ?>" <?php if (array_key_exists('password_length', $errors) || array_key_exists('password_validity', $errors) || array_key_exists('password_confirm', $errors) || array_key_exists('password_format', $errors)) { ?>class="errorInput" <?php } ?>>
+                <span class="icon"><i class="fa-solid fa-lock fa-sm icon_position" aria-hidden="true"></i></span>
+                <input class="input_with_icon" id="password_confirm" name="password_confirm" type="password" placeholder="Confirm your new password" value="<?= $password_confirm ?>" <?php if (array_key_exists('password_length', $errors) || array_key_exists('password_validity', $errors) || array_key_exists('password_confirm', $errors) || array_key_exists('password_format', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
-            <div id="errorPasswordconfirm"></div>
+            <div class="error_with_icon" id="errorPasswordconfirm"></div>
 
             <?php if (array_key_exists('password_confirm', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['password_confirm']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['password_confirm']; ?></p>
             <?php } ?>
 
             <?php if (array_key_exists('password_validity', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['password_validity']; ?></p>
+                <p class="errorMessage error_with_icon"><?php echo $errors['password_validity']; ?></p>
             <?php } ?>
             
         </form>
