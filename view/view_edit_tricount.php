@@ -26,20 +26,26 @@
         const tricount_id = <?= $_GET['param1']?>;
         let subs = <?= $tricount->get_subs_as_json() ?>;
 
-
-        function debounce (fn, time) {
-            var timer;
-
-            return function() {
-                clearTimeout(timer);
-                timer = setTimeout(() => {
-                    fn.apply(this, arguments);
-                }, time);
-            }
-        }
-
         $(function() {
-            const validation = new JustValidate('#edittricountform', {
+
+            description = $("#description");
+            table_subs = $("#table_subs");
+            description = $("#description");
+            desc_error = $("#desc_error");
+            title = $("#title");
+            errTitle = $("#errTitle");
+
+            $("form.nosubmit").submit(function(e) {
+                e.preventDefault();
+            });
+            $("#delete").attr("href", "javascript:confirmDelete()");
+            $("#back").attr("href", "javascript:confirmBack()");
+            
+            $("input:text:first").focus();
+
+            <?php if (Configuration::get("JustValidate")) { ?>
+
+            const validation = new JustValidate('#edit_tricount_form', {
                 validateBeforeSubmitting : true,
                 lockForm : true,
                 focusInvalidField : false,
@@ -97,50 +103,68 @@
                         event.target.submit();
                 })
 
-
-
-
-            // add_btn = $("#add_btn");
-            // subs = <?= $tricount->get_subs_as_json() ?>;
-            description = $("#description");
-            table_subs = $("#table_subs");
-            description = $("#description");
-            desc_error = $("#desc_error");
-            title = $("#title");
-            errTitle = $("#errTitle");
-
-           
-            // description.bind("input", checkDescription);
-            // title.bind("input", checkTitle);
-
-            $("form.nosubmit").submit(function(e) {
-                e.preventDefault();
-            });
-
-            $("input:text:first").focus();
-
-            $("#delete").attr("href", "javascript:confirmDelete()");
-            $("#back").attr("href", "javascript:confirmBack()");
+                <?php } else { ?>
+                    description.bind("input", checkDescription);
+                    title.bind("input", checkTitle);
+                    $("#edit_tricount_form").attr("onsubmit", "return checkTitleAndDescription();");
+                <?php } ?>
         })
 
-        // function checkTitle() {
-        //     let ok = true;
-        //     title.attr("style", "");
-        //     errTitle.html("");
-        //     if (!(/^.{3,}$/).test(title.val())) {
-        //         errTitle.append("Title lenght must be longer than 3 character");
-        //         ok = false;
-        //         title.attr("style", "border-color: rgb(220, 53, 69)");
-        //     }
-        //     if (ok)
-        //         ok = checkTitleExists();
-        //     return ok;
-        // }
+        <?php if (Configuration::get("JustValidate")) { ?>
 
-            //description.bind("input", checkDescription);
-            //title.bind("input", checkTitle);
+        function debounce (fn, time) {
+            var timer;
 
-        
+            return function() {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    fn.apply(this, arguments);
+                }, time);
+            }
+        }
+
+        <?php } else { ?>
+
+        function checkTitle() {
+            let ok = true;
+            title.attr("style", "");
+            errTitle.html("");
+            if (!(/^.{3,}$/).test(title.val())) {
+                errTitle.append("Title lenght must be longer than 3 character");
+                ok = false;
+                title.attr("style", "border-color: rgb(220, 53, 69)");
+            }
+            if (ok)
+                ok = checkTitleExists();
+            return ok;
+        }
+
+        async function checkTitleExists() {
+            const data = await $.getJSON("tricount/tricount_exists_service/" + title.val() + "/" + tricount_id);
+            if (data) {
+                errTitle.append("Title already exists");
+                title.attr("style", "border-color: rgb(220, 53, 69)");
+                return false;
+            }
+            return true;
+        }
+
+        function checkDescription() {
+            $(description).next(".errorMessage").remove();
+            description.attr("style", "");
+
+            if (description.val() !== "" && !(/^.{3,}$/).test(description.val())) {
+                description.css("border-color", "rgb(220, 53, 69)");
+                description.after("<p class='errorMessage'>Description lenght must be >= 3</p>");
+            }
+        }
+
+        function checkTitleAndDescription() {
+            let ok = checkTitle();
+            ok = checkDescription() && ok;
+            return ok;
+        }
+        <?php } ?>
 
 		async function deleteConfirmed() {
 			$.ajax({
@@ -205,48 +229,6 @@
                 } else
                     location.replace("tricount/operations/" + tricount_id);
         }
-
-        function checkTitle() {
-            let ok = true;
-            title.attr("style", "");
-            errTitle.html("");
-            if (!(/^.{3,}$/).test(title.val())) {
-                errTitle.append("Title lenght must be longer than 3 character");
-                ok = false;
-                title.attr("style", "border-color: rgb(220, 53, 69)");
-            }
-            if (ok)
-                ok = checkTitleExists();
-            return ok;
-        }
-
-
-        // async function checkTitleExists() {
-        //     const data = await $.getJSON("tricount/tricount_exists_service/" + title.val() + "/" + tricount_id);
-        //     if (data) {
-        //         errTitle.append("Title already exists");
-        //         title.attr("style", "border-color: rgb(220, 53, 69)");
-        //         return false;
-        //     }
-        //     return true;
-        // }
-
-        // function checkDescription() {
-        //     $(description).next(".errorMessage").remove();
-        //     description.attr("style", "");
-
-        //     if (description.val() !== "" && !(/^.{3,}$/).test(description.val())) {
-        //         description.css("border-color", "rgb(220, 53, 69)");
-        //         description.after("<p class='errorMessage'>Description lenght must be >= 3</p>");
-        //     }
-        // }
-
-        // function checkTitleAndDescription() {
-        //     let ok = checkTitle();
-        //     ok = checkDescription() && ok;
-        //     return ok;
-        // }
-        // onsubmit="return checkTitleAndDescription();"
 
         function my_echo(str, len) {
             let html = "";
@@ -357,10 +339,10 @@
         <header class="t2">
             <a href="tricount/operations/<?= $tricount->id ?>" class="button" id="back">Back</a>
             <p><?= strlen($tricount->title) > 20 ? substr($tricount->title, 0, 20)."..." : $tricount->title ?> &#11208; Edit</p>
-            <button form="edittricountform" type="submit" class="button save" id="add">Save</button>
+            <button form="edit_tricount_form" type="submit" class="button save" id="add">Save</button>
         </header>
         <h3>Settings</h3>
-        <form id="edittricountform" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post" class="edit">
+        <form id="edit_tricount_form" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post" class="edit">
             <label>Title :</label>
             <input id="title" name="title" type="text" value="<?= $tricount->title ?>" <?php if (array_key_exists('required', $errors) || array_key_exists('title_length', $errors) || array_key_exists('unique_title', $errors)) { ?>class="errorInput" <?php } ?>>
             <div id="errorTitle"></div><div class="success"></div>
