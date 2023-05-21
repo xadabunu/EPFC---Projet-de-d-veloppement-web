@@ -97,12 +97,7 @@
             errTitle = $("#errTitle");
             description = $("#description");
             errDescription = $("#errDescription");
-
-            $("#add").attr("disabled", true);
-            if (checkTitleAndDescription()) {
-                $("#add").attr("disabled", false);
-            }
-
+            
             <?php if (Configuration::get("JustValidate")) { ?>
 
                 const validation = new JustValidate('#add_tricount_form', {
@@ -170,8 +165,7 @@
             else { ?>
                 title.bind("input", checkTitle);
                 title.bind("input", checkTitleExists);
-                description.bind("input", checkDescription);
-                
+
             <?php } ?>
             
             $("#back").attr("href", "javascript:confirmBack()");
@@ -190,7 +184,7 @@
             <button class="button save" id="add" type="submit" form="add_tricount_form">Save</button>
         </header>
         <div class="menu"></div>
-        <form class="edit" id="add_tricount_form" action="tricount/add_tricount" method="post" <?php if (!Configuration::get("JustValidate")) {?> onsubmit=" return checkTitleAndDescription();"<?php }?> >
+        <form class="edit" id="add_tricount_form" action="tricount/add_tricount" method="post" <?php if (!Configuration::get("JustValidate")) {?> onsubmit=" return checkTitleAndDescription();"<?php }?>>
             <h3>Titre</h3>
             <div class="contains_input">
                 <input id="title" name="title" type="text" value="<?= $title ?>" placeholder="Title" <?php if (array_key_exists('required', $errors) || array_key_exists('title_length', $errors) || array_key_exists('unique_title', $errors)) { ?>class="errorInput" <?php } ?>>
