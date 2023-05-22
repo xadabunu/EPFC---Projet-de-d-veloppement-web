@@ -24,7 +24,9 @@
                     errTitle.append("Title lenght must be longer than 3 character");
                     ok = false;
                     title.attr("style", "border-color: rgb(220, 53, 69)");
-                }
+                    $("#add").attr("type", "button");
+                } else
+                $("#add").attr("type", "submit");
                 return ok;
             }
 
@@ -33,7 +35,9 @@
                 if (data) {
                     errTitle.append("Title already exists");
                     title.attr("style", "border-color: rgb(220, 53, 69)");
-                }
+                    $("#add").attr("type", "button");
+                } else
+                    $("#add").attr("type", "submit");
             }
 
             function checkDescription() {
@@ -42,9 +46,11 @@
                 if (description.val() !== "" && !(/^.{3,}$/).test(description.val())) {
                     errDescription.append("Description must be empty or longer than 3 character");
                     ok = false;
+                    $("#add").attr("type", "button");
                     description.attr("style", "border-color: rgb(220, 53, 69)");
                 }
                 else {
+                    $("#add").attr("type", "submit");
                     description.attr("style", "");
                 }
                 return ok;

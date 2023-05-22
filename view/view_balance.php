@@ -29,7 +29,7 @@
             canvas = $("#myChart");
             const ctx = canvas[0].getContext("2d");
             const subs = <?= $tricount->get_subs_as_json() ?>
-            
+
             let amounts = [];
             let background_colors= [];
             let max = 0;

@@ -911,5 +911,3 @@ td:has(input.errorInput:focus), .errorInput:focus {
     box-shadow: 0 0 10px 3px  rgb(243, 123, 123);
     border-radius: 10px;
 }
-
-

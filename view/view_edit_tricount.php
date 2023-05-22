@@ -104,9 +104,10 @@
                 })
 
                 <?php } else { ?>
+
                     description.bind("input", checkDescription);
                     title.bind("input", checkTitle);
-                    $("#edit_tricount_form").attr("onsubmit", "return checkTitleAndDescription();");
+
                 <?php } ?>
         })
 
@@ -133,6 +134,7 @@
                 errTitle.append("Title lenght must be longer than 3 character");
                 ok = false;
                 title.attr("style", "border-color: rgb(220, 53, 69)");
+                $("#add").attr("type", "button");
             }
             if (ok)
                 ok = checkTitleExists();
@@ -140,12 +142,14 @@
         }
 
         async function checkTitleExists() {
-            const data = await $.getJSON("tricount/tricount_exists_service/" + title.val() + "/" + tricount_id);
-            if (data) {
+            const data = await $.post("tricount/tricount_exists_service", { title: title.val(), tricount_id: tricount_id });
+            if (data != "false") {
+                $("#add").attr("type", "button");
                 errTitle.append("Title already exists");
                 title.attr("style", "border-color: rgb(220, 53, 69)");
                 return false;
             }
+            $("#add").attr("type", "submit");
             return true;
         }
 
@@ -156,11 +160,14 @@
             if (description.val() !== "" && !(/^.{3,}$/).test(description.val())) {
                 description.css("border-color", "rgb(220, 53, 69)");
                 description.after("<p class='errorMessage'>Description lenght must be >= 3</p>");
+                $("#add").attr("type", "button");
             }
+            else
+                $("#add").attr("type", "submit");
         }
 
-        function checkTitleAndDescription() {
-            let ok = checkTitle();
+        async function checkTitleAndDescription() {
+            let ok = await checkTitle();
             ok = checkDescription() && ok;
             return ok;
         }
