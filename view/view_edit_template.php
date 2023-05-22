@@ -18,9 +18,9 @@
     <script>
         let weights = [];
         const template = {
-            title : "<? $template->title ?>",
-            id : "<? $template->id ?>",
-            tricount_id : "<? $template->tricount->id ?>"
+            title: "<?= $template->title ?>",
+            id: "<?= $template->id ?>",
+            tricount_id: "<?= $template->tricount->id ?>"
         }
         
 
