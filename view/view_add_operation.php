@@ -18,6 +18,7 @@
             weights: [],
             paid_by: <?= $operation->initiator->id ?>
         };
+        let titleAvailable;
 
         function checkAmount() {
             err_amount.html("");
@@ -164,124 +165,130 @@
         }
 
         $(function() {
-            const validation = new JustValidate('#add_operation_form', {
-                validateBeforeSubmitting: true,
-                lockForm: true,
-                focusInvalidField: false,
-                successLabelCssClass: ['success'],
-                errorLabelCssClass: ['errorMessage'],
-                errorFieldCssClass: ['errorInput'],
-                successFieldCssClass: ['successField']
-                
-            });
 
-            validation
-                .addField('#title', [
-                    {
-                        rule: 'required',
-                        errorMessage: 'Title is required'
-                    },
-                    {
-                        rule: 'minLength',
-                        value: 3,
-                        errorMessage: 'Title length must be between 3 and 256',
+            <?php if (Configuration::get("JustValidate")) { ?>
 
-                    },
-                    {
-                        rule: 'maxLength',
-                        value: 256,
-                        errorMessage: 'Title length must be between 3 and 256'
-                    },
-                ], {errorsContainer: "#errorTitle"})
-
-                .addField('#amount', [
-                    {
-                        rule : 'required',
-                        errorMessage : 'Amount field cannot be empty'
-                    },
-                    {
-                        rule : 'number',
-                        errorMessage : 'Amount  must be a number'
-                    },
-                    {
-                        rule : 'minNumber',
-                        value : 0.01,
-                        errorMessage : 'Amount must be superior than 0,01'
-                    }
-
-                ], {errorsContainer: "#errorAmount"})
-
-                .addField('#operation_date', [
-                    {
-                        rule : 'required',
-                        errorMessage : 'Operation date is required'
-                    },
-                    {
-                    plugin : JustValidatePluginDate(() => {
-                        return {
-                            format : 'yyyy-mm-dd',
-                            isBeforeOrEqual : date                        };
-                    }),
-                            errorMessage: 'Date should be before the date of the day'
-                    }
-                ], {errorsContainer : '#errorOperation_date'})
-
-                .addField('#paid_by', [
-                    {
-                        rule : 'required',
-                        errorMessage : 'You have to select an initiator'
-                    }
-                ], {errorsContainer: "#errorPaidBy"})
-
-                .addRequiredGroup(
-                    '#whomGroup',
-                    'You should select at least one participant'
-                )
-
-                .addField("#weight", [
-                    {
-                        rule : 'integer',
-                        errorMessage : 'Weight must be an integer'
-                    },
-                    {
-                        rule : 'minNumber',
-                        value : 0,
-                        errorMessage : 'Weight must be positive'
-                    }
-                ], {errorsContainer : "#errorWeight"})
-
-                .addField("#template_title", [
-                    {
-                        validator: (value) => {
-                            return !$("#save_template").is(":checked") || $("#template_title").val();
-                        },
-                        errorMessage : 'You have to name your template',  
-                    },
-                    {
-                        validator: (value) => {
-                            return !$("#save_template").is(":checked") || $("#template_title").val().length >= 3;
-                        },
-                        errorMessage : 'Title length must be between 3 and 256',  
-                    },
-                    {
-                        validator: (value) => {
-                            return !$("#save_template").is(":checked") || $("#template_title").val().length <= 256;
-                        },
-                        errorMessage : 'Title length must be between 3 and 256', 
-
-                    }
-                ], {errorsContainer : '#save_template_error'})
-
-                .onValidate(async function(event) {
-                    titleAvailable = await $.post("operation/template_title_available/" , {"title" : $("#template_title").val()}, null, 'json');
-                    if (!titleAvailable)
-                        this.showErrors({ '#template_title': 'Name already exists' });
-                })
-
-                .onSuccess(function(event) {
-                    if(titleAvailable)
-                        event.target.submit();
+                const validation = new JustValidate('#add_operation_form', {
+                    validateBeforeSubmitting: true,
+                    lockForm: true,
+                    focusInvalidField: false,
+                    successLabelCssClass: ['success'],
+                    errorLabelCssClass: ['errorMessage'],
+                    errorFieldCssClass: ['errorInput'],
+                    successFieldCssClass: ['successField']
+                    
                 });
+
+                validation
+                    .addField('#title', [
+                        {
+                            rule: 'required',
+                            errorMessage: 'Title is required'
+                        },
+                        {
+                            rule: 'minLength',
+                            value: 3,
+                            errorMessage: 'Title length must be between 3 and 256',
+
+                        },
+                        {
+                            rule: 'maxLength',
+                            value: 256,
+                            errorMessage: 'Title length must be between 3 and 256'
+                        },
+                    ], {errorsContainer: "#errorTitle"})
+
+                    .addField('#amount', [
+                        {
+                            rule : 'required',
+                            errorMessage : 'Amount field cannot be empty'
+                        },
+                        {
+                            rule : 'number',
+                            errorMessage : 'Amount  must be a number'
+                        },
+                        {
+                            rule : 'minNumber',
+                            value : 0.01,
+                            errorMessage : 'Amount must be superior than 0,01'
+                        }
+
+                    ], {errorsContainer: "#errorAmount"})
+
+                    .addField('#operation_date', [
+                        {
+                            rule : 'required',
+                            errorMessage : 'Operation date is required'
+                        },
+                        {
+                        plugin : JustValidatePluginDate(() => {
+                            return {
+                                format : 'yyyy-mm-dd',
+                                isBeforeOrEqual : date
+                            };
+                        }),
+                                errorMessage: 'Date should be before the date of the day'
+                        }
+                    ], {errorsContainer : '#errorOperation_date'})
+
+                    .addField('#paid_by', [
+                        {
+                            rule : 'required',
+                            errorMessage : 'You have to select an initiator'
+                        }
+                    ], {errorsContainer: "#errorPaidBy"})
+
+                    .addRequiredGroup(
+                        '#whomGroup',
+                        'You should select at least one participant'
+                    )
+
+                    .addField("#weight", [
+                        {
+                            rule : 'integer',
+                            errorMessage : 'Weight must be an integer'
+                        },
+                        {
+                            rule : 'minNumber',
+                            value : 0,
+                            errorMessage : 'Weight must be positive'
+                        }
+                    ], {errorsContainer : "#errorWeight"})
+
+                    .addField("#template_title", [
+                        {
+                            validator: (value) => {
+                                return !$("#save_template").is(":checked") || $("#template_title").val();
+                            },
+                            errorMessage : 'You have to name your template',  
+                        },
+                        {
+                            validator: (value) => {
+                                return !$("#save_template").is(":checked") || $("#template_title").val().length >= 3;
+                            },
+                            errorMessage : 'Title length must be between 3 and 256',  
+                        },
+                        {
+                            validator: (value) => {
+                                return !$("#save_template").is(":checked") || $("#template_title").val().length <= 256;
+                            },
+                            errorMessage : 'Title length must be between 3 and 256', 
+
+                        }
+                    ], {errorsContainer : '#save_template_error'})
+
+                    .onValidate(async function(event) {
+                        titleAvailable = await $.post("operation/template_title_available/" , {"title" : $("#template_title").val()}, null, 'json');
+                        if (!titleAvailable)
+                            this.showErrors({ '#template_title': 'Name already exists' });
+                    })
+
+                    .onSuccess(function(event) {
+                        if(titleAvailable)
+                            event.target.submit();
+                    });
+
+            <?php } ?>    
 
             op_amount = <?= empty($operation->amount) ? 0 : $operation->amount ?>;
             lbl_amount = $("#amount");
@@ -297,7 +304,6 @@
             $("#template_title").prop("disabled", true);
             $("#td_template_title").css("background-color", "rgb(233, 236, 239)");
             $("#back").attr("href", "javascript:confirmBack()")
-            let titleAvailable;
             operation.weights = getWeights();
         });
     </script>
@@ -332,7 +338,8 @@
                                                                                                                                 echo $operation->amount;
                                                                                                                             } else {
                                                                                                                                 echo '';
-                                                                                                                            } ?>'></td>
+                                                                                                                            } ?>'<?php if (array_key_exists("amount", $errors) || array_key_exists("empty_amount", $errors)) { ?>class="errorInput" <?php } ?>>
+                    </td>
                     <td class="right">EUR</td>
                 </tr>
             </table>

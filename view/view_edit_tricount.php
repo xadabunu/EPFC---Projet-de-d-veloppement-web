@@ -107,7 +107,6 @@
 
                     description.bind("input", checkDescription);
                     title.bind("input", checkTitle);
-
                 <?php } ?>
         })
 
@@ -349,7 +348,7 @@
             <button form="edit_tricount_form" type="submit" class="button save" id="add">Save</button>
         </header>
         <h3>Settings</h3>
-        <form id="edit_tricount_form" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post" class="edit">
+        <form id="edit_tricount_form" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post" class="edit" <?php if (!Configuration::get("JustValidate")) {?> onsubmit=" return checkTitleAndDescription();"<?php }?> >
             <label>Title :</label>
             <input id="title" name="title" type="text" value="<?= $tricount->title ?>" <?php if (array_key_exists('required', $errors) || array_key_exists('title_length', $errors) || array_key_exists('unique_title', $errors)) { ?>class="errorInput" <?php } ?>>
             <div id="errorTitle"></div><div class="success"></div>

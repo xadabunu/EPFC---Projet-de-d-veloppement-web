@@ -207,6 +207,9 @@
         }
 
         $(function() {
+
+            <?php if (Configuration::get("JustValidate")) { ?>
+
             const validation = new JustValidate('#edit_operation_form', {
                 validateBeforeSubmitting: true,
                 lockForm: true,
@@ -325,6 +328,8 @@
                     if(titleAvailable)
                         event.target.submit();
                 });
+                
+            <?php } ?>      
 
 
             op_amount = <?= $operation->amount ?>;
