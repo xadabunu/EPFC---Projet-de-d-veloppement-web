@@ -22,7 +22,7 @@ class ControllerTricount extends MyController
             $tricounts = $user->get_created_tricounts();
             foreach ($tricounts as $tri) {
                 $title = trim($tri->title);
-                if ($title === strtolower($_POST["title"])) {
+                if (strtolower($title) === strtolower($_POST["title"])) {
                     $rez = "true";
                     if (isset($_POST["tricount_id"]) && $tri->id == $_POST['tricount_id']) {
                         $rez = "false";
