@@ -364,7 +364,7 @@
             <?php } ?>
             <label>Description (optional) :</label>
             <textarea id="description" name="description" rows="3" placeholder="Description" <?php if (array_key_exists('description_length', $errors)) { ?>class="errorInput" <?php } ?>><?= $tricount->description ?></textarea>
-            <div id="errorTitle"></div><div class="success"></div>
+            <div id="errorDescription"></div><div class="success"></div>
             <?php if (array_key_exists('description_length', $errors)) { ?>
                 <p id="desc_error" class="errorMessage"><?php echo $errors['description_length']; ?></p>
             <?php } ?>

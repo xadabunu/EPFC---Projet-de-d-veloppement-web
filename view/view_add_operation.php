@@ -417,20 +417,20 @@
                 ?>
                     <li>
                         <table class="whom" <?php if ((array_key_exists("whom", $errors)) || (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]))) { ?> style="border-color:rgb(220, 53, 69)" <?php } ?>>
-                            <tr class="edit" id='tr_template_<?= $subscriptor->id ?> weight' onchange="checkWeight(this);">
+                            <tr class="edit" id='tr_template_<?= $subscriptor->id ?>' onchange="checkWeight(this);">
                                 <td class="check">
                                     <p><input type='checkbox' class="checkbox_template" id='checkbox_<?= $subscriptor->id ?>' <?php echo empty($list) ? (empty($templateChoosen) ? 'checked' : (empty($repartition_template_items) ? 'unchecked' : 'checked')) : (array_key_exists($subscriptor->id, $list) ? 'checked' : 'unchecked'); ?> name='<?= $subscriptor->id ?>' value=''></p>
                                 </td>
                                 <td class="user">
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25) . "..." : $subscriptor->full_name ?>
                                 </td>
-                                <td class="weight" id="td_amount">
+                                <td class="weight td_amount" id="td_amount_<?= $subscriptor->id ?>">
                                     <p>Amount</p>
                                     <div class="user_amount">0 €</div>
                                 </td>
                                 <td class="weight">
                                     <p>Weight</p>
-                                    <input id='weight' type='number' class="whom_weight" name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($list) ? (empty($templateChoosen) ? '1' : (empty($repartition_template_items) ? '1' : $repartition_template_items->weight)) : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
+                                    <input id='weight_<?= $subscriptor->id ?>' type='number' class="whom_weight" name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($list) ? (empty($templateChoosen) ? '1' : (empty($repartition_template_items) ? '1' : $repartition_template_items->weight)) : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
                                 </td>
                             </tr>
                         </table>
