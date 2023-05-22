@@ -300,7 +300,6 @@
             $("#button_apply_template").hide();
             updateAmounts();
             $("input:text:first").focus();
-            $('#amount').attr('onChange', "");
             $("#template_title").prop("disabled", true);
             $("#td_template_title").css("background-color", "rgb(233, 236, 239)");
             $("#back").attr("href", "javascript:confirmBack()")
