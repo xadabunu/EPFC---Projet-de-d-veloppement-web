@@ -16,35 +16,40 @@
 
         <?php if (!Configuration::get("JustValidate")) { ?>
 
-            function checkTitle() {
+            async function checkTitle() {
                 let ok = true;
                 title.attr("style", "");
                 errTitle.html("");
-                if (!(/^.{3,}$/).test(title.val())) {
-                    errTitle.append("Title lenght must be longer than 3 character");
+                if (title.val() === "") {
+                    errTitle.append("Title is required");
+                    ok = false;
+                    title.attr("style", "border-color: rgb(220, 53, 69)");
+                    $("#add").attr("type", "button");
+                }
+                else if (!(/^.{3,}$/).test(title.val())) {
+                    errTitle.append("Title length must be between 3 and 256");
                     ok = false;
                     title.attr("style", "border-color: rgb(220, 53, 69)");
                     $("#add").attr("type", "button");
                 } else
                 $("#add").attr("type", "submit");
-                return ok;
-            }
-
-            async function checkTitleExists() {
-                const data = await $.post("Tricount/tricount_exists_service/", {"title" : title.val()}, null, 'json');
+                if (ok) {
+                    const data = await $.post("Tricount/tricount_exists_service/", {"title" : title.val()}, null, 'json');
                 if (data) {
-                    errTitle.append("Title already exists");
+                    errTitle.append("You already named a tricount with this title");
                     title.attr("style", "border-color: rgb(220, 53, 69)");
                     $("#add").attr("type", "button");
                 } else
                     $("#add").attr("type", "submit");
+                }
+                return ok;
             }
 
             function checkDescription() {
                 let ok = true;
                 errDescription.html("");
                 if (description.val() !== "" && !(/^.{3,}$/).test(description.val())) {
-                    errDescription.append("Description must be empty or longer than 3 character");
+                    errDescription.append("If not empty, description lenght must be between 3 and 1024");
                     ok = false;
                     $("#add").attr("type", "button");
                     description.attr("style", "border-color: rgb(220, 53, 69)");
@@ -100,11 +105,14 @@
 
         $(function() { 
             title = $("#title");
-            errTitle = $("#errTitle");
+            errTitle = $("#errorTitle");
             description = $("#description");
-            errDescription = $("#errDescription");
+            errDescription = $("#errorDescription");
             
             <?php if (Configuration::get("JustValidate")) { ?>
+                
+                errTitle.attr("class", ""); 
+                errDescription.attr("class", "");
 
                 const validation = new JustValidate('#add_tricount_form', {
                     validateBeforeSubmitting : true,
@@ -115,7 +123,6 @@
                     errorFieldCssClass: ['errorInput'],
                     successFieldCssClass: ['successField']
                 });
-
 
                 validation
                     .addField('#title', [
@@ -149,14 +156,14 @@
                                 $("#description").removeClass("errorInput");
                                 return true;
                             },
-                            errorMessage : 'Description must be empty or longer than 2'
+                            errorMessage : 'If not empty, description lenght must be between 3 and 1024'
                         }
                     ], {errorsContainer : "#errorDescription"})
 
                     .onValidate(debounce(async function(event) {
                         titleExists = await $.post("Tricount/tricount_exists_service/", {"title" : title.val()}, null, 'json');
                         if (titleExists){
-                            this.showErrors({ '#title': 'This title already exists !!' });
+                            this.showErrors({ '#title': 'You already named a tricount with this title' });
                         } 
                     }, 300))
 
@@ -169,7 +176,7 @@
 
             else { ?>
                 title.bind("input", checkTitle);
-                title.bind("input", checkTitleExists);
+                description.bind("input", checkDescription);
 
             <?php } ?>
             
@@ -194,26 +201,28 @@
             <div class="contains_input">
                 <input id="title" name="title" type="text" value="<?= $title ?>" placeholder="Title" <?php if (array_key_exists('required', $errors) || array_key_exists('title_length', $errors) || array_key_exists('unique_title', $errors)) { ?>class="errorInput" <?php } ?>>
             </div>
-            <div id="errorTitle"></div>
-            <p class = "errorMessage" id="errTitle"></p>
-            <?php if (array_key_exists('required', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['required']; ?></p>
-            <?php }
-            if (array_key_exists('title_length', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['title_length']; ?></p>
-            <?php }
-            if (array_key_exists('unique_title', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['unique_title']; ?></p>
-            <?php } ?>
+            <div id="errorTitle" class="errorMessage">
+            <?php if (array_key_exists('required', $errors)) {
+                echo $errors['required'];
+                echo "<br><br>";
+                echo $errors['title_length'];
+            }
+            else if (array_key_exists('title_length', $errors)) {
+                echo $errors['title_length'];
+            }
+            else if (array_key_exists('unique_title', $errors)) {
+                echo $errors['unique_title'];
+            } ?>
+            </div>
             <h3>Description (Optional) :</h3>
             <div id="contains_input">
                 <textarea id="description" name="description" rows="6" placeholder="Description"<?php if (array_key_exists('description_length', $errors)) { ?>class="errorInput" <?php } ?>><?= $description ?></textarea>
-                <div id="errorDescription"></div>
             </div>
-            <p class = "errorMessage" id="errDescription"></p>
-            <?php if (array_key_exists('description_length', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['description_length']; ?></p>
-            <?php } ?>
+            <div id="errorDescription" class="errorMessage">
+                <?php if (array_key_exists('description_length', $errors)) {
+                echo $errors['description_length'];
+            } ?>
+            </div>
         </form>
     </div>
 </body>

@@ -31,9 +31,9 @@
             description = $("#description");
             table_subs = $("#table_subs");
             description = $("#description");
-            desc_error = $("#desc_error");
+            desc_error = $("#errorDescription");
             title = $("#title");
-            errTitle = $("#errTitle");
+            errTitle = $("#errorTitle");
 
             $("form.nosubmit").submit(function(e) {
                 e.preventDefault();
@@ -44,6 +44,9 @@
             $("input:text:first").focus();
 
             <?php if (Configuration::get("JustValidate")) { ?>
+
+                errTitle.attr("class", ""); 
+                desc_error.attr("class", "");
 
             const validation = new JustValidate('#edit_tricount_form', {
                 validateBeforeSubmitting : true,
@@ -351,23 +354,28 @@
         <form id="edit_tricount_form" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post" class="edit" <?php if (!Configuration::get("JustValidate")) {?> onsubmit=" return checkTitleAndDescription();"<?php }?> >
             <label>Title :</label>
             <input id="title" name="title" type="text" value="<?= $tricount->title ?>" <?php if (array_key_exists('required', $errors) || array_key_exists('title_length', $errors) || array_key_exists('unique_title', $errors)) { ?>class="errorInput" <?php } ?>>
-            <div id="errorTitle"></div><div class="success"></div>
-            <p class = "errorMessage" id="errTitle"></p>
-            <?php if (array_key_exists('required', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['required']; ?></p>
-            <?php }
-            if (array_key_exists('title_length', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['title_length']; ?></p>
-            <?php }
-            if (array_key_exists('unique_title', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['unique_title']; ?></p>
-            <?php } ?>
-            <label>Description (optional) :</label>
-            <textarea id="description" name="description" rows="3" placeholder="Description" <?php if (array_key_exists('description_length', $errors)) { ?>class="errorInput" <?php } ?>><?= $tricount->description ?></textarea>
-            <div id="errorDescription"></div><div class="success"></div>
-            <?php if (array_key_exists('description_length', $errors)) { ?>
-                <p id="desc_error" class="errorMessage"><?php echo $errors['description_length']; ?></p>
-            <?php } ?>
+            <div id="errorTitle" class="errorMessage">
+            <?php if (array_key_exists('required', $errors)) {
+                echo $errors['required'];
+                echo "<br><br>";
+                echo $errors['title_length'];
+            }
+            else if (array_key_exists('title_length', $errors)) {
+                echo $errors['title_length'];
+            }
+            else if (array_key_exists('unique_title', $errors)) {
+                echo $errors['unique_title'];
+            } ?>
+            </div>
+            <h3>Description (Optional) :</h3>
+            <div id="contains_input">
+                <textarea id="description" name="description" rows="6" placeholder="Description"<?php if (array_key_exists('description_length', $errors)) { ?>class="errorInput" <?php } ?>><?= $tricount->description ?></textarea>
+            </div>
+            <div id="errorDescription" class="errorMessage">
+                <?php if (array_key_exists('description_length', $errors)) {
+                echo $errors['description_length'];
+            } ?>
+            </div>
         </form>
         <h3>Subscriptions</h3>
         <table class="subs" id="table_subs">

@@ -142,8 +142,9 @@
                     '#whomGroup',
                     'You should select at least one participant'
                 )
-
-                .addField("#weight", [
+                
+                <?php foreach ($tricount->get_subscriptors_with_creator() as $subscriptor) { ?>
+                .addField("#weight_<?= $subscriptor->id ?>", [
                     {
                         rule : 'integer',
                         errorMessage : 'Weight must be an integer'
@@ -154,6 +155,7 @@
                         errorMessage : 'Weight must be positive'
                     }
                 ], {errorsContainer : "#errorWeight"})
+            <?php } ?> 
 
                 .onValidate(async function(event) {
                     titleAvailable = await $.post("templates/template_title_available/", {"title" : $("#title").val()}, null, 'json'); 
@@ -211,15 +213,15 @@
                      ?>
                         <li>
                             <table class="whom" <?php  if( (array_key_exists("whom", $errors))  ||  (array_key_exists($subscriptor->id, $list) && !is_numeric($list[$subscriptor->id]) )  ) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
-                                <tr class="edit" id='tr_template_<?= $subscriptor->id ?> weight'>
+                                <tr class="edit" id='tr_template_<?= $subscriptor->id ?>'>
                                     <td class="check">
-                                        <p><input type='checkbox' class="checkbox_template" id='checkbox_<?= $subscriptor->id ?>' <?php echo array_key_exists($subscriptor->id, $list) ? 'checked' : ($template->is_participant_template($subscriptor) ? 'checked' : 'unchecked'); ?> name='<?= $subscriptor->id ?>' value=''></p>
+                                        <p><input type='checkbox' class="checkbox_template" id='checkbox_<?= $subscriptor->id ?>' <?php echo array_key_exists($subscriptor->id, $list) ? 'checked' : ($template->is_participant_template($subscriptor) ? 'checked' : ''); ?> name='<?= $subscriptor->id ?>' value=''></p>
                                     </td>
                                     <td class="user">
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight">
-                                        <p>Weight</p><input id='weight' class="whom_weight" type='number' name='weight_<?= $subscriptor->id ?>' value='<?php echo array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ?  $list[$subscriptor->id] : "1")  : ($template->is_participant_template($subscriptor) ? $repartition_template_items->weight : "1"); ?>'>
+                                        <p>Weight</p><input id='weight_<?= $subscriptor->id ?>' class="whom_weight" type='number' name='weight_<?= $subscriptor->id ?>' value='<?php echo array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ?  $list[$subscriptor->id] : "1")  : ($template->is_participant_template($subscriptor) ? $repartition_template_items->weight : "1"); ?>'>
                                     </td> 
                                 </tr>
                             </table>

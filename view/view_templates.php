@@ -57,9 +57,9 @@
                                 </ul>
                             </td>
                         </tr>
-                    </table>
-                <?php } 
-            }?>
+                        <?php } 
+                    }?>
+            </table>
     </div>
 </body>
 

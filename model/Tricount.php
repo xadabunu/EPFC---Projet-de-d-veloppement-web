@@ -253,15 +253,14 @@ class Tricount extends Model
             $errors['required'] = "Title is required.";
         }
         if (strlen($this->title) < 3 || strlen($this->title) > 256) {
-            $errors['title_length'] = "Title length must be between 3 and 256.";
+            $errors['title_length'] = "Title length must be between 3 and 256";
         }
         if (strlen($this->description) > 0 && (!(strlen($this->description) >= 3) || strlen($this->description) > 1024)) {
-            $errors['description_length'] = "Description length must be between 3 and 1024.";
+            $errors['description_length'] = "If not empty, description lenght must be between 3 and 1024";
         }
-        $array = self::get_tricounts_list($this->creator->id);
-        foreach ($array as $data) {
+        foreach ($this->creator->get_created_tricounts() as $data) {
             if (strtolower($this->title) == strtolower($data->title) && $this->id != $data->id) {
-                $errors['unique_title'] = "Title must be unique";
+                $errors['unique_title'] = "You already named a tricount with this title";
             }
         }
         return $errors;
