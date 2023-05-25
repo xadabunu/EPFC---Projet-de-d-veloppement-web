@@ -155,7 +155,6 @@
 
                     .onValidate(debounce(async function(event) {
                         titleExists = await $.post("Tricount/tricount_exists_service/", {"title" : title.val()}, null, 'json');
-                        console.log(justValidateOn);
                         if (titleExists){
                             this.showErrors({ '#title': 'This title already exists !!' });
                         } 

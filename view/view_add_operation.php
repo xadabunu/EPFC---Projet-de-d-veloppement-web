@@ -20,6 +20,20 @@
         };
         let titleAvailable;
 
+        <?php if (Configuration::get("JustValidate")) { ?>
+
+            function debounce(fn, time) {
+                var timer;
+
+                return function() {
+                    clearTimeout(timer);
+                    timer = setTimeout(() => {
+                        fn.apply(this, arguments);
+                    }, time);
+                }
+            }
+        <?php } ?>
+
         function checkAmount() {
             err_amount.html("");
             tr_currency.attr("style", "");
@@ -30,22 +44,12 @@
                 updateAmounts();
         }
 
-        function updateAmounts() {
-            let amount = lbl_amount.val() > 0 ? lbl_amount.val() : op_amount;
-            let sum_weight = 0;
-
-            $(".whom tr").each(function() {
-                if ($(this).find("input:checkbox").is(":checked"))
-                    sum_weight += parseInt($(this).find(".whom_weight").val());
-            });
-
-            $(".whom tr").each(function() {
-                if ($(this).find("input:checkbox").is(":checked")) {
-                    let w = $(this).find(".whom_weight").val();
-                    $(this).find(".user_amount").html(Math.round(100 * w * amount / sum_weight) / 100 + " €");
-                } else
-                    $(this).find(".user_amount").html("0 €");
-            })
+        async function checkTemplate() {
+            let elem_val = choosing_template.val();
+            if (jQuery.isNumeric(elem_val)) {
+                let obj = await $.getJSON("Operation/get_repartition_template_by_id_as_json/" + elem_val);
+                applyTemplate(obj.id);
+            }
         }
 
         function checkWeight(e) {
@@ -69,16 +73,27 @@
             updateTemplate();
         }
 
-        function updateTemplate() {
-            choosing_template.prop("value", "No ill use custom repartition");
+        function updateAmounts() {
+            console.log("test")
+            let amount = lbl_amount.val() > 0 ? lbl_amount.val() : op_amount;
+            let sum_weight = 0;
+
+            $(".whom tr").each(function() {
+                if ($(this).find("input:checkbox").is(":checked"))
+                    sum_weight += parseInt($(this).find(".whom_weight").val());
+            });
+
+            $(".whom tr").each(function() {
+                if ($(this).find("input:checkbox").is(":checked")) {
+                    let w = $(this).find(".whom_weight").val();
+                    $(this).find(".user_amount").html(Math.round(100 * w * amount / sum_weight) / 100 + " €");
+                } else
+                    $(this).find(".user_amount").html("0 €");
+            })
         }
 
-        async function checkTemplate() {
-            let elem_val = choosing_template.val();
-            if (jQuery.isNumeric(elem_val)) {
-                let obj = await $.getJSON("Operation/get_repartition_template_by_id_as_json/" + elem_val);
-                applyTemplate(obj.id);
-            }
+        function updateTemplate() {
+            choosing_template.prop("value", "No ill use custom repartition");
         }
 
         async function applyTemplate(template_id) {
@@ -151,17 +166,6 @@
                 });
             } else
                 location.replace("tricount/operations/" + <?= $_GET['param1'] ?>);
-        }
-
-        function debounce(fn, time) {
-            var timer;
-
-            return function() {
-                clearTimeout(timer);
-                timer = setTimeout(() => {
-                    fn.apply(this, arguments);
-                }, time);
-            }
         }
 
         $(function() {
@@ -288,8 +292,8 @@
                             event.target.submit();
                     });
 
-            <?php } ?>    
-
+            <?php } ?>
+            
             op_amount = <?= empty($operation->amount) ? 0 : $operation->amount ?>;
             lbl_amount = $("#amount");
             err_amount = $("#errAmount");
@@ -298,7 +302,6 @@
             for_whom_table = $("#for_whom");
             choosing_template = $("#templates");
             $("#button_apply_template").hide();
-            updateAmounts();
             $("input:text:first").focus();
             $('#amount').attr('onChange', "");
             $("#template_title").prop("disabled", true);
