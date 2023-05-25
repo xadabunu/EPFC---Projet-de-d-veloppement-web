@@ -231,7 +231,7 @@ class ControllerTricount extends MyController
 
     public function delete_subscriptor_service(): void
     {
-        $user = $this->get_user_or_false();
+        $user = $this->get_user_or_redirect();
         if (isset($_GET['param1']) && is_numeric($_GET['param1'])) {
             $tricount = Tricount::get_tricount_by_id($_GET['param1']);            
             if (!$tricount || !$tricount->has_access($user) || !isset($_POST["id"]) || !is_numeric($_POST["id"])) {

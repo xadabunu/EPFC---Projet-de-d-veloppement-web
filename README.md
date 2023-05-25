@@ -33,4 +33,5 @@
 
 ## Notes de version itération 3 
 
-...
+  * Bordure CSS en cas d'erreur/succes sont à refaire.
+  

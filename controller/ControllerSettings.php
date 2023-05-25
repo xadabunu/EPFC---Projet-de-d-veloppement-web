@@ -94,23 +94,15 @@ class ControllerSettings extends MyController
         return $errors;
     }
 
-    public function email_available_service() : void {
-        $res = 'true';
-        if (isset($_POST["email"]) && $_POST["email"] !== "" ) {
-            $user = User::get_user_by_email($_POST["email"]);
-            if ($user) {
-                $res = "false";
-            }
-        }
-        echo $res;
-    }
-
     public function current_password_is_correct(): void {
         $res = "true";
-        if(isset($_POST["password"]) && $_POST["password"] !== ""){
+        if($this->get_user_or_false() && isset($_POST["password"]) && $_POST["password"] !== ""){
             $passwordIsCorrect = User::current_password_is_correct($_POST["password"], $this->get_user_or_redirect());
             if(!$passwordIsCorrect)
                 $res = "false";
+        }
+        else {
+            Tools::abort("Invalid or missing argument");
         }
         echo $res;
     }

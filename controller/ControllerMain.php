@@ -79,7 +79,7 @@ class ControllerMain extends MyController
     public function email_available_service(): void
     {
         $res = 'true';
-        if (isset($_POST["email"]) && $_POST["email"] !== "" ) {
+        if ($this->get_user_or_false() && isset($_POST["email"]) && $_POST["email"] !== "" ) {
             $user = User::get_user_by_email($_POST["email"]);
             if ($user) {
                 $res = "false";
@@ -87,6 +87,9 @@ class ControllerMain extends MyController
                     $res = 'true';
                 }
             }
+        }
+        else {
+            Tools::abort("Invalid or missing argument");
         }
         echo $res;
     }

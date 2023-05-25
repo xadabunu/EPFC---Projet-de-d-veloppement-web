@@ -86,9 +86,8 @@ class ControllerOperation extends MyController
                     $repartition_template_choosen = RepartitionTemplates::get_repartition_template_by_id($_POST['templates']);                    
                 }
 
+                $errors = $operation->validate_operations();
                 if (count($errors) == 0) {
-                    $errors = $operation->validate_operations();
-
                     if (isset($_POST["save_template_checkbox"])) {
                         
                         $errors = array_merge($errors, $repartition_template->validate_repartition_template());
