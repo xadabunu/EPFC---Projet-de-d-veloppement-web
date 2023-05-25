@@ -13,6 +13,7 @@
     <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
     <script>
         let date = new Date().toISOString().substring(0, 10);
+        let titleAvailable;
         let op_amount, err_amount, lbl_amount, tr_currency, for_whom_table, err_whom, weights = [];
         const operation = {
             id: "<?= $operation->id ?>",
@@ -28,13 +29,15 @@
 
 
         function checkAmount() {
+            <?php if (Configuration::get("JustValidate")) { ?>
             err_amount.html("");
             tr_currency.attr("style", "");
             if (lbl_amount.val() <= 0) {
                 err_amount.append("Amount must be stricly positive");
                 tr_currency.css("border-color", "rgb(220, 53, 69)");
             }
-            else
+            else 
+            <?php } ?>
                 updateAmounts();
         }
 
@@ -210,6 +213,10 @@
 
             <?php if (Configuration::get("JustValidate")) { ?>
 
+                $("#errorTitle").attr("class", "");
+                $("#errorAmount").attr("class","");
+                $("#save_template_error").attr("class", "");
+
             const validation = new JustValidate('#edit_operation_form', {
                 validateBeforeSubmitting: true,
                 lockForm: true,
@@ -321,22 +328,24 @@
                 ], {errorsContainer : '#save_template_error'})
 
                 .onValidate(async function(event) {
-                    titleAvailable = await $.post("operation/template_title_available/" , {"title" : $("#template_title").val()}, null, 'json');
-                    if (!titleAvailable && $("#save_template").is(":checked"))
-                        this.showErrors({ '#template_title': 'Name already exists' });
-                })
+                        if ($("#save_template").is(":checked")) {
+                            titleAvailable = await $.post("operation/template_title_available/" , {"title" : $("#template_title").val()}, null, 'json');
+                            if (!titleAvailable)
+                                this.showErrors({ '#template_title': 'Name already exists' });
+                        }
+                    })
 
-                .onSuccess(function(event) {
-                    if(titleAvailable)
-                        event.target.submit();
-                });
+                    .onSuccess(function(event) {
+                        if(!$("#save_template").is(":checked") || titleAvailable)
+                            event.target.submit();
+                    });
                 
             <?php } ?>      
 
 
             op_amount = <?= $operation->amount ?>;
             lbl_amount = $("#amount");
-            err_amount = $("#errAmount");
+            err_amount = $("#errorAmount");
             tr_currency = $("#tr_currency");
             for_whom_table = $("#for_whom");
             err_whom = $("#errWhom");
@@ -348,7 +357,6 @@
             $("input:text:first").focus();
             $("#template_title").prop("disabled", true);
             $("#td_template_title").css("background-color", "rgb(233, 236, 239)");
-            let titleAvailable;
         })
     </script>
 </head>
@@ -366,13 +374,15 @@
                                                                                             } else {
                                                                                                 echo $operation->title;
                                                                                             } ?>" <?php if (array_key_exists('empty_title', $errors) || array_key_exists('length', $errors)) { ?>class="errorInput" <?php } ?>>
-            <div id="errorTitle"></div>
-            <?php if (array_key_exists('empty_title', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['empty_title']; ?></p>
-            <?php }
-            if (array_key_exists('length', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['length']; ?></p>
-            <?php } ?>
+            <div id="errorTitle" class="errorMessage">
+            <?php if (array_key_exists('empty_title', $errors)) {
+                echo $errors['empty_title'];
+            }
+            if (array_key_exists('length', $errors)) {
+                echo $errors['length'];
+            } ?>                                                                                                
+            </div>
+            
             <table class="edit" id="currency">
                 <tr class="currency" id="tr_currency">
                     <td><input id="amount" name="amount" type="text" size="16" placeholder="Amount" onchange="checkAmount();" value="<?php if (!empty($operation->amount)) {
@@ -383,14 +393,14 @@
                     <td class="right">EUR</td>
                 </tr>
             </table>
-            <div id="errorAmount"></div>
-            <p class="errorMessage" id="errAmount">
-                <?php if (array_key_exists('amount', $errors)) {
-                    echo $errors['amount']; } ?>
-            </p>
-            <?php if (array_key_exists('empty_amount', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['empty_amount']; ?></p>
-            <?php } ?>
+            <div id="errorAmount" class="errorMessage">
+            <?php if (array_key_exists('amount', $errors)) {
+                    echo $errors['amount']; }
+            
+            if (array_key_exists('empty_amount', $errors)) {
+                echo $errors['empty_amount'];
+            } ?>                                                                                                         
+            </div>
             <label for="operation_date">Date</label>
             <input id="operation_date" name="operation_date" type="date" value="<?php if (!empty($operation->operation_date)) {
                                                                                     echo $operation->operation_date;
@@ -492,25 +502,24 @@
             <?php } ?>
 
             Add a new repartition template
-            <table <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors) || array_key_exists('duplicate_title', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
+            <table class="table_with_no_margin" <?php if (array_key_exists('empty_template_title', $errors) || array_key_exists('template_length', $errors) || array_key_exists('duplicate_title', $errors)) { ?> style = "border-color:rgb(220, 53, 69)"<?php } ?>>
                 <tr>
                     <td class="check" oninput="saveTemplateCheckbox();"><input type="checkbox" id="save_template" name="save_template_checkbox"></td>
                     <td class="template">Save this template</td>
                     <td id="td_template_title" ><div style="color:silver">Name</div><input id="template_title" name="template_title" type="text" size="16" value='<?php if (!empty($repartition_template)) {echo $repartition_template->title;} else {echo '';} ?>'></td>
                 </tr>
             </table>
-            <div id="save_template_error"></div>
-                    <?php if (array_key_exists('empty_template_title', $errors)) { ?>
-                        <p class="errorMessage"><?php echo $errors['empty_template_title']; ?></p>
-                    <?php } ?>
-                    <?php if (array_key_exists('template_length', $errors)) { ?>
-                        <p class="errorMessage"><?php echo $errors['template_length']; ?></p>
-                    <?php } ?>
-                    <?php if (array_key_exists('duplicate_title', $errors)) { ?>
-                        <p class="errorMessage"><?php echo $errors['duplicate_title']; ?></p>
-                    <?php } ?>
-                
-            
+            <div id="save_template_error" class="errorMessage">
+            <?php if (array_key_exists('empty_template_title', $errors)) {
+                        echo $errors['empty_template_title'];
+                    }
+                    else if (array_key_exists('template_length', $errors)) {
+                        echo $errors['template_length'];
+                    }
+                    else if (array_key_exists('duplicate_title', $errors)) {
+                        echo $errors['duplicate_title'];
+                    } ?>
+            </div>
             <a href="operation/delete_operation/<?= $operation->id ?>" id="delete" class="button bottom2 delete delete2">Delete this operation</a>
         </form>
     </div>
