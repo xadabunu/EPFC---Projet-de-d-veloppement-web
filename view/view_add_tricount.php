@@ -208,7 +208,7 @@
             <h3>Description (Optional) :</h3>
             <div id="contains_input">
                 <textarea id="description" name="description" rows="6" placeholder="Description"<?php if (array_key_exists('description_length', $errors)) { ?>class="errorInput" <?php } ?>><?= $description ?></textarea>
-                <div id="errorDescription">
+                <div id="errorDescription"></div>
             </div>
             <p class = "errorMessage" id="errDescription"></p>
             <?php if (array_key_exists('description_length', $errors)) { ?>
