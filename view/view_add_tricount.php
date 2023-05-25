@@ -48,7 +48,7 @@
             function checkDescription() {
                 let ok = true;
                 errDescription.html("");
-                if (description.val() !== "" && !(/^.{3,}$/).test(description.val())) {
+                if (description.val() !== "" && !(/^.{3,1024}$/).test(description.val())) {
                     errDescription.append("If not empty, description lenght must be between 3 and 1024");
                     ok = false;
                     $("#add").attr("type", "button");
@@ -148,10 +148,10 @@
                             validator : function(value) {
                                 if (value !== "") {
                                     $("#description").addClass("errorInput");
-                                    if(value.length > 2){
+                                    if(value.length > 2 && value.length < 1024){
                                         $("#description").removeClass("errorInput");
                                     }
-                                    return value.length > 2 ;
+                                    return value.length > 2 && value.length < 1024 ;
                                 }
                                 $("#description").removeClass("errorInput");
                                 return true;
