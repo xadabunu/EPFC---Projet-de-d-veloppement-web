@@ -79,17 +79,17 @@
                 .addField('#description', [
                     {
                         validator : function(value) {
-                            if (value !== "") {
-                                $("#description").addClass("errorInput");
-                                if(value.length > 2){
-                                    $("#description").removeClass("errorInput");
+                                if (value !== "") {
+                                    $("#description").addClass("errorInput");
+                                    if(value.length > 2 && value.length < 1024){
+                                        $("#description").removeClass("errorInput");
+                                    }
+                                    return value.length > 2 && value.length < 1024 ;
                                 }
-                                return value.length > 2 ;
-                            }
-                            $("#description").removeClass("errorInput");
-                            return true;
-                        },
-                        errorMessage : 'Description must be empty or longer than 2'
+                                $("#description").removeClass("errorInput");
+                                return true;
+                            },
+                            errorMessage : 'If not empty, description lenght must be between 3 and 1024'
                     }
                 ], {errorsContainer : "#errorDescription"})
 
@@ -133,7 +133,7 @@
             title.attr("style", "");
             errTitle.html("");
             if (!(/^.{3,}$/).test(title.val())) {
-                errTitle.append("Title lenght must be longer than 3 character");
+                errTitle.append("Title length must be between 3 and 256");
                 ok = false;
                 title.attr("style", "border-color: rgb(220, 53, 69)");
                 $("#add").attr("type", "button");
@@ -156,12 +156,12 @@
         }
 
         function checkDescription() {
-            $(description).next(".errorMessage").remove();
             description.attr("style", "");
+            desc_error.html("");
 
-            if (description.val() !== "" && !(/^.{3,}$/).test(description.val())) {
+            if (description.val() !== "" && !(/^.{3,1024}$/).test(description.val())) {
                 description.css("border-color", "rgb(220, 53, 69)");
-                description.after("<p class='errorMessage'>Description lenght must be >= 3</p>");
+                desc_error.html("If not empty, description lenght must be between 3 and 1024");
                 $("#add").attr("type", "button");
             }
             else
