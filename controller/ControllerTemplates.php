@@ -225,11 +225,10 @@ class ControllerTemplates extends MyController
 
 // --------------------------- Javascipt Apply template for add/edit operation ------------------------------------ 
 
-
     public function template_title_available(): void {
         $res = "true";
-        if(isset($_POST["title"]) && $_POST["title"] !== ""){
-            $template_title = RepartitionTemplates::get_repartition_template_by_title($_POST["title"]);
+        if(isset($_POST["title"]) && $_POST["title"] !== "" && isset($_POST["tricount"]) && $_POST["tricount"] !== ""){
+            $template_title = RepartitionTemplates::get_repartition_template_by_title($_POST["title"], $_POST["tricount"]);
             if($template_title)
                 $res = "false";
         }
