@@ -158,7 +158,7 @@
             <?php } ?> 
 
                 .onValidate(async function(event) {
-                    titleAvailable = await $.post("templates/template_title_available/", {"title" : $("#title").val()}, null, 'json'); 
+                    titleAvailable = await $.post("templates/template_title_available/", {"title" : $("#title").val(), "tricount" : "<?= $tricount->id ?>"}, null, 'json'); 
                     if ($("#title").val() == current_title)
                         titleAvailable = true;
                     if (!titleAvailable)
@@ -221,7 +221,7 @@
                                     <?= strlen($subscriptor->full_name) > 25 ? substr($subscriptor->full_name, 0, 25)."..." : $subscriptor->full_name ?>
                                     </td>
                                     <td class="weight">
-                                        <p>Weight</p><input id='weight_<?= $subscriptor->id ?>' class="whom_weight" type='number' name='weight_<?= $subscriptor->id ?>' value='<?php echo array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ?  $list[$subscriptor->id] : "1")  : ($template->is_participant_template($subscriptor) ? $repartition_template_items->weight : "1"); ?>'>
+                                        <p>Weight</p><input id='weight_<?= $subscriptor->id ?>' class="whom_weight" type='number' min="0" name='weight_<?= $subscriptor->id ?>' value='<?php echo array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ?  $list[$subscriptor->id] : "1")  : ($template->is_participant_template($subscriptor) ? $repartition_template_items->weight : "1"); ?>'>
                                     </td> 
                                 </tr>
                             </table>
