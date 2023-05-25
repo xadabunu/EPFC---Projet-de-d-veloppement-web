@@ -290,8 +290,7 @@
 
                     .onValidate(async function(event) {
                         if ($("#save_template").is(":checked")) {
-                            titleAvailable = await $.post("operation/template_title_available/" , {"title" : $("#template_title").val()}, null, 'json');
-                            if (!titleAvailable)
+                            titleAvailable = await $.post("operation/template_title_available/" , {"title" : $("#template_title").val(), "tricount" : "<?= $operation->tricount->id ?>"}, null, 'json');                            if (!titleAvailable)
                                 this.showErrors({ '#template_title': 'Name already exists' });
                         }
                     })
@@ -441,7 +440,7 @@
                                 </td>
                                 <td class="weight">
                                     <p>Weight</p>
-                                    <input id='weight_<?= $subscriptor->id ?>' type='number' class="whom_weight" name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($list) ? (empty($templateChoosen) ? '1' : (empty($repartition_template_items) ? '1' : $repartition_template_items->weight)) : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
+                                    <input id='weight_<?= $subscriptor->id ?>' type='number' min="0" class="whom_weight" name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($list) ? (empty($templateChoosen) ? '1' : (empty($repartition_template_items) ? '1' : $repartition_template_items->weight)) : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
                                 </td>
                             </tr>
                         </table>

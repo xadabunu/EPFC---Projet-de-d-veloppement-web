@@ -357,25 +357,30 @@ class ControllerOperation extends MyController
 
     public function get_repartition_template_by_id_as_json():void
     {
-        if (isset($_GET["param1"]) && is_numeric($_GET["param1"])) {
+        if ($this->get_user_or_false() && isset($_GET["param1"]) && is_numeric($_GET["param1"])) {
             echo RepartitionTemplates::get_repartition_template_by_id_as_json(intval($_GET["param1"]));
-        }
+        } else 
+            $this->redirect();
     }
 
-    public function get_repartition_template_items_by_repartition_template_id_as_json() : void
+    public function get_repartition_template_items_by_repartition_template_id_as_json(): void
     {
-        if (isset($_GET["param1"]) && is_numeric($_GET["param1"])) {
+        if ($this->get_user_or_false() && isset($_GET["param1"]) && is_numeric($_GET["param1"])) {
             echo RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id_as_json(intval($_GET["param1"]));
         }
+        else
+            $this->redirect();
     }
     
     public function template_title_available(): void {
         $res = "true";
-        if(isset($_POST["title"]) && $_POST["title"] !== ""){
-            $template_title = RepartitionTemplates::get_repartition_template_by_title($_POST["title"]);
-            if($template_title)
+        if ($this->get_user_or_false() && isset($_POST["title"]) && $_POST["title"] !== "" && isset($_POST["tricount"]) && $_POST["tricount"] !== ""){
+            $template_title = RepartitionTemplates::get_repartition_template_by_title($_POST["title"], $_POST["tricount"]);
+            if ($template_title)
                 $res = "false";
         }
+        else
+            $this->redirect();
         echo $res;
     }
 }
