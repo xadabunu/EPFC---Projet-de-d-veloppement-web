@@ -284,7 +284,8 @@
                     'You should select at least one one participant'
                 )
 
-                .addField("#weight", [
+                <?php foreach ($operation->tricount->get_subscriptors_with_creator() as $subscriptor) { ?>
+                .addField("#weight_<?= $subscriptor->id ?>", [
                     {
                         rule : 'integer',
                         errorMessage : 'Weight must be an integer'
@@ -295,6 +296,7 @@
                         errorMessage : 'Weight must be positive'
                     }
                 ], {errorsContainer : "#errorWeight"})
+                <?php } ?>
 
                 .addField("#template_title", [
                     {
@@ -474,7 +476,7 @@
                                     </td>
                                     <td class="weight">
                                         <p>Weight</p>
-                                        <input id='weight_<?= $subscriptor->id ?>' type='text' class="whom_weight" name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? $repartition->weight : '1') : (empty($repartition_template_items) ? '1' : $repartition_template_items->weight)) : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
+                                        <input id='weight_<?= $subscriptor->id ?>' type='number' class="whom_weight" name='weight_<?= $subscriptor->id ?>' value='<?php echo empty($errors) ? (empty($templateChoosen) ? ($operation->is_participant_operation($subscriptor) ? $repartition->weight : '1') : (empty($repartition_template_items) ? '1' : $repartition_template_items->weight)) : (array_key_exists($subscriptor->id, $list) ? (is_numeric($list[$subscriptor->id]) ? $list[$subscriptor->id] : "1") : ('1')); ?>'>
                                     </td>
                                 </tr>
                             </table>

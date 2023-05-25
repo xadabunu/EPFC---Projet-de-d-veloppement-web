@@ -243,7 +243,8 @@
                         'You should select at least one participant'
                     )
 
-                    .addField("#weight", [
+                    <?php foreach ($operation->tricount->get_subscriptors_with_creator() as $subscriptor) { ?>
+                    .addField("#weight_<?= $subscriptor->id ?>", [
                         {
                             rule : 'integer',
                             errorMessage : 'Weight must be an integer'
@@ -254,6 +255,7 @@
                             errorMessage : 'Weight must be positive'
                         }
                     ], {errorsContainer : "#errorWeight"})
+                    <?php } ?>
 
                     .addField("#template_title", [
                         {
