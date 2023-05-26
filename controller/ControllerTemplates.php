@@ -21,8 +21,6 @@ class ControllerTemplates extends MyController
     {
         if (isset($_GET["param1"]) && is_numeric($_GET["param1"])) {
             $user = $this->get_user_or_redirect();
-            if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
-                $this->redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))
                 $this->redirect();
@@ -44,8 +42,6 @@ class ControllerTemplates extends MyController
             $repartition_template = '';
 
             $user = $this->get_user_or_redirect();
-            if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id()))
-                $this->redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))
                 $this->redirect();
@@ -81,16 +77,10 @@ class ControllerTemplates extends MyController
             $list = [];
             $errors = [];
 
-            if (!in_array($_GET['param1'], Tricount::get_all_tricounts_id())) {
-                $this->redirect();
-            }
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param1"]);
             if (!$tricount->has_access($user))
                 $this->redirect();
-            if (!in_array($_GET['param2'], RepartitionTemplates::get_all_template_ids())) {
-                $this->redirect();
-            }
             $repartition_template = RepartitionTemplates::get_repartition_template_by_id($_GET["param2"]);
             if ($repartition_template->tricount->id != $_GET['param1']) {
                 $this->redirect();
@@ -188,12 +178,6 @@ class ControllerTemplates extends MyController
     public function delete_template(): void
     {
         if (isset($_GET['param1']) && is_numeric($_GET['param1']) && isset($_GET['param2']) && is_numeric($_GET['param2'])) {
-            if (!in_array($_GET['param1'], RepartitionTemplates::get_all_template_ids())) {
-                $this->redirect();
-            }
-            if (!in_array($_GET['param2'], Tricount::get_all_tricounts_id())) {
-                $this->redirect();  
-            }
             $repartition_template = RepartitionTemplates::get_repartition_template_by_id($_GET["param1"]);      
             $user = $this->get_user_or_redirect();
             $tricount = Tricount::get_tricount_by_id($_GET["param2"]);
@@ -216,11 +200,44 @@ class ControllerTemplates extends MyController
             $tricount = $repartition_template->tricount;
             if (!$tricount->has_access($user))
                 $this->redirect();
-            RepartitionTemplateItems::delete_repartition_template_items_0($repartition_template);
+            RepartitionTemplateItems::delete_repartition_template_items_with_object($repartition_template);
             $repartition_template->delete_repartition_template();
             $this->redirect('templates', 'manage_templates', $repartition_template->tricount->id);
         } else {
             Tools::abort("Invalid or missing argument");
         }
+    }
+
+    public function delete_template_service()
+    {
+        $user = $this->get_user_or_false();
+        if (!$user) {
+            Tools::abort("Invalid or missing argument");
+        }    
+        if (isset($_GET["param1"])) {
+            $repartition_template = RepartitionTemplates::get_repartition_template_by_id($_GET["param1"]); 
+        }
+        if ($user && $repartition_template && $repartition_template->tricount->has_access($user)) {
+            RepartitionTemplateItems::delete_repartition_template_items_with_object($repartition_template);
+            $repartition_template->delete_repartition_template();
+            echo "true";
+        }
+        else
+            echo "false";
+    }
+
+// --------------------------- Javascipt Apply template for add/edit operation ------------------------------------ 
+
+    public function template_title_available(): void {
+        $res = "true";
+        if($this->get_user_or_false() && isset($_POST["title"]) && $_POST["title"] !== "" && isset($_POST["tricount"]) && $_POST["tricount"] !== ""){
+            $template_title = RepartitionTemplates::get_repartition_template_by_title($_POST["title"], $_POST["tricount"]);
+            if($template_title)
+                $res = "false";
+        }
+        else {
+            Tools::abort("Invalid or missing argument");
+        }
+        echo $res;
     }
 }

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="<?= $web_root ?>">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
-    <script src="lib/jquery-3.6.3.js" type="text/javascript"></script>
+    <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
     <title><?= $tricount->title ?> &#11208; Expenses</title>
     <script>
         const operations = <?= $tricount->get_operation_as_json() ?>;
@@ -18,6 +18,7 @@
             if (document.readyState === 'complete') {
                 tblOperations = document.getElementById('operation_list');
                 if (tblOperations) {
+                    displayCbox();
                     displayTable();   
                     document.getElementById('sort').onchange = function() {
                         sort(this.value);
@@ -35,6 +36,23 @@
                 html += "</tr>"
             }
             tblOperations.innerHTML = html;
+        }
+
+        function displayCbox() {
+            let html="<p style='font-size : 80%'>Order expenses by:";
+            html+="<select id='sort' class='selectCSS'>";
+            html+="<option value='operation_date'>Date  &emsp; &#9650;</option>"
+            html+="<option value='operation_date' selected>Date &emsp; &#9660;</option>"
+            html+="<option value='amount'>Amount &emsp; &#9650;</option>"
+            html+="<option value='amount'>Amount &emsp; &#9660;</option>"
+            html+="<option value='initiator'>Paid by &emsp; &#9650;</option>"
+            html+="<option value='initiator'>Paid by &emsp; &#9660;</option>"
+            html+="<option value='title'>Title &emsp; &#9650;</option>"
+            html+="<option value='title'>Title &emsp; &#9660;</option>"
+            html+="</select>"
+            html+="</p>"
+
+            $("#operation_list").before(html);
         }
 
         function sortOperation() {
@@ -98,18 +116,6 @@
             <?php }
         } else { ?>
             <p class="balance"><a href="tricount/balance/<?= $tricount->id ?>" class="button" id="balance"><b>&#8644;</b> View balance</a></p>
-            <p style="font-size : 80%">Order expenses by:
-                <select id="sort" class="selectCSS">
-                    <option value="operation_date">Date  &emsp; &#9650;</option>
-                    <option value="operation_date" selected>Date &emsp; &#9660;</option>
-                    <option value="amount">Amount &emsp; &#9650;</option>
-                    <option value="amount">Amount &emsp; &#9660;</option>
-                    <option value="initiator">Paid by &emsp; &#9650;</option>
-                    <option value="initiator">Paid by &emsp; &#9660;</option>
-                    <option value="title">Title &emsp; &#9650;</option>
-                    <option value="title">Title &emsp; &#9660;</option>
-                </select>
-            </p>
             <table id="operation_list">
                 <?php foreach ($tricount->get_operations() as $operation) { ?>
                     <tr>

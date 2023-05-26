@@ -32,6 +32,8 @@ class Tricount extends Model
     {
         $query = self::execute("SELECT * FROM tricounts WHERE id = :id", ["id" => $id]);
         $data = $query->fetch();
+        if (!$data)
+            Tools::abort("Invalid or missing argument.");
         return new Tricount($data['title'], $data['created_at'], User::get_user_by_id($data['creator']), $data['description'], $data['id']);
     }
 
@@ -40,17 +42,6 @@ class Tricount extends Model
         $query = self::execute("SELECT * FROM  tricounts WHERE title =:title", ["title" => $title]);
         $data = $query->fetch();
         return new Tricount($data['title'], $data['created_at'], User::get_user_by_id($data['creator']), $data['description'], $data['id']);
-    }
-
-    public static function get_all_tricounts_id(): array
-    {
-        $list = (self::execute("SELECT id FROM tricounts", []))->fetchAll();
-        $res = [];
-
-        foreach ($list as $var)
-            $res[] = $var['id'];
-
-        return $res;
     }
 
 
@@ -102,7 +93,7 @@ class Tricount extends Model
         foreach ($list as $op) {
             $spent += $op->get_user_amount($user_id);
         }
-        return $paid - $spent;
+        return round($paid - $spent, 2);
     }
 
 
@@ -178,7 +169,7 @@ class Tricount extends Model
             $row["id"] = $sub->id;
             $row["name"] = $sub->full_name;
             $row["deletable"] = in_array($sub, $this->get_deletables());
-            $table[$sub->id] = $row;
+            $table[] = $row;
         }
         return json_encode($table);
     }
@@ -237,15 +228,18 @@ class Tricount extends Model
         self::execute("INSERT INTO subscriptions(user, tricount) VALUES(:user, :tricount)", ["user" => $id, 'tricount' => $this->id]);
     }
 
-    public function delete_subscriptor(int $id): void
+    public function delete_subscriptor(int $user_id, int $tricount_id): void
     {
-        $this->delete_repartition_template_item($id);
-        self::execute("DELETE FROM subscriptions WHERE user=:user_id AND tricount=:tricount_id ", ["user_id" => $id, "tricount_id" => $this->id]);
+        $this->delete_repartition_template_item($user_id, $tricount_id);
+        self::execute("DELETE FROM subscriptions WHERE user=:user_id AND tricount=:tricount_id ", ["user_id" => $user_id, "tricount_id" => $this->id]);
     }
 
-    private function delete_repartition_template_item(int $id): void
+    private function delete_repartition_template_item(int $user_id, int $tricount_id): void
     {
-        self::execute("DELETE FROM repartition_template_items WHERE user = :id", ["id" => $id]);
+        $repartition_templates = RepartitionTemplates::get_all_repartition_templates_by_tricount_id($tricount_id);
+        foreach($repartition_templates as $template) {
+            self::execute("DELETE FROM repartition_template_items WHERE user = :id AND repartition_template = :template", ["id" => $user_id, "template" => $template->id]);
+        }
     }
 
 
@@ -259,15 +253,14 @@ class Tricount extends Model
             $errors['required'] = "Title is required.";
         }
         if (strlen($this->title) < 3 || strlen($this->title) > 256) {
-            $errors['title_length'] = "Title length must be between 3 and 256.";
+            $errors['title_length'] = "Title length must be between 3 and 256";
         }
         if (strlen($this->description) > 0 && (!(strlen($this->description) >= 3) || strlen($this->description) > 1024)) {
-            $errors['description_length'] = "Description length must be between 3 and 1024.";
+            $errors['description_length'] = "If not empty, description lenght must be between 3 and 1024";
         }
-        $array = self::get_tricounts_list($this->creator->id);
-        foreach ($array as $data) {
-            if (strtoupper($this->title) == strtoupper($data->title) && $this->id != $data->id) {
-                $errors['unique_title'] = "Title must be unique";
+        foreach ($this->creator->get_created_tricounts() as $data) {
+            if (strtolower($this->title) == strtolower($data->title) && $this->id != $data->id) {
+                $errors['unique_title'] = "You already named a tricount with this title";
             }
         }
         return $errors;

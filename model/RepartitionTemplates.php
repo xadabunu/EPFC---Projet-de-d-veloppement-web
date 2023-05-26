@@ -14,15 +14,6 @@ class RepartitionTemplates extends Model
 
 // --------------------------- Get sur les Template ------------------------------------ 
 
-    public static function get_all_template_ids() : array 
-    {
-        $list = (self::execute("SELECT id FROM repartition_templates", []))->fetchAll();
-        $res = [];
-        foreach ($list as $var)
-            $res[] = $var['id'];
-        return $res;
-    }     
-
     public static function get_all_repartition_templates_by_tricount_id(int $id): array
     {
         $query = self::execute("SELECT * FROM repartition_templates WHERE tricount = :id ORDER BY title ASC", ["id" => $id]);
@@ -38,6 +29,8 @@ class RepartitionTemplates extends Model
     {
         $query = self::execute("SELECT * FROM repartition_templates WHERE id = :id", ["id" => $id]);
         $data = $query->fetch();
+        if (!$data)
+            Tools::abort("Invalid or missing argument.");
         return new RepartitionTemplates($data['title'], Tricount::get_tricount_by_id($data['tricount']), $data['id']);
     }
 
@@ -58,7 +51,14 @@ class RepartitionTemplates extends Model
         $query = self::execute("SELECT * FROM repartition_templates WHERE title = :title AND tricount = :tricountId", ["title" => $title, "tricountId" => $tricountId]);
         $data = $query->fetch();
         return $data;
-   }
+    }
+
+    public static function get_repartition_template_by_title(string $title, int $tricount): RepartitionTemplates | false
+    {
+        $query = self::execute("SELECT * FROM repartition_templates WHERE title = :title AND tricount = :tricount", ["title" => $title, "tricount" => $tricount]);
+        $data = $query->fetch();
+        return $data != null ? new RepartitionTemplates($data['title'], Tricount::get_tricount_by_id($data['tricount']), $data['id']) : false;
+    }
 
 
 // --------------------------- Validate && Persist ------------------------------------ 
@@ -72,7 +72,7 @@ class RepartitionTemplates extends Model
         }
 
         $data = self::get_template_data_by_title_and_tricount($this->title, $this->tricount->id);
-        if($data ? (empty($data) ? false : ( $this->id  == 0 ? true : ($data['id'] == $this->id ? false : true))) : false){
+        if ($data ? (empty($data) ? false : ( $this->id  == 0 ? true : ($data['id'] == $this->id ? false : true))) : false) {
             $errors['duplicate_title'] = "Title already exists in this tricount.";
         }
         return $errors;
@@ -98,10 +98,10 @@ class RepartitionTemplates extends Model
     public function add_repartition_template_from_operation(array $list, RepartitionTemplates $repartition_template): void
     {
         $repartition_template->persist_template();
-        foreach($list as $key => $value){
+        foreach($list as $key => $value) {
             $repartition_template_items = new RepartitionTemplateItems((int) $value, User::get_user_by_id($key), $repartition_template);
             $repartition_template_items->persist_repartition_template_items();
-       }
+        }
     }
 
 // --------------------------- Delete Template ------------------------------------ 
@@ -116,13 +116,11 @@ class RepartitionTemplates extends Model
     public function is_participant_template(User $user): bool 
     {
         $repartition_template_items =  RepartitionTemplateItems::get_repartition_template_items_by_repartition_template_id($this->id);
-        foreach( $repartition_template_items as $items){
-            if($items->user->id == $user->id){
+        foreach( $repartition_template_items as $items) {
+            if ($items->user->id == $user->id) {
                 return true;
             }
         }
         return false;
     }
-    
-
 }

@@ -58,19 +58,6 @@ class User extends Model
         return $array;
     }
 
-    private static function get_user_by_password(string $clear_password): User |false
-    {
-        $hashed_password = Tools::my_hash($clear_password);
-        $query = self::execute("SELECT * FROM users WHERE hashed_password =:hashed_password", ["hashed_password" => $hashed_password]);
-        $data = $query->fetch();
-        if ($query->rowcount() == 0) {
-            return false;
-        } else {
-            return new User($data["mail"], $data["hashed_password"], $data["full_name"], $data["role"], $data["iban"], $data["id"]);
-        }
-    }
-
-
 // --------------------------- Validate && Persist // Delete User ------------------------------------ 
 
 
@@ -100,19 +87,15 @@ class User extends Model
         $errors = [];
         $user = self::get_user_by_email($email);
         if ($user) {
-            $errors['validity'] = "This email is not available";
+            $errors['validity'] = "This email already exists";
         }
         return $errors;
     }
 
-    public static function validate_password_unicity(string $clear_password): array
-    {
-        $errors = [];
-        $user = self::get_user_by_password($clear_password);
-        if ($user){
-            $errors['password_validity'] = "The new password must be different from the old.";
-        }
-        return $errors;
+    public static function current_password_is_correct(string $current_password, User $current_user) {
+        if (Tools::my_hash($current_password) == $current_user->hashed_password) 
+            return true;
+        return false;
     }
 
     public function validate(): array
@@ -122,7 +105,7 @@ class User extends Model
             $errors['required'] = "Email is required.";
         }
         if (strlen($this->email) > 256) {
-            $errors['email_length'] = "Email address can't be longer then 256 characters.";
+            $errors['email_length'] = "Email address cannot be longer than 256 characters.";
         }
         if (!preg_match('/^[a-zA-Z0-9]{1,20}[@]{1}[a-zA-A0-9]{1,15}[.]{1}[a-z]{1,7}$/', $this->email)) {
             $errors['validity'] = "Not a valid email address.";
@@ -133,7 +116,7 @@ class User extends Model
         if (!preg_match("/^[A-Za-zÀ-ÿ\s]*$/", $this->full_name)) {
             $errors['name_contains'] = "Name must contains only letters";
         }
-        if (!preg_match("/^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/", $this->iban)) {
+        if ((strlen($this->iban) > 0) && !preg_match("/^BE[0-9]{2}\s[0-9]{4}\s[0-9]{4}\s[0-9]{4}$/", $this->iban)) {
             $errors['iban'] = "IBAN must have an official Belgian IBAN format.";
         }
         return $errors;
@@ -154,12 +137,8 @@ class User extends Model
     public static function validate_passwords(string $password, string $password_confirm): array
     {
         $errors = self::validate_password($password);
-        $errors = array_merge(self::validate_password_unicity($password));
         if ($password != $password_confirm) {
             $errors['password_confirm'] = "You have to enter twice the same password.";
-        }
-        else{
-            $errors = array_merge(self::validate_password_unicity($password));
         }
         return $errors;
     }

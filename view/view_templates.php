@@ -57,8 +57,8 @@
                                 </ul>
                             </td>
                         </tr>
-                    <?php } 
-                }?>
+                        <?php } 
+                    }?>
             </table>
     </div>
 </body>

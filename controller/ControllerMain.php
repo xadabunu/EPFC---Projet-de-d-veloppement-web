@@ -75,4 +75,22 @@ class ControllerMain extends MyController
             "full_name" => $full_name, "iban" => $iban, "errors" => $errors
         ]);
     }
+
+    public function email_available_service(): void
+    {
+        $res = 'true';
+        if ($this->get_user_or_false() && isset($_POST["email"]) && $_POST["email"] !== "" ) {
+            $user = User::get_user_by_email($_POST["email"]);
+            if ($user) {
+                $res = "false";
+                if (isset($_POST['user_email']) && $_POST['user_email'] === $_POST['email']) {
+                    $res = 'true';
+                }
+            }
+        }
+        else {
+            Tools::abort("Invalid or missing argument");
+        }
+        echo $res;
+    }
 }

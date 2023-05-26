@@ -9,37 +9,134 @@
     <link href="css/styles.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <script src="lib/jquery-3.6.3.min.js" type="text/javascript"></script>
+    <script src="lib/sweetalert2@11.js"></script>
+    <script src="lib/just-validate-4.2.0.production.min.js" type="text/javascript"></script>
+    <script src="lib/just-validate-plugin-date-1.2.0.production.min.js" type="text/javascript"></script>
     <script>
-        let tricount_id, add_btn, subs, table_subs, addables, added, desc_error;
-        let title, errTitle, description;
+        let titleAvailable;
+        let table_subs, added, desc_error, title, errTitle, description;
         const user_id = "<?= $user->id ?>";
+        const db_title = "<?= $tricount->title ?>";
+        const db_description = "<?= $tricount->description ?>";
+		const tricount = {
+                id: <?= $tricount->id ?>,
+                title: "<?= $tricount->title ?>",
+            };
+        let addables = <?= $tricount->get_addables_as_json() ?>;
+        const tricount_id = <?= $_GET['param1']?>;
+        let subs = <?= $tricount->get_subs_as_json() ?>;
 
         $(function() {
-            add_btn = $("#add_btn");
-            table_subs = $("#table_subs");
-            subs = <?= $tricount->get_subs_as_json() ?>;
-            addables = <?= $tricount->get_addables_as_json() ?>;
-            tricount_id = <?= $_GET['param1']?>;
+
             description = $("#description");
-            desc_error = $("#desc_error");
+            table_subs = $("#table_subs");
+            description = $("#description");
+            desc_error = $("#errorDescription");
             title = $("#title");
-            errTitle = $("#errTitle");
+            errTitle = $("#errorTitle");
 
             $("form.nosubmit").submit(function(e) {
                 e.preventDefault();
             });
-            description.bind("input", checkDescription);
-            title.bind("input", checkTitle);
+            $("#delete").attr("href", "javascript:confirmDelete()");
+            $("#back").attr("href", "javascript:confirmBack()");
+            
+            $("input:text:first").focus();
+
+            <?php if (Configuration::get("JustValidate")) { ?>
+
+                errTitle.attr("class", ""); 
+                desc_error.attr("class", "");
+
+            const validation = new JustValidate('#edit_tricount_form', {
+                validateBeforeSubmitting : true,
+                lockForm : true,
+                focusInvalidField : false,
+                successLabelCssClass : ['success'],
+                errorFieldCssClass: ['errorInput'],
+                errorLabelCssClass: ['errorMessage'],
+                successFieldCssClass: ['successField']
+            });
+
+            validation
+                .addField('#title', [
+                    {
+                        rule : 'required',
+                        errorMessage : 'Title is required'
+                    },
+                    {
+                        rule : 'minLength',
+                        value : 3,
+                        errorMessage : 'Title length must be between 3 and 256'
+                    },
+                    {
+                        rule : 'maxLength',
+                        value : 256,
+                        errorMessage : 'Title length must be between 3 and 256'
+                    },
+                ], {errorsContainer : "#errorTitle"})
+
+                .addField('#description', [
+                    {
+                        validator : function(value) {
+                                if (value !== "") {
+                                    $("#description").addClass("errorInput");
+                                    if(value.length > 2 && value.length < 1024){
+                                        $("#description").removeClass("errorInput");
+                                    }
+                                    return value.length > 2 && value.length < 1024 ;
+                                }
+                                $("#description").removeClass("errorInput");
+                                return true;
+                            },
+                            errorMessage : 'If not empty, description lenght must be between 3 and 1024'
+                    }
+                ], {errorsContainer : "#errorDescription"})
+
+                .onValidate(debounce(async function(event) {
+                    titleAvailable = await $.post("Tricount/tricount_exists_service/",
+                                                                    {"title" : $("#title").val(),
+                                                                    "tricount_id" : tricount_id }, null, 'json');
+                    if (titleAvailable)
+                        this.showErrors({ '#title': 'This title already exists' });
+                }, 300))
+
+                .onSuccess(function(event) {
+                    if (!titleAvailable)
+                        event.target.submit();
+                })
+
+                <?php } else { ?>
+
+                    description.bind("input", checkDescription);
+                    title.bind("input", checkTitle);
+                <?php } ?>
         })
+
+        <?php if (Configuration::get("JustValidate")) { ?>
+
+        function debounce (fn, time) {
+            var timer;
+
+            return function() {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    fn.apply(this, arguments);
+                }, time);
+            }
+        }
+
+        <?php } else { ?>
 
         function checkTitle() {
             let ok = true;
             title.attr("style", "");
             errTitle.html("");
             if (!(/^.{3,}$/).test(title.val())) {
-                errTitle.append("Title lenght must be longer than 3 character");
+                errTitle.append("Title length must be between 3 and 256");
                 ok = false;
                 title.attr("style", "border-color: rgb(220, 53, 69)");
+                $("#add").attr("type", "button");
             }
             if (ok)
                 ok = checkTitleExists();
@@ -47,34 +144,104 @@
         }
 
         async function checkTitleExists() {
-            const data = await $.getJSON("tricount/tricount_exists_service/" + title.val() + "/" + tricount_id);
-            if (data) {
+            const data = await $.post("tricount/tricount_exists_service", { title: title.val(), tricount_id: tricount_id });
+            if (data != "false") {
+                $("#add").attr("type", "button");
                 errTitle.append("Title already exists");
                 title.attr("style", "border-color: rgb(220, 53, 69)");
                 return false;
             }
+            $("#add").attr("type", "submit");
             return true;
         }
 
         function checkDescription() {
-            $(description).next(".errorMessage").remove();
             description.attr("style", "");
+            desc_error.html("");
 
-            if (description.val() !== "" && !(/^.{3,}$/).test(description.val())) {
+            if (description.val() !== "" && !(/^.{3,1024}$/).test(description.val())) {
                 description.css("border-color", "rgb(220, 53, 69)");
-                description.after("<p class='errorMessage'>Description lenght must be >= 3</p>");
+                desc_error.html("If not empty, description lenght must be between 3 and 1024");
+                $("#add").attr("type", "button");
             }
+            else
+                $("#add").attr("type", "submit");
         }
 
-        function checkTitleAndDescription() {
-            let ok = checkTitle();
+        async function checkTitleAndDescription() {
+            let ok = await checkTitle();
             ok = checkDescription() && ok;
             return ok;
+        }
+        <?php } ?>
+
+		async function deleteConfirmed() {
+			$.ajax({
+				url: "tricount/delete_tricount_service/" + tricount_id,
+				type: "POST",
+				dataType: "text",
+				cache: false,
+				success: Swal.fire({
+					title: "Deleted!",
+					html: "<p>This tricount has been deleted</p>",
+					icon: "success",
+					position: "top",
+					confirmButtonColor: "#6f66e2",
+					focusConfirm: true
+				}).then((result) => {
+					location.replace("user/my_tricounts");
+				})
+			});
+		}
+
+        function confirmDelete() {
+            Swal.fire({
+                title: "Confirm Tricount deletion",
+                html: `
+                    <p>Do you really want to delete tricount "<b>${tricount.title}</b>"
+                    and all of its dependencies ?</p>
+                    <p>This process cannot be undone.</p>
+                `,
+                icon: 'warning',
+                position: 'top',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+        		focusCancel: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+					deleteConfirmed();
+				}
+            });
+        }
+
+        function confirmBack() {
+            if (db_title.trim() != title.val().trim() || db_description.trim() != description.val().trim()) {
+                Swal.fire({
+                    title: "Unsaved changes !",
+                    html: `
+                        <p>Are you sure you want to leave this form ?
+                        Changes you made will not be saved.</p>
+                    `,
+                    icon: 'warning',
+                    position: 'top',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c747c',
+                    confirmButtonText: 'Leave Page',
+                    focusCancel: true
+                }).then((result) => {
+                    if (result.isConfirmed)
+                        location.replace("tricount/operations/" + tricount_id);
+                    });
+                } else
+                    location.replace("tricount/operations/" + tricount_id);
         }
 
         function my_echo(str, len) {
             let html = "";
-            html += str.len > len ? substr(user.name, 0, len - 3) + "..." : str;
+            html += str.len > len ? substr(str, 0, len - 3) + "..." : str;
             return html;
         }
 
@@ -88,8 +255,8 @@
                 "id" : id
             }
 
-            let current = $("form[name='subscriptor']").find("option:first");
-            let next = $(current).next();
+             let current = $("form[name='subscriptor']").find("option:first");
+             let next = $(current).next();
 
             while (addables[id].name > current.html() && $(next).html()) {
                 current = next;
@@ -120,31 +287,33 @@
             /* -- front -- */
             
             added = $("#subscriptor").find(":selected");
+            if (added.val() != -1) {
             const tmp = added.val();
-            $("#subscriptor").val("-1");
-            added.remove();
-            added = addables[tmp];
-            
-            if (added) {
-                let current = table_subs.find("tr:first");
-                let td_name = $(current).find("td:first");
-                let next = $(current).next("tr");
+                $("#subscriptor").val("-1").change();
+                added.remove();
+                added = addables[tmp];
+                
+                if (added) {
+                    let current = table_subs.find("tr:first");
+                    let td_name = $(current).find("td:first");
+                    let next = $(current).next("tr");
 
-                while (added.name > td_name.html() && $(next).find("td:first").html()) {
-                    current = next;
-                    next = $(next).next("tr");
-                    td_name = $(current).find("td:first");
+                    while (added.name > td_name.html() && $(next).find("td:first").html()) {
+                        current = next;
+                        next = $(next).next("tr");
+                        td_name = $(current).find("td:first");
+                    }
+
+                    if (added.name > td_name.html())
+                        current.after(generateTableHTML(added));
+                    else
+                        current.before(generateTableHTML(added));
+                    $(addables).splice(added.id);
+                        
+                /* -- back -- */
+
+                    await $.post("tricount/add_subscriptor_service/" + tricount_id, {"id": added.id});
                 }
-
-                if (added.name > td_name.html())
-                    current.after(generateTableHTML(added));
-                else
-                    current.before(generateTableHTML(added));
-                $(addables).splice(added.id);
-                    
-            /* -- back -- */
-
-                await $.post("tricount/add_subscriptor_service/" + tricount_id, {"id": added.id});
             }
             return false;
         }
@@ -179,27 +348,34 @@
         <header class="t2">
             <a href="tricount/operations/<?= $tricount->id ?>" class="button" id="back">Back</a>
             <p><?= strlen($tricount->title) > 20 ? substr($tricount->title, 0, 20)."..." : $tricount->title ?> &#11208; Edit</p>
-            <button form="edittricountform" type="submit" class="button save" id="add">Save</button>
+            <button form="edit_tricount_form" type="submit" class="button save" id="add">Save</button>
         </header>
         <h3>Settings</h3>
-        <form id="edittricountform" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post" class="edit" onsubmit="return checkTitleAndDescription();">
+        <form id="edit_tricount_form" action="tricount/edit_tricount/<?= $tricount->id ?>" method="post" class="edit" <?php if (!Configuration::get("JustValidate")) {?> onsubmit=" return checkTitleAndDescription();"<?php }?> >
             <label>Title :</label>
             <input id="title" name="title" type="text" value="<?= $tricount->title ?>" <?php if (array_key_exists('required', $errors) || array_key_exists('title_length', $errors) || array_key_exists('unique_title', $errors)) { ?>class="errorInput" <?php } ?>>
-            <p class = "errorMessage" id="errTitle"></p>
-            <?php if (array_key_exists('required', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['required']; ?></p>
-            <?php }
-            if (array_key_exists('title_length', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['title_length']; ?></p>
-            <?php }
-            if (array_key_exists('unique_title', $errors)) { ?>
-                <p class="errorMessage"><?php echo $errors['unique_title']; ?></p>
-            <?php } ?>
-            <label>Description (optional) :</label>
-            <textarea id="description" name="description" rows="3" placeholder="Description" <?php if (array_key_exists('description_length', $errors)) { ?>class="errorInput" <?php } ?>><?= $tricount->description ?></textarea>
-            <?php if (array_key_exists('description_length', $errors)) { ?>
-                <p id="desc_error" class="errorMessage"><?php echo $errors['description_length']; ?></p>
-            <?php } ?>
+            <div id="errorTitle" class="errorMessage">
+            <?php if (array_key_exists('required', $errors)) {
+                echo $errors['required'];
+                echo "<br><br>";
+                echo $errors['title_length'];
+            }
+            else if (array_key_exists('title_length', $errors)) {
+                echo $errors['title_length'];
+            }
+            else if (array_key_exists('unique_title', $errors)) {
+                echo $errors['unique_title'];
+            } ?>
+            </div>
+            <h3>Description (Optional) :</h3>
+            <div id="contains_input">
+                <textarea id="description" name="description" rows="6" placeholder="Description"<?php if (array_key_exists('description_length', $errors)) { ?>class="errorInput" <?php } ?>><?= $tricount->description ?></textarea>
+            </div>
+            <div id="errorDescription" class="errorMessage">
+                <?php if (array_key_exists('description_length', $errors)) {
+                echo $errors['description_length'];
+            } ?>
+            </div>
         </form>
         <h3>Subscriptions</h3>
         <table class="subs" id="table_subs">
@@ -235,7 +411,7 @@
             </table>
         </form>
         <a href="templates/manage_templates/<?= $tricount->id ?>" class="button bottom2 manage">Manage repartition template</a>
-        <a href="tricount/delete_tricount/<?= $tricount->id ?>" class="button bottom2 delete">Delete this tricount</a>
+        <a href="tricount/delete_tricount/<?= $tricount->id ?>" id="delete" class="button bottom2 delete">Delete this tricount</a>
     </div>
 </body>
 
